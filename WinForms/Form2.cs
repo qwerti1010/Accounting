@@ -1,6 +1,7 @@
 ﻿using Accounting.WinForms;
 using MySqlConnector;
 using System.Data;
+using DB;
 
 namespace Accounting
 {
@@ -77,6 +78,12 @@ namespace Accounting
         public void RefreshDataGrid(string comandStr)
         {
             dataGridView1.Rows.Clear();
+            var computers = new ComputerRep().GetItems();
+            foreach (var computer in computers)
+            {
+                ReadSingleRow(computer);
+            }
+
             using (var db = new DbContext().GetConnection())
             {
                 db.Open();
