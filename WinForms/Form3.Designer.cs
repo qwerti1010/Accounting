@@ -67,270 +67,303 @@
             // 
             // name
             // 
-            this.name.Location = new System.Drawing.Point(268, 22);
+            this.name.Location = new System.Drawing.Point(188, 13);
+            this.name.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.name.Name = "name";
-            this.name.Size = new System.Drawing.Size(250, 31);
+            this.name.Size = new System.Drawing.Size(176, 23);
             this.name.TabIndex = 0;
             // 
             // producer
             // 
-            this.producer.Location = new System.Drawing.Point(268, 406);
+            this.producer.Location = new System.Drawing.Point(188, 244);
+            this.producer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.producer.Name = "producer";
-            this.producer.Size = new System.Drawing.Size(250, 31);
+            this.producer.Size = new System.Drawing.Size(176, 23);
             this.producer.TabIndex = 7;
             // 
             // price
             // 
-            this.price.Location = new System.Drawing.Point(268, 350);
+            this.price.Location = new System.Drawing.Point(188, 210);
+            this.price.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.price.Name = "price";
-            this.price.Size = new System.Drawing.Size(250, 31);
+            this.price.Size = new System.Drawing.Size(176, 23);
             this.price.TabIndex = 6;
             // 
             // regNumber
             // 
-            this.regNumber.Location = new System.Drawing.Point(268, 242);
+            this.regNumber.Location = new System.Drawing.Point(188, 145);
+            this.regNumber.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.regNumber.Name = "regNumber";
-            this.regNumber.Size = new System.Drawing.Size(250, 31);
+            this.regNumber.Size = new System.Drawing.Size(176, 23);
             this.regNumber.TabIndex = 4;
             // 
             // amortPeriod
             // 
-            this.amortPeriod.Location = new System.Drawing.Point(268, 884);
+            this.amortPeriod.Location = new System.Drawing.Point(188, 530);
+            this.amortPeriod.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.amortPeriod.Name = "amortPeriod";
-            this.amortPeriod.Size = new System.Drawing.Size(250, 31);
+            this.amortPeriod.Size = new System.Drawing.Size(176, 23);
             this.amortPeriod.TabIndex = 15;
             // 
             // bodySize
             // 
-            this.bodySize.Location = new System.Drawing.Point(268, 770);
+            this.bodySize.Location = new System.Drawing.Point(188, 462);
+            this.bodySize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bodySize.Name = "bodySize";
-            this.bodySize.Size = new System.Drawing.Size(250, 31);
+            this.bodySize.Size = new System.Drawing.Size(176, 23);
             this.bodySize.TabIndex = 13;
             // 
             // memory
             // 
-            this.memory.Location = new System.Drawing.Point(268, 710);
+            this.memory.Location = new System.Drawing.Point(188, 426);
+            this.memory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.memory.Name = "memory";
-            this.memory.Size = new System.Drawing.Size(250, 31);
+            this.memory.Size = new System.Drawing.Size(176, 23);
             this.memory.TabIndex = 12;
             // 
             // graphicsCard
             // 
-            this.graphicsCard.Location = new System.Drawing.Point(268, 650);
+            this.graphicsCard.Location = new System.Drawing.Point(188, 390);
+            this.graphicsCard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.graphicsCard.Name = "graphicsCard";
-            this.graphicsCard.Size = new System.Drawing.Size(250, 31);
+            this.graphicsCard.Size = new System.Drawing.Size(176, 23);
             this.graphicsCard.TabIndex = 11;
             // 
             // ram
             // 
-            this.ram.Location = new System.Drawing.Point(268, 594);
+            this.ram.Location = new System.Drawing.Point(188, 356);
+            this.ram.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ram.Name = "ram";
-            this.ram.Size = new System.Drawing.Size(250, 31);
+            this.ram.Size = new System.Drawing.Size(176, 23);
             this.ram.TabIndex = 10;
             // 
             // coresCount
             // 
-            this.coresCount.Location = new System.Drawing.Point(268, 527);
+            this.coresCount.Location = new System.Drawing.Point(188, 316);
+            this.coresCount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.coresCount.Name = "coresCount";
-            this.coresCount.Size = new System.Drawing.Size(250, 31);
+            this.coresCount.Size = new System.Drawing.Size(176, 23);
             this.coresCount.TabIndex = 9;
             // 
             // cpu
             // 
-            this.cpu.Location = new System.Drawing.Point(268, 465);
+            this.cpu.Location = new System.Drawing.Point(188, 279);
+            this.cpu.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cpu.Name = "cpu";
-            this.cpu.Size = new System.Drawing.Size(250, 31);
+            this.cpu.Size = new System.Drawing.Size(176, 23);
             this.cpu.TabIndex = 8;
             // 
             // location
             // 
             this.location.FormattingEnabled = true;
-            this.location.Location = new System.Drawing.Point(268, 75);
+            this.location.Location = new System.Drawing.Point(188, 45);
+            this.location.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.location.Name = "location";
-            this.location.Size = new System.Drawing.Size(250, 33);
+            this.location.Size = new System.Drawing.Size(176, 23);
             this.location.TabIndex = 16;
             // 
             // status
             // 
             this.status.FormattingEnabled = true;
-            this.status.Location = new System.Drawing.Point(268, 131);
+            this.status.Location = new System.Drawing.Point(188, 79);
+            this.status.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(250, 33);
+            this.status.Size = new System.Drawing.Size(176, 23);
             this.status.TabIndex = 17;
             // 
             // employee
             // 
             this.employee.FormattingEnabled = true;
-            this.employee.Location = new System.Drawing.Point(268, 185);
+            this.employee.Location = new System.Drawing.Point(188, 111);
+            this.employee.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.employee.Name = "employee";
-            this.employee.Size = new System.Drawing.Size(250, 33);
+            this.employee.Size = new System.Drawing.Size(176, 23);
             this.employee.TabIndex = 18;
             // 
             // regDate
             // 
             this.regDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.regDate.Location = new System.Drawing.Point(268, 296);
+            this.regDate.Location = new System.Drawing.Point(188, 178);
+            this.regDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.regDate.Name = "regDate";
-            this.regDate.Size = new System.Drawing.Size(250, 31);
+            this.regDate.Size = new System.Drawing.Size(176, 23);
             this.regDate.TabIndex = 19;
             // 
             // explStart
             // 
             this.explStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.explStart.Location = new System.Drawing.Point(268, 818);
+            this.explStart.Location = new System.Drawing.Point(188, 491);
+            this.explStart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.explStart.Name = "explStart";
-            this.explStart.Size = new System.Drawing.Size(250, 31);
+            this.explStart.Size = new System.Drawing.Size(176, 23);
             this.explStart.TabIndex = 20;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 28);
+            this.label1.Location = new System.Drawing.Point(18, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 25);
+            this.label1.Size = new System.Drawing.Size(59, 15);
             this.label1.TabIndex = 21;
             this.label1.Text = "Название";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 83);
+            this.label2.Location = new System.Drawing.Point(18, 50);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 25);
+            this.label2.Size = new System.Drawing.Size(42, 15);
             this.label2.TabIndex = 22;
             this.label2.Text = "Место";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 139);
+            this.label3.Location = new System.Drawing.Point(18, 83);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 25);
+            this.label3.Size = new System.Drawing.Size(43, 15);
             this.label3.TabIndex = 23;
             this.label3.Text = "Статус";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 193);
+            this.label4.Location = new System.Drawing.Point(18, 116);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 25);
+            this.label4.Size = new System.Drawing.Size(66, 15);
             this.label4.TabIndex = 24;
             this.label4.Text = "Сотрудник";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 248);
+            this.label5.Location = new System.Drawing.Point(18, 149);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(183, 25);
+            this.label5.Size = new System.Drawing.Size(122, 15);
             this.label5.TabIndex = 25;
             this.label5.Text = "Инвентарный номер";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(26, 302);
+            this.label6.Location = new System.Drawing.Point(18, 181);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(213, 25);
+            this.label6.Size = new System.Drawing.Size(142, 15);
             this.label6.TabIndex = 26;
             this.label6.Text = "Дата постановки на учет";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(26, 356);
+            this.label7.Location = new System.Drawing.Point(18, 214);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(102, 25);
+            this.label7.Size = new System.Drawing.Size(69, 15);
             this.label7.TabIndex = 27;
             this.label7.Text = "Цена (руб.)";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(26, 412);
+            this.label8.Location = new System.Drawing.Point(18, 247);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(140, 25);
+            this.label8.Size = new System.Drawing.Size(92, 15);
             this.label8.TabIndex = 28;
             this.label8.Text = "Производитель";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(26, 471);
+            this.label9.Location = new System.Drawing.Point(18, 283);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(105, 25);
+            this.label9.Size = new System.Drawing.Size(69, 15);
             this.label9.TabIndex = 29;
             this.label9.Text = "Процессор";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(26, 518);
+            this.label10.Location = new System.Drawing.Point(18, 311);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(151, 50);
+            this.label10.Size = new System.Drawing.Size(100, 30);
             this.label10.TabIndex = 30;
             this.label10.Text = "Количество ядер\r\nпроцессора\r\n";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(26, 585);
+            this.label11.Location = new System.Drawing.Point(18, 351);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(182, 50);
+            this.label11.Size = new System.Drawing.Size(120, 30);
             this.label11.TabIndex = 31;
             this.label11.Text = "Объем оперативной\r\nпамяти (гб.)";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 656);
+            this.label12.Location = new System.Drawing.Point(18, 394);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(194, 25);
+            this.label12.Size = new System.Drawing.Size(127, 15);
             this.label12.TabIndex = 32;
             this.label12.Text = "Название видеокарты";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 700);
+            this.label13.Location = new System.Drawing.Point(18, 420);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(171, 50);
+            this.label13.Size = new System.Drawing.Size(114, 30);
             this.label13.TabIndex = 33;
             this.label13.Text = "Объем постоянной\r\nпамяти (тб.)\r\n";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(26, 776);
+            this.label14.Location = new System.Drawing.Point(18, 466);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(200, 25);
+            this.label14.Size = new System.Drawing.Size(134, 15);
             this.label14.TabIndex = 34;
             this.label14.Text = "Размеры корпуса (см²)";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(26, 824);
+            this.label15.Location = new System.Drawing.Point(18, 494);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(224, 25);
+            this.label15.Size = new System.Drawing.Size(153, 15);
             this.label15.TabIndex = 35;
             this.label15.Text = "Дата начала эксплуатации";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(26, 874);
+            this.label16.Location = new System.Drawing.Point(18, 524);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(168, 50);
+            this.label16.Size = new System.Drawing.Size(111, 30);
             this.label16.TabIndex = 36;
             this.label16.Text = "Срок амортизации\r\n(кол-во месяцев)";
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(268, 935);
+            this.close.Location = new System.Drawing.Point(286, 561);
+            this.close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.close.Name = "close";
-            this.close.Size = new System.Drawing.Size(112, 54);
+            this.close.Size = new System.Drawing.Size(78, 32);
             this.close.TabIndex = 37;
             this.close.Text = "Выход";
             this.close.UseVisualStyleBackColor = true;
@@ -338,9 +371,10 @@
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(406, 935);
+            this.update.Location = new System.Drawing.Point(188, 561);
+            this.update.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.update.Name = "update";
-            this.update.Size = new System.Drawing.Size(112, 54);
+            this.update.Size = new System.Drawing.Size(78, 32);
             this.update.TabIndex = 38;
             this.update.Text = "Изменить";
             this.update.UseVisualStyleBackColor = true;
@@ -349,9 +383,10 @@
             // enableRedact
             // 
             this.enableRedact.AutoSize = true;
-            this.enableRedact.Location = new System.Drawing.Point(524, 287);
+            this.enableRedact.Location = new System.Drawing.Point(367, 172);
+            this.enableRedact.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.enableRedact.Name = "enableRedact";
-            this.enableRedact.Size = new System.Drawing.Size(173, 54);
+            this.enableRedact.Size = new System.Drawing.Size(115, 34);
             this.enableRedact.TabIndex = 40;
             this.enableRedact.Text = "Включить\r\nредактирование";
             this.enableRedact.UseVisualStyleBackColor = true;
@@ -359,9 +394,9 @@
             // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 1001);
+            this.ClientSize = new System.Drawing.Size(489, 601);
             this.Controls.Add(this.enableRedact);
             this.Controls.Add(this.update);
             this.Controls.Add(this.close);
@@ -397,6 +432,7 @@
             this.Controls.Add(this.price);
             this.Controls.Add(this.regNumber);
             this.Controls.Add(this.name);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Form3";
             this.Text = "Form3";
             this.Load += new System.EventHandler(this.Form3_Load);

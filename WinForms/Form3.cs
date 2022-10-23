@@ -4,15 +4,16 @@ namespace Accounting.WinForms
 {
     public partial class Form3 : Form
     {
-        Computer computer = new Computer();
+        private readonly Computer _computer = new Computer();
+
         public Form3()
         {
             InitializeComponent();
         }
 
         public Form3(Computer computer)
-        {            
-            this.computer = computer;            
+        {
+            this._computer = computer;
             InitializeComponent();
         }
 
@@ -26,7 +27,7 @@ namespace Accounting.WinForms
             SetComboBoxItems("SELECT name FROM employee", employee);
             SetComboBoxItems("SELECT location FROM computers", location);
             SetComboBoxItems("SELECT status FROM computers", status);
-            if (computer.Name == null)
+            if (_computer.Name == null)
             {
                 Text = "Добавить новое устройство";
                 update.Text = "Добавить";
@@ -34,29 +35,29 @@ namespace Accounting.WinForms
                 return;
             }
 
-            Text = $"Просмотр информации устройства. Номер в базе - {computer.Id}";
+            Text = $"Просмотр информации устройства. Номер в базе - {_computer.Id}";
             ChangeState();
-            name.Text = computer.Name;
-            location.Text = computer.Location;
-            status.Text = computer.Status;
-            employee.Text = computer.Employee;
-            regNumber.Text = computer.RegNumber;
-            regDate.Text = computer.RegDate.ToShortDateString();
-            price.Text = computer.Price.ToString();
-            producer.Text = computer.Producer.ToString();
-            cpu.Text = computer.Processor.ToString();
-            coresCount.Text = computer.CoresCount.ToString();
-            ram.Text = computer.RAM.ToString();
-            graphicsCard.Text = computer.GraphicsCard.ToString();
-            memory.Text = computer.Memory.ToString();
-            bodySize.Text = computer.BodySize.ToString();
-            explStart.Text = computer.RegDate.ToString();
-            amortPeriod.Text = computer.AmortPeriod.ToString();
+            name.Text = _computer.Name;
+            location.Text = _computer.Location;
+            status.Text = _computer.Status;
+            employee.Text = _computer.Employee;
+            regNumber.Text = _computer.RegNumber;
+            regDate.Text = _computer.RegDate.ToShortDateString();
+            price.Text = _computer.Price.ToString();
+            producer.Text = _computer.Producer.ToString();
+            cpu.Text = _computer.Processor.ToString();
+            coresCount.Text = _computer.CoresCount.ToString();
+            ram.Text = _computer.RAM.ToString();
+            graphicsCard.Text = _computer.GraphicsCard.ToString();
+            memory.Text = _computer.Memory.ToString();
+            bodySize.Text = _computer.BodySize.ToString();
+            explStart.Text = _computer.RegDate.ToString();
+            amortPeriod.Text = _computer.AmortPeriod.ToString();
         }
 
         private void enableRedact_CheckStateChanged(object sender, EventArgs e)
         {
-            ChangeState();            
+            ChangeState();
         }
 
         private void ChangeState()
@@ -66,16 +67,23 @@ namespace Accounting.WinForms
                 switch (control)
                 {
                     case TextBox tb:
+                    {
                         tb.ReadOnly = !tb.ReadOnly;
                         break;
+                    }
                     case ComboBox cb:
+                    {
                         cb.Enabled = !cb.Enabled;
                         break;
+                    }
                     case DateTimePicker dtp:
+                    {
                         dtp.Enabled = !dtp.Enabled;
                         break;
+                    }
                 }
             }
+
             update.Visible = !update.Visible;
         }
 
@@ -87,10 +95,23 @@ namespace Accounting.WinForms
                 " price, producer, cpu, numberOfCores, ram, graphicsCard, status, employee, location," +
                 " bodySize, explutationStart, amortisationPeriod, memory)" +
                 " VALUES (@n,@rn,@rd,@p,@prod,@c,@numc,@ra,@gc,@s,@emp,@l,@bs,@exp,@am,@m)";
-                var updateCommand = "UPDATE computers SET name=@n, registerNumber=@rn, registrationDate=@rd," +
-                    " price=@p, producer=@prod, cpu=@c, numberOfCores=@numc, ram=@ra, graphicsCard=@gc," +
-                    " status=@s, employee=@emp, location=@l, bodySize=@bs, explutationStart=@exp," +
-                    " amortisationPeriod=@am, memory=@m WHERE computerId = @id";
+                var updateCommand = "UPDATE computers SET name=@name," +
+                                    " registerNumber=@rn," +
+                                    " registrationDate=@rd," +
+                                    " price=@p," +
+                                    " producer=@prod," +
+                                    " cpu=@c, " +
+                                    "numberOfCores=@numc, " +
+                                    "ram=@ra, " +
+                                    "graphicsCard=@gc," +
+                                    " status=@s, " +
+                                    "employee=@emp, " +
+                                    "location=@location, " +
+                                    "bodySize=@bodySize, " +
+                                    "explutationStart=@exp," +
+                                    " amortisationPeriod=@am, " +
+                                    "memory=@m " +
+                                    "WHERE computerId = @id";
 
                 using (var db = new DbContext().GetConnection())
                 {
@@ -114,11 +135,11 @@ namespace Accounting.WinForms
                     command.Parameters.Add("@m", MySqlDbType.Double).Value = memory.Text;
                     //(@n,@rn,@rd,@p,@prod,@c,@numc,@ra,@gc,@s,@emp,@l,@bs,@exp,@am,@m)
                     command.Connection = db;
-                    if (computer.Name == null)
+                    if (_computer.Name == null)
                         command.CommandText = insertCommand;
                     else
                     {
-                        command.Parameters.Add("@id", MySqlDbType.Int32).Value = computer.Id;
+                        command.Parameters.Add("@id", MySqlDbType.Int32).Value = _computer.Id;
                         command.CommandText = updateCommand;
                     }
                     command.ExecuteNonQuery();
@@ -134,7 +155,7 @@ namespace Accounting.WinForms
         private void SetComboBoxItems(string commandStr, ComboBox box)
         {
             commandStr += " WHERE isDeleted = 0";
-            using(var db = new DbContext().GetConnection())
+            using (var db = new DbContext().GetConnection())
             {
                 db.Open();
                 var command = new MySqlCommand(commandStr, db);
