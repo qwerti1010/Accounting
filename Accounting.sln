@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accounting", "WinForms\Accounting.csproj", "{B27EAF05-E6A1-4F8A-A7E5-5BA3A3B3F898}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLibrary", "..\DBLibrary\DBLibrary.csproj", "{5F0F8AA6-F359-464C-9B53-33370F196DAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B27EAF05-E6A1-4F8A-A7E5-5BA3A3B3F898}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B27EAF05-E6A1-4F8A-A7E5-5BA3A3B3F898}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B27EAF05-E6A1-4F8A-A7E5-5BA3A3B3F898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F0F8AA6-F359-464C-9B53-33370F196DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F0F8AA6-F359-464C-9B53-33370F196DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F0F8AA6-F359-464C-9B53-33370F196DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F0F8AA6-F359-464C-9B53-33370F196DAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

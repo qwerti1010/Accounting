@@ -3,13 +3,19 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable></Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MySqlConnector" Version="2.1.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DBLibrary">
+      <HintPath>..\..\DBLibrary\bin\Debug\net6.0\DBLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,33 +1,33 @@
-﻿namespace Accounting
+﻿namespace Accounting;
+
+partial class LoginForm
 {
-    partial class Form1
+    /// <summary>
+    ///  Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    ///  Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        if (disposing && (components != null))
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
+            components.Dispose();
         }
+        base.Dispose(disposing);
+    }
 
-        #region Windows Form Designer generated code
+    #region Windows Form Designer generated code
 
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+    /// <summary>
+    ///  Required method for Designer support - do not modify
+    ///  the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
             this.signUp = new System.Windows.Forms.Button();
             this.passTextBox = new System.Windows.Forms.TextBox();
             this.passLabel = new System.Windows.Forms.Label();
@@ -41,9 +41,9 @@
             this.signUp.Name = "signUp";
             this.signUp.Size = new System.Drawing.Size(125, 43);
             this.signUp.TabIndex = 2;
-            this.signUp.Text = "Sign Up";
+            this.signUp.Text = "Войти";
             this.signUp.UseVisualStyleBackColor = true;
-            this.signUp.Click += new System.EventHandler(this.signUp_Click);
+            this.signUp.Click += new System.EventHandler(this.SignUp_Click);
             // 
             // passTextBox
             // 
@@ -60,9 +60,9 @@
             this.passLabel.AutoSize = true;
             this.passLabel.Location = new System.Drawing.Point(54, 164);
             this.passLabel.Name = "passLabel";
-            this.passLabel.Size = new System.Drawing.Size(91, 25);
+            this.passLabel.Size = new System.Drawing.Size(78, 25);
             this.passLabel.TabIndex = 2;
-            this.passLabel.Text = "Password:";
+            this.passLabel.Text = "Пароль:";
             // 
             // loginTextBox
             // 
@@ -76,11 +76,11 @@
             this.loginLabel.AutoSize = true;
             this.loginLabel.Location = new System.Drawing.Point(53, 70);
             this.loginLabel.Name = "loginLabel";
-            this.loginLabel.Size = new System.Drawing.Size(60, 25);
+            this.loginLabel.Size = new System.Drawing.Size(66, 25);
             this.loginLabel.TabIndex = 4;
-            this.loginLabel.Text = "Login:";
+            this.loginLabel.Text = "Логин:";
             // 
-            // Form1
+            // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -92,20 +92,19 @@
             this.Controls.Add(this.passTextBox);
             this.Controls.Add(this.signUp);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Form1";
+            this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        }
-
-        #endregion
-
-        private Button signUp;
-        private TextBox passTextBox;
-        private Label passLabel;
-        private TextBox loginTextBox;
-        private Label loginLabel;
     }
+
+    #endregion
+
+    private Button signUp;
+    private TextBox passTextBox;
+    private Label passLabel;
+    private TextBox loginTextBox;
+    private Label loginLabel;
 }

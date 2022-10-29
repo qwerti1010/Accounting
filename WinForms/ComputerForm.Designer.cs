@@ -1,33 +1,33 @@
-﻿namespace Accounting.WinForms
+﻿namespace Accounting;
+
+partial class ComputerForm
 {
-    partial class Form3
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        if (disposing && (components != null))
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
+            components.Dispose();
         }
+        base.Dispose(disposing);
+    }
 
-        #region Windows Form Designer generated code
+    #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
             this.name = new System.Windows.Forms.TextBox();
             this.producer = new System.Windows.Forms.TextBox();
             this.price = new System.Windows.Forms.TextBox();
@@ -328,23 +328,23 @@
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(268, 935);
+            this.close.Location = new System.Drawing.Point(406, 935);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(112, 54);
             this.close.TabIndex = 37;
             this.close.Text = "Выход";
             this.close.UseVisualStyleBackColor = true;
-            this.close.Click += new System.EventHandler(this.close_Click);
+            this.close.Click += new System.EventHandler(this.Close_Click);
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(406, 935);
+            this.update.Location = new System.Drawing.Point(268, 935);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(112, 54);
             this.update.TabIndex = 38;
             this.update.Text = "Изменить";
             this.update.UseVisualStyleBackColor = true;
-            this.update.Click += new System.EventHandler(this.update_Click);
+            this.update.Click += new System.EventHandler(this.Update_Click);
             // 
             // enableRedact
             // 
@@ -355,9 +355,9 @@
             this.enableRedact.TabIndex = 40;
             this.enableRedact.Text = "Включить\r\nредактирование";
             this.enableRedact.UseVisualStyleBackColor = true;
-            this.enableRedact.CheckStateChanged += new System.EventHandler(this.enableRedact_CheckStateChanged);
+            this.enableRedact.CheckStateChanged += new System.EventHandler(this.EnableRedact_CheckStateChanged);
             // 
-            // Form3
+            // ComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -397,50 +397,48 @@
             this.Controls.Add(this.price);
             this.Controls.Add(this.regNumber);
             this.Controls.Add(this.name);
-            this.Name = "Form3";
+            this.Name = "ComputerForm";
             this.Text = "Form3";
-            this.Load += new System.EventHandler(this.Form3_Load);
+            this.Load += new System.EventHandler(this.ComputerForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        }
-
-        #endregion
-
-        private TextBox name;
-        private TextBox producer;
-        private TextBox price;
-        private TextBox regNumber;
-        private TextBox amortPeriod;
-        private TextBox bodySize;
-        private TextBox memory;
-        private TextBox graphicsCard;
-        private TextBox ram;
-        private TextBox coresCount;
-        private TextBox cpu;
-        private ComboBox location;
-        private ComboBox status;
-        private ComboBox employee;
-        private DateTimePicker regDate;
-        private DateTimePicker explStart;
-        private Label label1;
-        private Label label2;
-        private Label label3;
-        private Label label4;
-        private Label label5;
-        private Label label6;
-        private Label label7;
-        private Label label8;
-        private Label label9;
-        private Label label10;
-        private Label label11;
-        private Label label12;
-        private Label label13;
-        private Label label14;
-        private Label label15;
-        private Label label16;
-        private Button close;
-        private Button update;
-        private CheckBox enableRedact;
     }
+
+    #endregion
+    private TextBox name;
+    private TextBox producer;
+    private TextBox price;
+    private TextBox regNumber;
+    private TextBox amortPeriod;
+    private TextBox bodySize;
+    private TextBox memory;
+    private TextBox graphicsCard;
+    private TextBox ram;
+    private TextBox coresCount;
+    private TextBox cpu;
+    private ComboBox location;
+    private ComboBox status;
+    private ComboBox employee;
+    private DateTimePicker regDate;
+    private DateTimePicker explStart;
+    private Label label1;
+    private Label label2;
+    private Label label3;
+    private Label label4;
+    private Label label5;
+    private Label label6;
+    private Label label7;
+    private Label label8;
+    private Label label9;
+    private Label label10;
+    private Label label11;
+    private Label label12;
+    private Label label13;
+    private Label label14;
+    private Label label15;
+    private Label label16;
+    private Button close;
+    private Button update;
+    private CheckBox enableRedact;
 }
