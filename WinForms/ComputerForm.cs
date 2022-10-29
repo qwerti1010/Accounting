@@ -32,7 +32,7 @@ public partial class ComputerForm : Form
 
     private void ComputerForm_Load(object sender, EventArgs e)
     {
-        foreach (var c in _computers)
+          foreach (var c in _computers)
         {
             location.Items.Add(c.Location);
             status.Items.Add(c.Status);
