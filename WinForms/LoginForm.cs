@@ -4,7 +4,7 @@ namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private EmployeeRep _employeeRep;
+    private IEmployeeRepository _employeeRep;
     private DbContext _dbContext;
     public LoginForm()
     {
@@ -18,7 +18,7 @@ public partial class LoginForm : Form
         _dbContext.Open();
         var employee = _employeeRep.GetByLogin(loginTextBox.Text);
         _dbContext.Close();
-        if (employee.ID == 0)
+        if (employee is null || employee.Login.CompareTo(loginTextBox.Text) != 0)
         {
             MessageBox.Show("Неверный логин");
             return;
@@ -32,5 +32,5 @@ public partial class LoginForm : Form
         var form = new MainForm(employee);
         form.ShowDialog();
         Hide();
-    }    
+    }
 }

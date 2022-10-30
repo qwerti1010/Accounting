@@ -397,6 +397,7 @@ partial class ComputerForm
             this.Controls.Add(this.price);
             this.Controls.Add(this.regNumber);
             this.Controls.Add(this.name);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ComputerForm";
             this.Text = "Form3";
             this.Load += new System.EventHandler(this.ComputerForm_Load);

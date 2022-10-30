@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DBLibrary;
 
-public class EmployeeRep : IRepository<Employee>
+public class EmployeeRep : IEmployeeRepository
 {
     private readonly MySqlConnection _connection;
 
@@ -26,18 +26,17 @@ public class EmployeeRep : IRepository<Employee>
         return employees;
     }
 
-    public Employee GetById(uint id)
-    {
-        var employee = new Employee();        
+    public Employee? GetById(uint id)
+    {               
         var commandStr = "SELECT * FROM employees WHERE id = @id AND isDeleted = 0";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            employee = Record(reader);
+            return Record(reader);
         }        
-        return employee;
+        return null;
     }
 
     public void Create(Employee entity)
@@ -56,7 +55,7 @@ public class EmployeeRep : IRepository<Employee>
         command.ExecuteNonQuery();        
     }   
 
-    public Employee Record(IDataRecord record)
+    private Employee Record(IDataRecord record)
     {
         var log = record["login"];
         var pass = record["password"];
@@ -88,19 +87,18 @@ public class EmployeeRep : IRepository<Employee>
         command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = entity.Phone;
     }
 
-    public Employee GetByLogin(string login)
-    {
-        var employee = new Employee();         
+    public Employee? GetByLogin(string login)
+    {                 
         var commandString = "SELECT * FROM employees WHERE login = @login";
         var command = new MySqlCommand(commandString, _connection);
         command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
         var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            employee = Record(reader);
+            return Record(reader);
         }
         reader.Close();        
-        return employee;
+        return null;
     }
  }
 

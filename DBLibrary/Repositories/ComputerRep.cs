@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DBLibrary;
 
-public class ComputerRep : IRepository<Computer>
+public class ComputerRep : IComputerRepository
 {
     private readonly MySqlConnection _connection;
 
@@ -25,18 +25,17 @@ public class ComputerRep : IRepository<Computer>
         return computers;
     }
 
-    public Computer GetById(uint id)
-    {
-        var computer = new Computer(); 
+    public Computer? GetById(uint id)
+    {; 
         var commandStr = "SELECT * FROM computers WHERE computerid = @id AND isDeleted = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            computer = Record(reader);
+            return Record(reader);
         }       
-        return computer;
+        return null;
     }
 
     public void Create(Computer entity)
@@ -67,7 +66,7 @@ public class ComputerRep : IRepository<Computer>
         command.ExecuteNonQuery();        
     }
 
-    public Computer Record(IDataRecord record)
+    private Computer Record(IDataRecord record)
     {
         return new Computer
         {

@@ -6,7 +6,7 @@ public partial class ComputerForm : Form
 {
     private Computer _computer;
     private List<Computer> _computers;
-    private ComputerRep _computerRep;
+    private IComputerRepository _computerRep;
     private DbContext _dbContext;
     public ComputerForm(List<Computer> computers)
     {
@@ -32,12 +32,7 @@ public partial class ComputerForm : Form
 
     private void ComputerForm_Load(object sender, EventArgs e)
     {
-          foreach (var c in _computers)
-        {
-            location.Items.Add(c.Location);
-            status.Items.Add(c.Status);
-            employee.Items.Add(c.Employee);
-        }
+        AddItemsToComboBoxes();
         if (_computer == null)
         {
             Text = "Добавить новое устройство";
@@ -53,7 +48,7 @@ public partial class ComputerForm : Form
         status.Text = _computer.Status;
         employee.Text = _computer.Employee;
         regNumber.Text = _computer.RegNumber;
-        regDate.Text = _computer.RegDate.ToShortDateString();
+        regDate.Value = _computer.RegDate;
         price.Text = _computer.Price.ToString();
         producer.Text = _computer.Producer.ToString();
         cpu.Text = _computer.Processor.ToString();
@@ -62,7 +57,7 @@ public partial class ComputerForm : Form
         graphicsCard.Text = _computer.GraphicsCard.ToString();
         memory.Text = _computer.Memory.ToString();
         bodySize.Text = _computer.BodySize.ToString();
-        explStart.Text = _computer.RegDate.ToString();
+        explStart.Value = _computer.ExplDate;
         amortPeriod.Text = _computer.AmortPeriod.ToString();
     }
 
@@ -94,7 +89,7 @@ public partial class ComputerForm : Form
     private void Update_Click(object sender, EventArgs e)
     {
         _dbContext.Open();
-        if (_computer == null)
+        if (_computer is null)
         {
             _computer = new Computer();
         }        
@@ -102,7 +97,7 @@ public partial class ComputerForm : Form
         {
             _computer.Name = name.Text;
             _computer.RegNumber = regNumber.Text;
-            _computer.RegDate = DateTime.Parse(regDate.Text);
+            _computer.RegDate = regDate.Value;
             _computer.Price = decimal.Parse(price.Text);
             _computer.Producer = producer.Text;
             _computer.Processor = cpu.Text;
@@ -113,7 +108,7 @@ public partial class ComputerForm : Form
             _computer.Employee = employee.Text;
             _computer.Location = location.Text;
             _computer.BodySize = double.Parse(bodySize.Text);
-            _computer.ExplDate = DateTime.Parse(explStart.Text);
+            _computer.ExplDate = explStart.Value;
             _computer.AmortPeriod = int.Parse(amortPeriod.Text);
             _computer.Memory = double.Parse(memory.Text);
             if (_computer.ID == 0)
@@ -134,5 +129,21 @@ public partial class ComputerForm : Form
             MessageBox.Show("Некорректные данные");
         }
         _dbContext.Close();
+    }
+
+    private void AddItemsToComboBoxes()
+    {
+        var locations = new List<string>();
+        var stat = new List<string>();
+        var employees = new List<string>();
+        foreach (var computer in _computers)
+        {
+            locations.Add(computer.Location);
+            stat.Add(computer.Status);
+            employees.Add(computer.Employee);
+        }
+        location.Items.AddRange(locations.Distinct().ToArray());
+        status.Items.AddRange(locations.Distinct().ToArray());
+        employee.Items.AddRange(locations.Distinct().ToArray());
     }
 }

@@ -8,11 +8,12 @@ public partial class MainForm : Form
     private Computer _computer;
     private List<Employee> _employees;
     private List<Computer> _computers;
-    private EmployeeRep _employeeRep;
-    private ComputerRep _computerRep;
+    private List<Computer> _filredComputers;
+    private IEmployeeRepository _employeeRep;
+    private IComputerRepository _computerRep;
     private List<(string, string)> _empColumns;
     private List<(string, string)> _computerColumns;
-    private DbContext _dbContext;
+    private DbContext _dbContext;    
 
     public MainForm(Employee employee)
     {
@@ -20,8 +21,9 @@ public partial class MainForm : Form
         _employee = employee;
         _employeeRep = new EmployeeRep(_dbContext);
         _computerRep = new ComputerRep(_dbContext);
+        _filredComputers = new List<Computer>();
         InitializeComponent();
-        tabPage.SelectTab(nameof(tabPage2));
+        mainFormTabPage.SelectTab(nameof(tabPage2));
         _empColumns = new List<(string, string)>
             {
                 ("employeeId", "Id"),
@@ -59,10 +61,10 @@ public partial class MainForm : Form
         _computers = _computerRep.GetAll();
         _dbContext.Close();
         CreateColumns(_empColumns);
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
     }
 
-    public void CreateColumns(List<(string, string)> columnsNames)
+    private void CreateColumns(List<(string, string)> columnsNames)
     {
         dgv.Columns.Clear();
         foreach (var name in columnsNames)
@@ -71,12 +73,12 @@ public partial class MainForm : Form
         }
     }
 
-    public void ReadSingleRow(Employee employee)
+    private void ReadSingleRow(Employee employee)
     {
         dgv.Rows.Add(employee.ID, employee.Name, employee.Position, employee.Phone);
     }
 
-    public void ReadSingleRow(Computer computer)
+    private void ReadSingleRow(Computer computer)
     {
         dgv.Rows.Add(computer.ID, computer.Name, computer.RegNumber, computer.RegDate,
             computer.Price, computer.Producer, computer.Processor, computer.CoresCount, computer.RAM,
@@ -84,26 +86,39 @@ public partial class MainForm : Form
             computer.ExplDate, computer.AmortPeriod, computer.Memory);
     }
 
-    public void RefreshDataGrid()
+    private void RefreshDataGrid(DataGridViewCondition condition)
     {
         dgv.Rows.Clear();
-        if (dgv.ColumnCount == 4)
+        switch (condition)
         {
-            foreach (var e in _employees)
-            {
-                ReadSingleRow(e);
-            }
-        }
-        else
-        {
-            foreach (var c in _computers)
-            {
-                ReadSingleRow(c);
-            }
-        }
+            case DataGridViewCondition.DeviceTab:
+                {
+                    foreach (var computer in _computers)
+                    {
+                        ReadSingleRow(computer);
+                    }
+                    break;
+                }
+            case DataGridViewCondition.EmployeeTab:
+                {
+                    foreach (var employee in _employees)
+                    {
+                        ReadSingleRow(employee);
+                    }
+                    break;
+                }
+            case DataGridViewCondition.FilterTab:
+                {
+                    foreach (var computer in _filredComputers)
+                    {
+                        ReadSingleRow(computer);
+                    }
+                    break;
+                }
+        }        
     }
 
-    public void ClearTextBoxes()
+    private void ClearTextBoxes()
     {
         nameTextBox.Clear();
         positionTextBox.Clear();
@@ -140,7 +155,7 @@ public partial class MainForm : Form
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
         _employees = _employeeRep.GetAll();
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _dbContext.Close();
     }
 
@@ -152,7 +167,7 @@ public partial class MainForm : Form
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
         _employees = _employeeRep.GetAll();
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _dbContext.Close();
     }
 
@@ -173,7 +188,7 @@ public partial class MainForm : Form
         }
         _employees = _employeeRep.GetAll();
         ClearTextBoxes();
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _dbContext.Close();
     }    
 
@@ -184,13 +199,19 @@ public partial class MainForm : Form
             case 0:
                 {
                     CreateColumns(_computerColumns);
-                    RefreshDataGrid();
+                    RefreshDataGrid(DataGridViewCondition.DeviceTab);                    
                     break;
                 }
             case 1:
                 {
                     CreateColumns(_empColumns);
-                    RefreshDataGrid();
+                    RefreshDataGrid(DataGridViewCondition.EmployeeTab);                    
+                    break;
+                }
+            case 2:
+                {
+                    CreateColumns(_computerColumns);
+                    RefreshDataGrid(DataGridViewCondition.FilterTab);
                     break;
                 }
         }
@@ -199,7 +220,7 @@ public partial class MainForm : Form
     private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
         
-        if (tabPage.SelectedIndex == 1 && e.RowIndex >= 0)
+        if (mainFormTabPage.SelectedIndex == 1 && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];
             _employee = _employees.First(e => e.ID == (uint)row.Cells[0].Value);
@@ -209,7 +230,7 @@ public partial class MainForm : Form
             updateEmployee.Enabled = true;
             deleteEmployee.Enabled = true;
         }
-        if (tabPage.SelectedIndex == 0 && e.RowIndex >= 0)
+        if (mainFormTabPage.SelectedIndex == 0 && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];
             _computer = _computers.First(c => c.ID == (uint)row.Cells[0].Value);
@@ -231,7 +252,7 @@ public partial class MainForm : Form
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
         _computers = _computerRep.GetAll();
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.DeviceTab);
         _dbContext.Close();
     }
 
@@ -246,6 +267,34 @@ public partial class MainForm : Form
         _dbContext.Open();
         _computers = _computerRep.GetAll();
         _dbContext.Close();
-        RefreshDataGrid();
+        RefreshDataGrid(DataGridViewCondition.DeviceTab);
+    }
+
+    private void ApplyFilters_Click(object sender, EventArgs e)
+    {
+        if (String.IsNullOrEmpty(computerName.Text) && String.IsNullOrEmpty(computerNum.Text)
+            && String.IsNullOrEmpty(computerProducer.Text) && regDatePicker.Enabled == false)
+        {
+            MessageBox.Show("Фильтры отсутствуют");
+            return;
+        }
+
+        _filredComputers = _computers.Where(c =>
+        {
+            var nameFilter = String.IsNullOrEmpty(computerName.Text) ? c.Name : computerName.Text;
+            var numberFilter = String.IsNullOrEmpty(computerNum.Text) ? c.RegNumber : computerNum.Text;
+            var producerFilter = String.IsNullOrEmpty(computerProducer.Text) ? c.Producer : computerProducer.Text;
+            var regDateFilter = regDatePicker.Enabled == false ? c.RegDate : regDatePicker.Value;
+            return c.Name == nameFilter 
+                && c.RegNumber == numberFilter
+                && c.Producer == producerFilter
+                && c.RegDate.ToShortDateString().CompareTo(regDateFilter.ToShortDateString()) == 0;
+        }).ToList();
+        RefreshDataGrid(DataGridViewCondition.FilterTab);
+    }
+
+    private void regCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        regDatePicker.Enabled = !regDatePicker.Enabled;
     }
 }

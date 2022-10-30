@@ -94,10 +94,9 @@ partial class LoginForm
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
+            this.Text = "Login";            
             this.ResumeLayout(false);
             this.PerformLayout();
-
     }
 
     #endregion
