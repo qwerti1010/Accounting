@@ -293,7 +293,7 @@ public partial class MainForm : Form
         RefreshDataGrid(DataGridViewCondition.FilterTab);
     }
 
-    private void regCheckBox_CheckedChanged(object sender, EventArgs e)
+    private void RegCheckBox_CheckedChanged(object sender, EventArgs e)
     {
         regDatePicker.Enabled = !regDatePicker.Enabled;
     }

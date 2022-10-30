@@ -360,7 +360,7 @@ partial class MainForm
             this.regCheckBox.Size = new System.Drawing.Size(22, 21);
             this.regCheckBox.TabIndex = 12;
             this.regCheckBox.UseVisualStyleBackColor = true;
-            this.regCheckBox.CheckedChanged += new System.EventHandler(this.regCheckBox_CheckedChanged);
+            this.regCheckBox.CheckedChanged += new System.EventHandler(this.RegCheckBox_CheckedChanged);
             // 
             // MainForm
             // 
