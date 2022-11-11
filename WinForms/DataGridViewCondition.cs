@@ -1,6 +1,6 @@
 ﻿namespace Accounting;
 
-enum DataGridViewCondition
+internal enum DataGridViewCondition
 {
     DeviceTab,
     EmployeeTab,

@@ -29,16 +29,7 @@ partial class ComputerForm
     private void InitializeComponent()
     {
             this.name = new System.Windows.Forms.TextBox();
-            this.producer = new System.Windows.Forms.TextBox();
             this.price = new System.Windows.Forms.TextBox();
-            this.regNumber = new System.Windows.Forms.TextBox();
-            this.amortPeriod = new System.Windows.Forms.TextBox();
-            this.bodySize = new System.Windows.Forms.TextBox();
-            this.memory = new System.Windows.Forms.TextBox();
-            this.graphicsCard = new System.Windows.Forms.TextBox();
-            this.ram = new System.Windows.Forms.TextBox();
-            this.coresCount = new System.Windows.Forms.TextBox();
-            this.cpu = new System.Windows.Forms.TextBox();
             this.location = new System.Windows.Forms.ComboBox();
             this.status = new System.Windows.Forms.ComboBox();
             this.employee = new System.Windows.Forms.ComboBox();
@@ -51,18 +42,21 @@ partial class ComputerForm
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
             this.close = new System.Windows.Forms.Button();
             this.update = new System.Windows.Forms.Button();
             this.enableRedact = new System.Windows.Forms.CheckBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ram = new System.Windows.Forms.ComboBox();
+            this.graphicsCard = new System.Windows.Forms.ComboBox();
+            this.memory = new System.Windows.Forms.ComboBox();
+            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.cpu = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // name
@@ -72,13 +66,6 @@ partial class ComputerForm
             this.name.Size = new System.Drawing.Size(250, 31);
             this.name.TabIndex = 0;
             // 
-            // producer
-            // 
-            this.producer.Location = new System.Drawing.Point(268, 406);
-            this.producer.Name = "producer";
-            this.producer.Size = new System.Drawing.Size(250, 31);
-            this.producer.TabIndex = 7;
-            // 
             // price
             // 
             this.price.Location = new System.Drawing.Point(268, 350);
@@ -86,64 +73,9 @@ partial class ComputerForm
             this.price.Size = new System.Drawing.Size(250, 31);
             this.price.TabIndex = 6;
             // 
-            // regNumber
-            // 
-            this.regNumber.Location = new System.Drawing.Point(268, 242);
-            this.regNumber.Name = "regNumber";
-            this.regNumber.Size = new System.Drawing.Size(250, 31);
-            this.regNumber.TabIndex = 4;
-            // 
-            // amortPeriod
-            // 
-            this.amortPeriod.Location = new System.Drawing.Point(268, 884);
-            this.amortPeriod.Name = "amortPeriod";
-            this.amortPeriod.Size = new System.Drawing.Size(250, 31);
-            this.amortPeriod.TabIndex = 15;
-            // 
-            // bodySize
-            // 
-            this.bodySize.Location = new System.Drawing.Point(268, 770);
-            this.bodySize.Name = "bodySize";
-            this.bodySize.Size = new System.Drawing.Size(250, 31);
-            this.bodySize.TabIndex = 13;
-            // 
-            // memory
-            // 
-            this.memory.Location = new System.Drawing.Point(268, 710);
-            this.memory.Name = "memory";
-            this.memory.Size = new System.Drawing.Size(250, 31);
-            this.memory.TabIndex = 12;
-            // 
-            // graphicsCard
-            // 
-            this.graphicsCard.Location = new System.Drawing.Point(268, 650);
-            this.graphicsCard.Name = "graphicsCard";
-            this.graphicsCard.Size = new System.Drawing.Size(250, 31);
-            this.graphicsCard.TabIndex = 11;
-            // 
-            // ram
-            // 
-            this.ram.Location = new System.Drawing.Point(268, 594);
-            this.ram.Name = "ram";
-            this.ram.Size = new System.Drawing.Size(250, 31);
-            this.ram.TabIndex = 10;
-            // 
-            // coresCount
-            // 
-            this.coresCount.Location = new System.Drawing.Point(268, 527);
-            this.coresCount.Name = "coresCount";
-            this.coresCount.Size = new System.Drawing.Size(250, 31);
-            this.coresCount.TabIndex = 9;
-            // 
-            // cpu
-            // 
-            this.cpu.Location = new System.Drawing.Point(268, 465);
-            this.cpu.Name = "cpu";
-            this.cpu.Size = new System.Drawing.Size(250, 31);
-            this.cpu.TabIndex = 8;
-            // 
             // location
             // 
+            this.location.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.location.FormattingEnabled = true;
             this.location.Location = new System.Drawing.Point(268, 75);
             this.location.Name = "location";
@@ -152,6 +84,7 @@ partial class ComputerForm
             // 
             // status
             // 
+            this.status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.status.FormattingEnabled = true;
             this.status.Location = new System.Drawing.Point(268, 131);
             this.status.Name = "status";
@@ -160,6 +93,7 @@ partial class ComputerForm
             // 
             // employee
             // 
+            this.employee.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.employee.FormattingEnabled = true;
             this.employee.Location = new System.Drawing.Point(268, 185);
             this.employee.Name = "employee";
@@ -177,7 +111,7 @@ partial class ComputerForm
             // explStart
             // 
             this.explStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.explStart.Location = new System.Drawing.Point(268, 818);
+            this.explStart.Location = new System.Drawing.Point(268, 690);
             this.explStart.Name = "explStart";
             this.explStart.Size = new System.Drawing.Size(250, 31);
             this.explStart.TabIndex = 20;
@@ -196,9 +130,9 @@ partial class ComputerForm
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(26, 83);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 25);
+            this.label2.Size = new System.Drawing.Size(168, 25);
             this.label2.TabIndex = 22;
-            this.label2.Text = "Место";
+            this.label2.Text = "Материнская плата";
             // 
             // label3
             // 
@@ -223,9 +157,9 @@ partial class ComputerForm
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(26, 248);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(183, 25);
+            this.label5.Size = new System.Drawing.Size(121, 25);
             this.label5.TabIndex = 25;
-            this.label5.Text = "Инвентарный номер";
+            this.label5.Text = "Блок питания";
             // 
             // label6
             // 
@@ -245,92 +179,65 @@ partial class ComputerForm
             this.label7.TabIndex = 27;
             this.label7.Text = "Цена (руб.)";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(26, 412);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(140, 25);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "Производитель";
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(26, 471);
+            this.label9.Location = new System.Drawing.Point(26, 412);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(105, 25);
             this.label9.TabIndex = 29;
             this.label9.Text = "Процессор";
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(26, 518);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(151, 50);
-            this.label10.TabIndex = 30;
-            this.label10.Text = "Количество ядер\r\nпроцессора\r\n";
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(26, 585);
+            this.label11.Location = new System.Drawing.Point(26, 469);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(182, 50);
+            this.label11.Size = new System.Drawing.Size(182, 25);
             this.label11.TabIndex = 31;
-            this.label11.Text = "Объем оперативной\r\nпамяти (гб.)";
+            this.label11.Text = "Оперативная память";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 656);
+            this.label12.Location = new System.Drawing.Point(26, 528);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(194, 25);
+            this.label12.Size = new System.Drawing.Size(107, 25);
             this.label12.TabIndex = 32;
-            this.label12.Text = "Название видеокарты";
+            this.label12.Text = "Видеокарта";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 700);
+            this.label13.Location = new System.Drawing.Point(26, 585);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(171, 50);
+            this.label13.Size = new System.Drawing.Size(156, 25);
             this.label13.TabIndex = 33;
-            this.label13.Text = "Объем постоянной\r\nпамяти (тб.)\r\n";
+            this.label13.Text = "Хранение данных";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(26, 776);
+            this.label14.Location = new System.Drawing.Point(26, 645);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(200, 25);
+            this.label14.Size = new System.Drawing.Size(71, 25);
             this.label14.TabIndex = 34;
-            this.label14.Text = "Размеры корпуса (см²)";
+            this.label14.Text = "Корпус";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(26, 824);
+            this.label15.Location = new System.Drawing.Point(26, 696);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(224, 25);
             this.label15.TabIndex = 35;
             this.label15.Text = "Дата начала эксплуатации";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(26, 874);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(168, 50);
-            this.label16.TabIndex = 36;
-            this.label16.Text = "Срок амортизации\r\n(кол-во месяцев)";
-            // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(406, 935);
+            this.close.Location = new System.Drawing.Point(426, 776);
             this.close.Name = "close";
-            this.close.Size = new System.Drawing.Size(112, 54);
+            this.close.Size = new System.Drawing.Size(143, 66);
             this.close.TabIndex = 37;
             this.close.Text = "Выход";
             this.close.UseVisualStyleBackColor = true;
@@ -338,9 +245,9 @@ partial class ComputerForm
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(268, 935);
+            this.update.Location = new System.Drawing.Point(214, 776);
             this.update.Name = "update";
-            this.update.Size = new System.Drawing.Size(112, 54);
+            this.update.Size = new System.Drawing.Size(143, 66);
             this.update.TabIndex = 38;
             this.update.Text = "Изменить";
             this.update.UseVisualStyleBackColor = true;
@@ -357,23 +264,80 @@ partial class ComputerForm
             this.enableRedact.UseVisualStyleBackColor = true;
             this.enableRedact.CheckStateChanged += new System.EventHandler(this.EnableRedact_CheckStateChanged);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(268, 240);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(250, 33);
+            this.comboBox1.TabIndex = 41;
+            // 
+            // ram
+            // 
+            this.ram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ram.FormattingEnabled = true;
+            this.ram.Location = new System.Drawing.Point(268, 461);
+            this.ram.Name = "ram";
+            this.ram.Size = new System.Drawing.Size(250, 33);
+            this.ram.TabIndex = 43;
+            // 
+            // graphicsCard
+            // 
+            this.graphicsCard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.graphicsCard.FormattingEnabled = true;
+            this.graphicsCard.Location = new System.Drawing.Point(268, 520);
+            this.graphicsCard.Name = "graphicsCard";
+            this.graphicsCard.Size = new System.Drawing.Size(250, 33);
+            this.graphicsCard.TabIndex = 44;
+            // 
+            // memory
+            // 
+            this.memory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.memory.FormattingEnabled = true;
+            this.memory.Location = new System.Drawing.Point(268, 577);
+            this.memory.Name = "memory";
+            this.memory.Size = new System.Drawing.Size(250, 33);
+            this.memory.TabIndex = 45;
+            // 
+            // comboBox6
+            // 
+            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox6.FormattingEnabled = true;
+            this.comboBox6.Location = new System.Drawing.Point(268, 637);
+            this.comboBox6.Name = "comboBox6";
+            this.comboBox6.Size = new System.Drawing.Size(250, 33);
+            this.comboBox6.TabIndex = 46;
+            // 
+            // cpu
+            // 
+            this.cpu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cpu.FormattingEnabled = true;
+            this.cpu.Location = new System.Drawing.Point(268, 409);
+            this.cpu.Name = "cpu";
+            this.cpu.Size = new System.Drawing.Size(250, 33);
+            this.cpu.TabIndex = 47;
+            // 
             // ComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 1001);
+            this.ClientSize = new System.Drawing.Size(699, 858);
+            this.Controls.Add(this.cpu);
+            this.Controls.Add(this.comboBox6);
+            this.Controls.Add(this.memory);
+            this.Controls.Add(this.graphicsCard);
+            this.Controls.Add(this.ram);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.enableRedact);
             this.Controls.Add(this.update);
             this.Controls.Add(this.close);
-            this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -386,16 +350,7 @@ partial class ComputerForm
             this.Controls.Add(this.employee);
             this.Controls.Add(this.status);
             this.Controls.Add(this.location);
-            this.Controls.Add(this.amortPeriod);
-            this.Controls.Add(this.bodySize);
-            this.Controls.Add(this.memory);
-            this.Controls.Add(this.graphicsCard);
-            this.Controls.Add(this.ram);
-            this.Controls.Add(this.coresCount);
-            this.Controls.Add(this.cpu);
-            this.Controls.Add(this.producer);
             this.Controls.Add(this.price);
-            this.Controls.Add(this.regNumber);
             this.Controls.Add(this.name);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ComputerForm";
@@ -408,16 +363,7 @@ partial class ComputerForm
 
     #endregion
     private TextBox name;
-    private TextBox producer;
     private TextBox price;
-    private TextBox regNumber;
-    private TextBox amortPeriod;
-    private TextBox bodySize;
-    private TextBox memory;
-    private TextBox graphicsCard;
-    private TextBox ram;
-    private TextBox coresCount;
-    private TextBox cpu;
     private ComboBox location;
     private ComboBox status;
     private ComboBox employee;
@@ -430,16 +376,19 @@ partial class ComputerForm
     private Label label5;
     private Label label6;
     private Label label7;
-    private Label label8;
     private Label label9;
-    private Label label10;
     private Label label11;
     private Label label12;
     private Label label13;
     private Label label14;
     private Label label15;
-    private Label label16;
     private Button close;
     private Button update;
     private CheckBox enableRedact;
+    private ComboBox comboBox1;
+    private ComboBox ram;
+    private ComboBox graphicsCard;
+    private ComboBox memory;
+    private ComboBox comboBox6;
+    private ComboBox cpu;
 }

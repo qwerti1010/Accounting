@@ -1,28 +1,28 @@
 ﻿using DBLibrary;
+using DBLibrary.Entities;
+using DBLibrary.Interfaces;
+using System.Reflection;
 
 namespace Accounting;
 
 public partial class ComputerForm : Form
 {
     private Computer _computer;
-    private List<Computer> _computers;
     private IComputerRepository _computerRep;
-    private DbContext _dbContext;
-    public ComputerForm(List<Computer> computers)
+    private DbContext _context;
+    private IEmployeeRepository _employeeRep;
+    private IPropertyRepository _propertyRep;
+    private List<Property> _properties;
+
+    public ComputerForm(Computer computer, DbContext context, List<Property> properties)
     {
         InitializeComponent();
-        _computers = computers;
-        _dbContext = new DbContext();
-        _computerRep = new ComputerRep(_dbContext);
-    }
-
-    public ComputerForm(Computer computer, List<Computer> computers)
-    {        
-        InitializeComponent();
         _computer = computer;
-        _computers = computers;
-        _dbContext = new DbContext();
-        _computerRep = new ComputerRep(_dbContext);
+        _context = context;
+        _computerRep = new ComputerRep(_context);
+        _employeeRep = new EmployeeRep(_context);
+        _propertyRep = new PropertyRep(_context);
+        _properties = properties;
     }
 
     private void Close_Click(object sender, EventArgs e)
@@ -44,21 +44,20 @@ public partial class ComputerForm : Form
         Text = $"Просмотр информации устройства. Номер в базе - {_computer.ID}";
         ChangeState();
         name.Text = _computer.Name;
-        location.Text = _computer.Location;
-        status.Text = _computer.Status;
-        employee.Text = _computer.Employee;
-        regNumber.Text = _computer.RegNumber;
+        _context.Open();
+        status.Text = _computer.Status.ToString();
+        employee.Text = _employeeRep.GetById(_computer.EmployeeID).Name;
+        _context.Close();
         regDate.Value = _computer.RegDate;
         price.Text = _computer.Price.ToString();
-        producer.Text = _computer.Producer.ToString();
-        cpu.Text = _computer.Processor.ToString();
-        coresCount.Text = _computer.CoresCount.ToString();
-        ram.Text = _computer.RAM.ToString();
-        graphicsCard.Text = _computer.GraphicsCard.ToString();
-        memory.Text = _computer.Memory.ToString();
-        bodySize.Text = _computer.BodySize.ToString();
+        var cpu1 = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU);
+        var x = cpu1.Value.CompareTo("Intel core i5");
+        cpu.Text = cpu1.Value;
+
+        //ram.Text = _properties.First(p => p.TypeID == PropType.RAM).Value;
+        //graphicsCard.Text = _properties.First(p => p.TypeID == PropType.GraphicsCard).Value;
+        //memory.Text = _properties.First(p => p.TypeID == PropType.Memory).Value;      
         explStart.Value = _computer.ExplDate;
-        amortPeriod.Text = _computer.AmortPeriod.ToString();
     }
 
     private void EnableRedact_CheckStateChanged(object sender, EventArgs e)
@@ -88,62 +87,60 @@ public partial class ComputerForm : Form
 
     private void Update_Click(object sender, EventArgs e)
     {
-        _dbContext.Open();
-        if (_computer is null)
-        {
-            _computer = new Computer();
-        }        
-        try
-        {
-            _computer.Name = name.Text;
-            _computer.RegNumber = regNumber.Text;
-            _computer.RegDate = regDate.Value;
-            _computer.Price = decimal.Parse(price.Text);
-            _computer.Producer = producer.Text;
-            _computer.Processor = cpu.Text;
-            _computer.CoresCount = int.Parse(coresCount.Text);
-            _computer.RAM = int.Parse(ram.Text);
-            _computer.GraphicsCard = graphicsCard.Text;
-            _computer.Status = status.Text;
-            _computer.Employee = employee.Text;
-            _computer.Location = location.Text;
-            _computer.BodySize = double.Parse(bodySize.Text);
-            _computer.ExplDate = explStart.Value;
-            _computer.AmortPeriod = int.Parse(amortPeriod.Text);
-            _computer.Memory = double.Parse(memory.Text);
-            if (_computer.ID == 0)
-            {
-                _computerRep.Create(_computer);
-                MessageBox.Show("Устройство успешно дабавленно");
-                Close();
-            }
-            else
-            {
-                _computerRep.Update(_computer);
-                MessageBox.Show("Устройство успешно обнавленно");
-                Close();
-            }
-        }
-        catch
-        {
-            MessageBox.Show("Некорректные данные");
-        }
-        _dbContext.Close();
+        //_context.Open();
+        //if (_computer is null)
+        //{
+        //    _computer = new Computer();
+        //}
+        //try
+        //{
+        //    _computer.Name = name.Text;
+        //    _computer.RegDate = regDate.Value;
+        //    _computer.Price = decimal.Parse(price.Text);
+        //    _computer.Processor = cpu.Text;
+        //    _computer.RAM = uint.Parse(ram.Text);
+        //    _computer.GraphicsCard = graphicsCard.Text;
+        //    _computer.Status = (Status)status.SelectedIndex;
+        //    _computer.EmployeeID = uint.Parse(employee.Text);
+            
+        //    _computer.ExplDate = explStart.Value;
+        //    _computer.Memory = double.Parse(memory.Text);
+        //    if (_computer.ID == 0)
+        //    {
+        //        _computerRep.Create(_computer);
+        //        MessageBox.Show("Устройство успешно дабавленно");
+        //        Close();
+        //    }
+        //    else
+        //    {
+        //        _computerRep.Update(_computer);
+        //        MessageBox.Show("Устройство успешно обнавленно");
+        //        Close();
+        //    }
+        //}
+        //catch
+        //{
+        //    MessageBox.Show("Некорректные данные");
+        //}
+        //_context.Close();
     }
 
     private void AddItemsToComboBoxes()
     {
-        var locations = new List<string>();
-        var stat = new List<string>();
-        var employees = new List<string>();
-        foreach (var computer in _computers)
+        _context.Open();        
+        employee.Items.AddRange(_employeeRep.GetAll().Select(e => e.Name).ToArray());
+        status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
+        _context.Close();
+        var fields = typeof(CPUs).GetFields();
+        foreach (var field in fields)
         {
-            locations.Add(computer.Location);
-            stat.Add(computer.Status);
-            employees.Add(computer.Employee);
+            var at = field?.GetCustomAttribute<DescriptionAttribute>();
+            if (at != null)
+            {
+                cpu.Items.Add(at.Description);
+            }                       
         }
-        location.Items.AddRange(locations.Distinct().ToArray());
-        status.Items.AddRange(locations.Distinct().ToArray());
-        employee.Items.AddRange(locations.Distinct().ToArray());
     }
 }
+
+

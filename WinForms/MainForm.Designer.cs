@@ -39,24 +39,24 @@ partial class MainForm
             this.addEmployee = new System.Windows.Forms.Button();
             this.updateEmployee = new System.Windows.Forms.Button();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
-            this.positionTextBox = new System.Windows.Forms.TextBox();
             this.nameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.status = new System.Windows.Forms.ComboBox();
+            this.regCheckBox = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.regDatePicker = new System.Windows.Forms.DateTimePicker();
             this.applyFilters = new System.Windows.Forms.Button();
-            this.computerProducer = new System.Windows.Forms.TextBox();
-            this.computerNum = new System.Windows.Forms.TextBox();
+            this.price = new System.Windows.Forms.TextBox();
             this.computerName = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.Статус = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgv = new System.Windows.Forms.DataGridView();
-            this.regCheckBox = new System.Windows.Forms.CheckBox();
+            this.position = new System.Windows.Forms.ComboBox();
             this.mainFormTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -135,11 +135,11 @@ partial class MainForm
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.position);
             this.tabPage2.Controls.Add(this.deleteEmployee);
             this.tabPage2.Controls.Add(this.addEmployee);
             this.tabPage2.Controls.Add(this.updateEmployee);
             this.tabPage2.Controls.Add(this.phoneTextBox);
-            this.tabPage2.Controls.Add(this.positionTextBox);
             this.tabPage2.Controls.Add(this.nameTextBox);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.label2);
@@ -186,21 +186,14 @@ partial class MainForm
             // 
             // phoneTextBox
             // 
-            this.phoneTextBox.Location = new System.Drawing.Point(214, 188);
+            this.phoneTextBox.Location = new System.Drawing.Point(214, 191);
             this.phoneTextBox.Name = "phoneTextBox";
             this.phoneTextBox.Size = new System.Drawing.Size(218, 31);
             this.phoneTextBox.TabIndex = 5;
             // 
-            // positionTextBox
-            // 
-            this.positionTextBox.Location = new System.Drawing.Point(214, 113);
-            this.positionTextBox.Name = "positionTextBox";
-            this.positionTextBox.Size = new System.Drawing.Size(218, 31);
-            this.positionTextBox.TabIndex = 4;
-            // 
             // nameTextBox
             // 
-            this.nameTextBox.Location = new System.Drawing.Point(214, 35);
+            this.nameTextBox.Location = new System.Drawing.Point(214, 38);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(218, 31);
             this.nameTextBox.TabIndex = 3;
@@ -234,14 +227,14 @@ partial class MainForm
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.status);
             this.tabPage3.Controls.Add(this.regCheckBox);
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Controls.Add(this.regDatePicker);
             this.tabPage3.Controls.Add(this.applyFilters);
-            this.tabPage3.Controls.Add(this.computerProducer);
-            this.tabPage3.Controls.Add(this.computerNum);
+            this.tabPage3.Controls.Add(this.price);
             this.tabPage3.Controls.Add(this.computerName);
-            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.Статус);
             this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.label4);
             this.tabPage3.Location = new System.Drawing.Point(4, 34);
@@ -251,6 +244,25 @@ partial class MainForm
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Фильтры";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // status
+            // 
+            this.status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.status.FormattingEnabled = true;
+            this.status.Location = new System.Drawing.Point(186, 179);
+            this.status.Name = "status";
+            this.status.Size = new System.Drawing.Size(267, 33);
+            this.status.TabIndex = 13;
+            // 
+            // regCheckBox
+            // 
+            this.regCheckBox.AutoSize = true;
+            this.regCheckBox.Location = new System.Drawing.Point(474, 247);
+            this.regCheckBox.Name = "regCheckBox";
+            this.regCheckBox.Size = new System.Drawing.Size(22, 21);
+            this.regCheckBox.TabIndex = 12;
+            this.regCheckBox.UseVisualStyleBackColor = true;
+            this.regCheckBox.CheckedChanged += new System.EventHandler(this.RegCheckBox_CheckedChanged);
             // 
             // label7
             // 
@@ -280,19 +292,12 @@ partial class MainForm
             this.applyFilters.UseVisualStyleBackColor = true;
             this.applyFilters.Click += new System.EventHandler(this.ApplyFilters_Click);
             // 
-            // computerProducer
+            // price
             // 
-            this.computerProducer.Location = new System.Drawing.Point(186, 176);
-            this.computerProducer.Name = "computerProducer";
-            this.computerProducer.Size = new System.Drawing.Size(267, 31);
-            this.computerProducer.TabIndex = 8;
-            // 
-            // computerNum
-            // 
-            this.computerNum.Location = new System.Drawing.Point(186, 110);
-            this.computerNum.Name = "computerNum";
-            this.computerNum.Size = new System.Drawing.Size(267, 31);
-            this.computerNum.TabIndex = 7;
+            this.price.Location = new System.Drawing.Point(186, 110);
+            this.price.Name = "price";
+            this.price.Size = new System.Drawing.Size(267, 31);
+            this.price.TabIndex = 7;
             // 
             // computerName
             // 
@@ -301,23 +306,23 @@ partial class MainForm
             this.computerName.Size = new System.Drawing.Size(267, 31);
             this.computerName.TabIndex = 6;
             // 
-            // label6
+            // Статус
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 182);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(140, 25);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Производитель";
+            this.Статус.AutoSize = true;
+            this.Статус.Location = new System.Drawing.Point(11, 182);
+            this.Статус.Name = "Статус";
+            this.Статус.Size = new System.Drawing.Size(63, 25);
+            this.Статус.TabIndex = 5;
+            this.Статус.Text = "Статус";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(11, 116);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(101, 25);
+            this.label5.Size = new System.Drawing.Size(53, 25);
             this.label5.TabIndex = 4;
-            this.label5.Text = "Рег. номер";
+            this.label5.Text = "Цена";
             // 
             // label4
             // 
@@ -352,15 +357,14 @@ partial class MainForm
             this.dgv.TabIndex = 1;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
             // 
-            // regCheckBox
+            // position
             // 
-            this.regCheckBox.AutoSize = true;
-            this.regCheckBox.Location = new System.Drawing.Point(474, 247);
-            this.regCheckBox.Name = "regCheckBox";
-            this.regCheckBox.Size = new System.Drawing.Size(22, 21);
-            this.regCheckBox.TabIndex = 12;
-            this.regCheckBox.UseVisualStyleBackColor = true;
-            this.regCheckBox.CheckedChanged += new System.EventHandler(this.RegCheckBox_CheckedChanged);
+            this.position.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.position.FormattingEnabled = true;
+            this.position.Location = new System.Drawing.Point(214, 116);
+            this.position.Name = "position";
+            this.position.Size = new System.Drawing.Size(218, 33);
+            this.position.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -392,7 +396,6 @@ partial class MainForm
     private TabPage tabPage1;
     private TabPage tabPage2;
     private TextBox phoneTextBox;
-    private TextBox positionTextBox;
     private TextBox nameTextBox;
     private Label label3;
     private Label label2;
@@ -408,13 +411,14 @@ partial class MainForm
     private Button getComputer;
     private Button chengeOperation;
     private Button applyFilters;
-    private TextBox computerProducer;
-    private TextBox computerNum;
+    private TextBox price;
     private TextBox computerName;
-    private Label label6;
+    private Label Статус;
     private Label label5;
     private Label label4;
     private Label label7;
     private DateTimePicker regDatePicker;
     private CheckBox regCheckBox;
+    private ComboBox status;
+    private ComboBox position;
 }

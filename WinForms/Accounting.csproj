@@ -13,13 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DBLibrary\DBLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="DBLibrary">
       <HintPath>..\DBLibrary\bin\Debug\net6.0\DBLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+  
 </Project>

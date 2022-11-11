@@ -33,11 +33,12 @@ partial class LoginForm
             this.passLabel = new System.Windows.Forms.Label();
             this.loginTextBox = new System.Windows.Forms.TextBox();
             this.loginLabel = new System.Windows.Forms.Label();
+            this.registration = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // signUp
             // 
-            this.signUp.Location = new System.Drawing.Point(102, 273);
+            this.signUp.Location = new System.Drawing.Point(101, 244);
             this.signUp.Name = "signUp";
             this.signUp.Size = new System.Drawing.Size(125, 43);
             this.signUp.TabIndex = 2;
@@ -48,7 +49,7 @@ partial class LoginForm
             // passTextBox
             // 
             this.passTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.passTextBox.Location = new System.Drawing.Point(54, 192);
+            this.passTextBox.Location = new System.Drawing.Point(54, 176);
             this.passTextBox.MaxLength = 16;
             this.passTextBox.Name = "passTextBox";
             this.passTextBox.PasswordChar = '*';
@@ -58,7 +59,7 @@ partial class LoginForm
             // passLabel
             // 
             this.passLabel.AutoSize = true;
-            this.passLabel.Location = new System.Drawing.Point(54, 164);
+            this.passLabel.Location = new System.Drawing.Point(54, 148);
             this.passLabel.Name = "passLabel";
             this.passLabel.Size = new System.Drawing.Size(78, 25);
             this.passLabel.TabIndex = 2;
@@ -74,11 +75,22 @@ partial class LoginForm
             // loginLabel
             // 
             this.loginLabel.AutoSize = true;
-            this.loginLabel.Location = new System.Drawing.Point(53, 70);
+            this.loginLabel.Location = new System.Drawing.Point(54, 70);
             this.loginLabel.Name = "loginLabel";
             this.loginLabel.Size = new System.Drawing.Size(66, 25);
             this.loginLabel.TabIndex = 4;
             this.loginLabel.Text = "Логин:";
+            // 
+            // registration
+            // 
+            this.registration.AutoSize = true;
+            this.registration.Location = new System.Drawing.Point(73, 303);
+            this.registration.Name = "registration";
+            this.registration.Size = new System.Drawing.Size(177, 25);
+            this.registration.TabIndex = 5;
+            this.registration.TabStop = true;
+            this.registration.Text = "Зарегестрироваться";
+            this.registration.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Registration_LinkClicked);
             // 
             // LoginForm
             // 
@@ -86,6 +98,7 @@ partial class LoginForm
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(343, 350);
+            this.Controls.Add(this.registration);
             this.Controls.Add(this.loginLabel);
             this.Controls.Add(this.loginTextBox);
             this.Controls.Add(this.passLabel);
@@ -94,9 +107,11 @@ partial class LoginForm
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";            
+            this.Text = "Login";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
     }
 
     #endregion
@@ -106,4 +121,5 @@ partial class LoginForm
     private Label passLabel;
     private TextBox loginTextBox;
     private Label loginLabel;
+    private LinkLabel registration;
 }
