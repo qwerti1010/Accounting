@@ -49,10 +49,8 @@ public partial class ComputerForm : Form
         employee.Text = _employeeRep.GetById(_computer.EmployeeID).Name;
         _context.Close();
         regDate.Value = _computer.RegDate;
-        price.Text = _computer.Price.ToString();
-        var cpu1 = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU);
-        var x = cpu1.Value.CompareTo("Intel core i5");
-        cpu.Text = cpu1.Value;
+        price.Text = _computer.Price.ToString();             
+        cpu.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU).Value;
 
         //ram.Text = _properties.First(p => p.TypeID == PropType.RAM).Value;
         //graphicsCard.Text = _properties.First(p => p.TypeID == PropType.GraphicsCard).Value;
@@ -131,6 +129,7 @@ public partial class ComputerForm : Form
         employee.Items.AddRange(_employeeRep.GetAll().Select(e => e.Name).ToArray());
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         _context.Close();
+        //перенести в библиотеку дб
         var fields = typeof(CPUs).GetFields();
         foreach (var field in fields)
         {
