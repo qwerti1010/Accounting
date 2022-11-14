@@ -14,15 +14,20 @@ public class ComputerRep : IComputerRepository
         _connection = context.GetConnection();
     }
 
-    public List<Computer> GetAll()
+    public List<Computer> GetAll(int take, int skip)
     {
         var computers = new List<Computer>();
-        var commandString = "SELECT * FROM computers WHERE isDeleted = 0 LIMIT 10";        
+        var commandString = "SELECT * FROM computers WHERE isDeleted = 0 LIMIT 10";          
         var command = new MySqlCommand(commandString, _connection);
-        using var reader = command.ExecuteReader();
+        var reader = command.ExecuteReader();
         while (reader.Read())
         {
             computers.Add(Record(reader));
+        }
+        reader.Close();
+        foreach (var computer in computers)
+        {
+            computer.Properties = GetByComputerID(computer.ID);
         }
         return computers;
     }
@@ -47,35 +52,43 @@ public class ComputerRep : IComputerRepository
             command.CommandText += " AND status = @status";
             command.Parameters.Add("@status", MySqlDbType.Int32).Value = status;
         }        
-        using var reader = command.ExecuteReader();
+        var reader = command.ExecuteReader();
         while (reader.Read())
         {
             computers.Add(Record(reader));
         }
+        reader.Close();
+        foreach(var computer in computers)
+        {
+            computer.Properties = GetByComputerID(computer.ID);
+        }
         return computers;
     }
 
-    public Computer? GetById(uint id)
+    public Computer? GetByID(uint id)
     {
+        Computer? computer = null;
         var commandStr = "SELECT * FROM computers WHERE id = @id AND isDeleted = 0";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
-        using var reader = command.ExecuteReader();
+        var reader = command.ExecuteReader();        
         while (reader.Read())
         {       
-            return Record(reader);
+            computer = Record(reader);            
+        }
+        reader.Close();
+        if (computer != null)
+        {
+            computer.Properties = GetByComputerID(id);
         }       
-        return null;
+        return computer;
     }
 
     public void Create(Computer entity)
     {
         var commandStr = "INSERT INTO computers (name, registrationDate," +
-            " price, cpu, ram, graphicsCard, status, employee," +
-            " bodySize, exploitationStart, memory)" +
-            " VALUES(@name, @registrationDate, @price, @cpu," +
-            " @ram, @graphicsCard, @status, @employee, @bodySize," +
-            " @exploitationStart, @memory)";
+            " price, status, employeeID, exploitationStart)" +
+            " VALUES(@name, @registrationDate, @price, @status, @employeeID, @exploitationStart)";
 
         var command = new MySqlCommand(commandStr, _connection);        
         AddParameters(command, entity);
@@ -85,16 +98,15 @@ public class ComputerRep : IComputerRepository
     public void Update(Computer entity)
     {
         var commandStr = "UPDATE computers SET name = @name, registrationDate = @registrationDate," +
-            " price = @price, cpu = @cpu, ram = @ram, graphicsCard = @graphicsCard, status = @status," +
-            " employeeID = @employee, bodySize = @bodySize, exploitationStart = @exploitationStart," +
-            " memory = @memory WHERE id = @id";
+            " price = @price, status = @status employeeID = @employee," +
+            " exploitationStart = @exploitationStart WHERE id = @id";
 
         var command = new MySqlCommand(commandStr, _connection);        
         AddParameters(command, entity);
         command.ExecuteNonQuery();        
     }
 
-    private Computer Record(IDataRecord record)
+    private static Computer Record(IDataRecord record)
     {
         return new Computer
         {
@@ -107,7 +119,7 @@ public class ComputerRep : IComputerRepository
             ExplDate = (DateTime)record["exploitationStart"],
             IsDeleted = (bool)record["isDeleted"]
         };
-    }
+    }   
 
     public void Delete(uint id)
     {        
@@ -115,26 +127,44 @@ public class ComputerRep : IComputerRepository
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
         command.ExecuteNonQuery();
-    }
+    }    
 
-    //уточнить
-    //public void UpdateEmployeeID(uint id)
-    //{               
-    //    var computers = new List<Computer>(); 
-    //    var commandStr = "UPDATE computers SET employeeID = 0 WHERE employeeID = @employeeID";
-    //    var command = new MySqlCommand(commandStr, _connection);
-    //    command.Parameters.Add("@employeeID", MySqlDbType.UInt32).Value = id;
-    //    command.ExecuteNonQuery();
-    //}
-
-    private void AddParameters(MySqlCommand command, Computer entity)
+    private static void  AddParameters(MySqlCommand command, Computer entity)
     {
         command.Parameters.Add("@id", MySqlDbType.UInt32).Value = entity.ID;
         command.Parameters.Add("@name", MySqlDbType.VarChar).Value = entity.Name;
         command.Parameters.Add("@registrationDate", MySqlDbType.DateTime).Value = entity.RegDate;
         command.Parameters.Add("@price", MySqlDbType.Decimal).Value = entity.Price;
         command.Parameters.Add("@status", MySqlDbType.Int32).Value = (int)entity.Status;
-        command.Parameters.Add("@employee", MySqlDbType.UInt32).Value = entity.EmployeeID;
+        command.Parameters.Add("@employeeID", MySqlDbType.UInt32).Value = entity.EmployeeID;
         command.Parameters.Add("@exploitationStart", MySqlDbType.DateTime).Value = entity.ExplDate;
+    }
+
+    public Dictionary<PropType, Property> GetByComputerID(uint id)
+    {
+        var properties = new Dictionary<PropType, Property>();
+        var commandStr = "SELECT * FROM properties" +
+            " WHERE isDeleted = 0 AND computerID = @computerID";
+        var command = new MySqlCommand(commandStr, _connection);
+        command.Parameters.Add("@computerId", MySqlDbType.UInt32).Value = id;
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            var property = PropRecord(reader);
+            properties[property.TypeID] = property;
+        }
+        return properties;
+    }
+
+    private static Property PropRecord(IDataRecord record)
+    {
+        return new Property
+        {
+            ID = (uint)record["ID"],
+            ComputerID = (uint)record["computerID"],
+            IsDeleted = (bool)record["isDeleted"],
+            TypeID = (PropType)record["typeID"],
+            Value = (string)record["value"]
+        };
     }
 }

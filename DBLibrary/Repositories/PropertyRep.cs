@@ -12,15 +12,20 @@ public class PropertyRep : IPropertyRepository
     {
         _connection = context.GetConnection();
     }
-    public void Create(Property entity)
+    public void Create(List<Property> properties)
     {
         var commandStr = "INSERT INTO properties (computerID, typeID, value)" +
             " VALUES (@computerID, @typeID, @value)";
         var command = new MySqlCommand(commandStr, _connection);
-        command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = entity.ComputerID;
-        command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)entity.TypeID;
-        command.Parameters.Add("@value", MySqlDbType.VarChar).Value = entity.Value;
-        command.ExecuteNonQuery();
+        foreach (var property in properties)
+        {
+            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = property.ComputerID;
+            command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)property.TypeID;
+            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = property.Value;
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+        }        
+        
     }
 
     public void Delete(uint id)
@@ -42,12 +47,12 @@ public class PropertyRep : IPropertyRepository
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            properties.Add(Record(reader));
+            properties.Add(PropRecord(reader));
         }
         return properties;
     }
 
-    private Property Record(IDataRecord record)
+    private static Property PropRecord(IDataRecord record)
     {
         return new Property
         {
@@ -59,7 +64,7 @@ public class PropertyRep : IPropertyRepository
         };
     }
 
-    public List<Property> GetAll()
+    public List<Property> GetAll(int take, int skip)
     {
         throw new NotImplementedException();
     }
@@ -69,8 +74,16 @@ public class PropertyRep : IPropertyRepository
         throw new NotImplementedException();
     }
 
-    public void Update(Property entity)
+    public void Update(List<Property> properties)
     {
-        throw new NotImplementedException();
+        var commandStr = "UPDATE properties SET value = @value WHERE computerID = @computerID";
+        var command = new MySqlCommand(commandStr, _connection);
+        foreach(var property in properties)
+        {
+            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = property.Value;
+            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = property.ComputerID;
+            command.ExecuteNonQuery();
+            command.Parameters.Clear(); 
+        }
     }
 }

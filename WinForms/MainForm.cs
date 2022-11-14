@@ -12,12 +12,11 @@ public partial class MainForm : Form
     private List<Employee> _employees;
     private List<Computer> _computers;
     private List<Computer> _filredComputers;
-    private IEmployeeRepository _employeeRep;
-    private IComputerRepository _computerRep;
-    private IPropertyRepository _propertyRep;
-    private List<(string, string)> _empColumns;
-    private List<(string, string)> _computerColumns;
-    private DbContext _context;    
+    private readonly IEmployeeRepository _employeeRep;
+    private readonly IComputerRepository _computerRep;
+    private readonly List<(string, string)> _empColumns;
+    private readonly List<(string, string)> _computerColumns;
+    private readonly DbContext _context;    
     
     public MainForm(Employee employee, DbContext context)
     {
@@ -25,7 +24,6 @@ public partial class MainForm : Form
         _employee = employee;
         _employeeRep = new EmployeeRep(_context);
         _computerRep = new ComputerRep(_context);
-        _propertyRep = new PropertyRep(_context);
         _filredComputers = new List<Computer>();
         InitializeComponent();
         mainFormTabPage.SelectTab(nameof(tabPage2));
@@ -57,8 +55,8 @@ public partial class MainForm : Form
     {
         Text = "Привет, " + _employee.Name;
         _context.Open();
-        _employees = _employeeRep.GetAll().ToList();
-        _computers = _computerRep.GetAll().ToList();
+        _employees = _employeeRep.GetAll(10,0);
+        _computers = _computerRep.GetAll(10,0);
         _context.Close();
         CreateColumns(_empColumns);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
@@ -81,21 +79,15 @@ public partial class MainForm : Form
     }
 
     private void ReadSingleRow(Computer computer)
-    {
-        _context.Open();
-        var properties = _propertyRep.GetByComputerID(computer.ID);
-        _context.Close();
-        if (properties.Count == 0)
-        {
-            properties.Add(new Property { TypeID = PropType.None });
-        }
+    {               
         dgv.Rows.Add(computer.ID, computer.Name, computer.RegDate, computer.Price,
-            properties.FirstOrDefault(p => p.TypeID == PropType.CPU)?.Value,
-            properties.FirstOrDefault(p => p.TypeID == PropType.RAM)?.Value,
-            properties.FirstOrDefault(p => p.TypeID == PropType.GraphicsCard)?.Value,
-            computer.Status, computer.EmployeeID,
-            properties.FirstOrDefault(p => p.TypeID == PropType.Case)?.Value, computer.ExplDate,
-            properties.FirstOrDefault(p => p.TypeID == PropType.Memory)?.Value);
+            computer.Properties.ContainsKey(PropType.CPU) ? computer.Properties[PropType.CPU].Value : PropType.None,
+            computer.Properties.ContainsKey(PropType.RAM) ? computer.Properties[PropType.RAM].Value : PropType.None,
+            computer.Properties.ContainsKey(PropType.GraphicsCard) ? computer.Properties[PropType.GraphicsCard].Value : PropType.None,
+            computer.Status, _employeeRep.GetByID(computer.EmployeeID).Name,
+            computer.Properties.ContainsKey(PropType.Case) ? computer.Properties[PropType.Case].Value : PropType.None,
+            computer.ExplDate,
+            computer.Properties.ContainsKey(PropType.Memory) ? computer.Properties[PropType.Memory].Value : PropType.None);
     }
 
     private void RefreshDataGrid(DataGridViewCondition condition)
@@ -127,7 +119,7 @@ public partial class MainForm : Form
                     }
                     break;
                 }
-        }        
+        }
     }
 
     private void ClearTextBoxes()
@@ -164,7 +156,6 @@ public partial class MainForm : Form
             _context.Close();
             return;
         }
-        
         _employee.Name = nameTextBox.Text;
         _employee.Phone = phoneTextBox.Text;
         _employee.Position = (PositionEnum)position.SelectedIndex;
@@ -172,9 +163,9 @@ public partial class MainForm : Form
         ClearTextBoxes();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll();
-        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
+        _employees = _employeeRep.GetAll(10, 0);
         _context.Close();
+        RefreshDataGrid(DataGridViewCondition.EmployeeTab);        
     }
 
     private void DeleteEmployee_Click(object sender, EventArgs e)
@@ -184,7 +175,7 @@ public partial class MainForm : Form
         _employeeRep.Delete(_employee.ID);        
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll();
+        _employees = _employeeRep.GetAll(10, 0);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _context.Close();
     }
@@ -222,7 +213,7 @@ public partial class MainForm : Form
         ClearTextBoxes();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll();
+        _employees = _employeeRep.GetAll(10, 0);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _context.Close();
     }    
@@ -258,7 +249,7 @@ public partial class MainForm : Form
         if (mainFormTabPage.SelectedIndex == 1 && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];            
-            _employee = _employeeRep.GetById((uint)row.Cells[0].Value);
+            _employee = _employeeRep.GetByID((uint)row.Cells[0].Value);
             nameTextBox.Text = _employee.Name;
             phoneTextBox.Text = _employee.Phone;
             position.Text = _employee.Position.ToString();
@@ -268,7 +259,7 @@ public partial class MainForm : Form
         else if (mainFormTabPage.SelectedIndex == 0 && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];
-            _computer = _computerRep.GetById((uint)row.Cells[0].Value);
+            _computer = _computerRep.GetByID((uint)row.Cells[0].Value);
             getComputer.Enabled = true;
             deleteComputer.Enabled = true;
         }
@@ -277,10 +268,8 @@ public partial class MainForm : Form
 
     private void GetComputer_Click(object sender, EventArgs e)
     {
-        _context.Open();
-        var properties = _propertyRep.GetByComputerID(_computer.ID);
-        _context.Close();
-        var form = new ComputerForm(_computer, _context, properties);
+        
+        var form = new ComputerForm(_computer, _context);
         form.ShowDialog();
     }
 
@@ -290,21 +279,21 @@ public partial class MainForm : Form
         _computerRep.Delete(_computer.ID);
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
-        _computers = _computerRep.GetAll();
+        _computers = _computerRep.GetAll(10, 0);
         RefreshDataGrid(DataGridViewCondition.DeviceTab);
         _context.Close();
     }
 
     private void CreateComputer_Click(object sender, EventArgs e)
     {
-        var form = new ComputerForm(null, _context, null);
+        var form = new ComputerForm(null, _context);
         form.ShowDialog();
     }
 
     private void RefreshDbState_Click(object sender, EventArgs e)
     {
         _context.Open();
-        _computers = _computerRep.GetAll().Take(10).ToList();
+        _computers = _computerRep.GetAll(10, 0).ToList();
         _context.Close();
         RefreshDataGrid(DataGridViewCondition.DeviceTab);
     }

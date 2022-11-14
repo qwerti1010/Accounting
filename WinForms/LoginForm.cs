@@ -6,9 +6,9 @@ namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private IEmployeeRepository _employeeRep;
-    private IVisitRepository _visitRep;
-    private DbContext _context;
+    private readonly IEmployeeRepository _employeeRep;
+    private readonly IVisitRepository _visitRep;
+    private readonly DbContext _context;
 
     public LoginForm()
     {

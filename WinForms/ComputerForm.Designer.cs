@@ -30,7 +30,7 @@ partial class ComputerForm
     {
             this.name = new System.Windows.Forms.TextBox();
             this.price = new System.Windows.Forms.TextBox();
-            this.location = new System.Windows.Forms.ComboBox();
+            this.motherBoard = new System.Windows.Forms.ComboBox();
             this.status = new System.Windows.Forms.ComboBox();
             this.employee = new System.Windows.Forms.ComboBox();
             this.regDate = new System.Windows.Forms.DateTimePicker();
@@ -51,11 +51,11 @@ partial class ComputerForm
             this.close = new System.Windows.Forms.Button();
             this.update = new System.Windows.Forms.Button();
             this.enableRedact = new System.Windows.Forms.CheckBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.powerSupply = new System.Windows.Forms.ComboBox();
             this.ram = new System.Windows.Forms.ComboBox();
             this.graphicsCard = new System.Windows.Forms.ComboBox();
             this.memory = new System.Windows.Forms.ComboBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.caseBox = new System.Windows.Forms.ComboBox();
             this.cpu = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -73,14 +73,14 @@ partial class ComputerForm
             this.price.Size = new System.Drawing.Size(250, 31);
             this.price.TabIndex = 6;
             // 
-            // location
+            // motherBoard
             // 
-            this.location.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.location.FormattingEnabled = true;
-            this.location.Location = new System.Drawing.Point(268, 75);
-            this.location.Name = "location";
-            this.location.Size = new System.Drawing.Size(250, 33);
-            this.location.TabIndex = 16;
+            this.motherBoard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.motherBoard.FormattingEnabled = true;
+            this.motherBoard.Location = new System.Drawing.Point(268, 75);
+            this.motherBoard.Name = "motherBoard";
+            this.motherBoard.Size = new System.Drawing.Size(250, 33);
+            this.motherBoard.TabIndex = 16;
             // 
             // status
             // 
@@ -264,14 +264,14 @@ partial class ComputerForm
             this.enableRedact.UseVisualStyleBackColor = true;
             this.enableRedact.CheckStateChanged += new System.EventHandler(this.EnableRedact_CheckStateChanged);
             // 
-            // comboBox1
+            // powerSupply
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(268, 240);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(250, 33);
-            this.comboBox1.TabIndex = 41;
+            this.powerSupply.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.powerSupply.FormattingEnabled = true;
+            this.powerSupply.Location = new System.Drawing.Point(268, 240);
+            this.powerSupply.Name = "powerSupply";
+            this.powerSupply.Size = new System.Drawing.Size(250, 33);
+            this.powerSupply.TabIndex = 41;
             // 
             // ram
             // 
@@ -300,14 +300,14 @@ partial class ComputerForm
             this.memory.Size = new System.Drawing.Size(250, 33);
             this.memory.TabIndex = 45;
             // 
-            // comboBox6
+            // caseBox
             // 
-            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(268, 637);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(250, 33);
-            this.comboBox6.TabIndex = 46;
+            this.caseBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.caseBox.FormattingEnabled = true;
+            this.caseBox.Location = new System.Drawing.Point(268, 637);
+            this.caseBox.Name = "caseBox";
+            this.caseBox.Size = new System.Drawing.Size(250, 33);
+            this.caseBox.TabIndex = 46;
             // 
             // cpu
             // 
@@ -324,11 +324,11 @@ partial class ComputerForm
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 858);
             this.Controls.Add(this.cpu);
-            this.Controls.Add(this.comboBox6);
+            this.Controls.Add(this.caseBox);
             this.Controls.Add(this.memory);
             this.Controls.Add(this.graphicsCard);
             this.Controls.Add(this.ram);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.powerSupply);
             this.Controls.Add(this.enableRedact);
             this.Controls.Add(this.update);
             this.Controls.Add(this.close);
@@ -349,7 +349,7 @@ partial class ComputerForm
             this.Controls.Add(this.regDate);
             this.Controls.Add(this.employee);
             this.Controls.Add(this.status);
-            this.Controls.Add(this.location);
+            this.Controls.Add(this.motherBoard);
             this.Controls.Add(this.price);
             this.Controls.Add(this.name);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -364,7 +364,7 @@ partial class ComputerForm
     #endregion
     private TextBox name;
     private TextBox price;
-    private ComboBox location;
+    private ComboBox motherBoard;
     private ComboBox status;
     private ComboBox employee;
     private DateTimePicker regDate;
@@ -385,10 +385,10 @@ partial class ComputerForm
     private Button close;
     private Button update;
     private CheckBox enableRedact;
-    private ComboBox comboBox1;
+    private ComboBox powerSupply;
     private ComboBox ram;
     private ComboBox graphicsCard;
     private ComboBox memory;
-    private ComboBox comboBox6;
+    private ComboBox caseBox;
     private ComboBox cpu;
 }

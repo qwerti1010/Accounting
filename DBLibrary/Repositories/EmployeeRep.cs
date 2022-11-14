@@ -14,7 +14,7 @@ public class EmployeeRep : IEmployeeRepository
         _connection = context.GetConnection();
     }
 
-    public List<Employee> GetAll()
+    public List<Employee> GetAll(int take, int skip)
     {
         var employees = new List<Employee>();
         var commandString = "SELECT * FROM employees WHERE isDeleted = 0 LIMIT 10";
@@ -27,7 +27,7 @@ public class EmployeeRep : IEmployeeRepository
         return employees;
     }
 
-    public Employee? GetById(uint id)
+    public Employee? GetByID(uint id)
     {               
         var commandStr = "SELECT * FROM employees WHERE id = @id AND isDeleted = 0";
         var command = new MySqlCommand(commandStr, _connection);
@@ -57,7 +57,7 @@ public class EmployeeRep : IEmployeeRepository
         command.ExecuteNonQuery();        
     }   
 
-    private Employee Record(IDataRecord record)
+    private static Employee Record(IDataRecord record)
     {
         var log = record["login"];
         var pass = record["password"];
@@ -81,7 +81,7 @@ public class EmployeeRep : IEmployeeRepository
         command.ExecuteNonQuery();        
     }
 
-    private void AddParameters(MySqlCommand command, Employee entity)
+    private static void AddParameters(MySqlCommand command, Employee entity)
     {
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = entity.ID;
         command.Parameters.Add("@name", MySqlDbType.VarChar).Value = entity.Name;
@@ -104,7 +104,7 @@ public class EmployeeRep : IEmployeeRepository
         return null;
     }
     
-    public Employee? GetEmployee(string name, string phone, string login)
+    public Employee? GetEmployee(string? name = null, string? phone = null, string? login = null)
     {
         var commandString = "SELECT * FROM employees WHERE isDeleted = 0" +
             " AND (phone = @phone OR login = @login OR name = @name) LIMIT 1";

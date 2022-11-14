@@ -29,12 +29,12 @@ public class VisitRep : IVisitRepository
         throw new NotImplementedException();
     }
 
-    public List<Visit> GetAll()
+    public List<Visit> GetAll(int take, int skip)
     {
         throw new NotImplementedException();
     }
 
-    public Visit? GetById(uint id)
+    public Visit? GetByID(uint id)
     {
         throw new NotImplementedException();
     }

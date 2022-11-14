@@ -8,21 +8,17 @@ namespace Accounting;
 public partial class ComputerForm : Form
 {
     private Computer _computer;
-    private IComputerRepository _computerRep;
-    private DbContext _context;
-    private IEmployeeRepository _employeeRep;
-    private IPropertyRepository _propertyRep;
-    private List<Property> _properties;
+    private readonly IComputerRepository _computerRep;
+    private readonly DbContext _context;
+    private readonly IEmployeeRepository _employeeRep;
 
-    public ComputerForm(Computer computer, DbContext context, List<Property> properties)
+    public ComputerForm(Computer computer, DbContext context)
     {
         InitializeComponent();
         _computer = computer;
         _context = context;
         _computerRep = new ComputerRep(_context);
-        _employeeRep = new EmployeeRep(_context);
-        _propertyRep = new PropertyRep(_context);
-        _properties = properties;
+        _employeeRep = new EmployeeRep(_context);        
     }
 
     private void Close_Click(object sender, EventArgs e)
@@ -46,15 +42,17 @@ public partial class ComputerForm : Form
         name.Text = _computer.Name;
         _context.Open();
         status.Text = _computer.Status.ToString();
-        employee.Text = _employeeRep.GetById(_computer.EmployeeID).Name;
+        employee.Text = _employeeRep.GetByID(_computer.EmployeeID).Name;
         _context.Close();
         regDate.Value = _computer.RegDate;
-        price.Text = _computer.Price.ToString();             
-        cpu.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU).Value;
-
-        //ram.Text = _properties.First(p => p.TypeID == PropType.RAM).Value;
-        //graphicsCard.Text = _properties.First(p => p.TypeID == PropType.GraphicsCard).Value;
-        //memory.Text = _properties.First(p => p.TypeID == PropType.Memory).Value;      
+        price.Text = _computer.Price.ToString();
+        cpu.Text = _computer.Properties.ContainsKey(PropType.CPU) ? _computer.Properties[PropType.CPU].Value : null;
+        ram.Text = _computer.Properties.ContainsKey(PropType.RAM) ? _computer.Properties[PropType.RAM].Value : null;
+        graphicsCard.Text = _computer.Properties.ContainsKey(PropType.GraphicsCard) ? _computer.Properties[PropType.GraphicsCard].Value : null; 
+        memory.Text = _computer.Properties.ContainsKey(PropType.Memory) ? _computer.Properties[PropType.Memory].Value : null; 
+        motherBoard.Text = _computer.Properties.ContainsKey(PropType.MotherBoard) ? _computer.Properties[PropType.MotherBoard].Value : null; 
+        powerSupply.Text = _computer.Properties.ContainsKey(PropType.PowerSupply) ? _computer.Properties[PropType.PowerSupply].Value : null;        
+        caseBox.Text = _computer.Properties.ContainsKey(PropType.Case) ? _computer.Properties[PropType.Case].Value : null;
         explStart.Value = _computer.ExplDate;
     }
 
@@ -89,55 +87,77 @@ public partial class ComputerForm : Form
         //if (_computer is null)
         //{
         //    _computer = new Computer();
-        //}
-        //try
-        //{
-        //    _computer.Name = name.Text;
-        //    _computer.RegDate = regDate.Value;
-        //    _computer.Price = decimal.Parse(price.Text);
-        //    _computer.Processor = cpu.Text;
-        //    _computer.RAM = uint.Parse(ram.Text);
-        //    _computer.GraphicsCard = graphicsCard.Text;
-        //    _computer.Status = (Status)status.SelectedIndex;
-        //    _computer.EmployeeID = uint.Parse(employee.Text);
-            
-        //    _computer.ExplDate = explStart.Value;
-        //    _computer.Memory = double.Parse(memory.Text);
-        //    if (_computer.ID == 0)
+        //    _properties = new List<Property>
         //    {
-        //        _computerRep.Create(_computer);
-        //        MessageBox.Show("Устройство успешно дабавленно");
-        //        Close();
-        //    }
-        //    else
-        //    {
-        //        _computerRep.Update(_computer);
-        //        MessageBox.Show("Устройство успешно обнавленно");
-        //        Close();
-        //    }
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.CPU, Value = cpu.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.RAM, Value = ram.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.GraphicsCard, Value = graphicsCard.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.Memory, Value = memory.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.Case, Value = caseBox.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.MotherBoard, Value = motherBoard.Text },
+        //        new Property { ComputerID = _computer.ID, TypeID = PropType.PowerSupply, Value = powerSupply.Text }
+        //    };
         //}
-        //catch
+        //cpu.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU)?.Value;
+        //ram.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.RAM)?.Value;
+        //graphicsCard.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.GraphicsCard)?.Value;
+        //memory.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Memory)?.Value;
+        //motherBoard.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.MotherBoard)?.Value;
+        //powerSupply.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.PowerSupply)?.Value;
+        //memory.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Memory)?.Value;
+        //caseBox.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Case)?.Value;
+        //_computer.Name = name.Text;
+        //_computer.RegDate = regDate.Value;
+        //_computer.Price = decimal.Parse(price.Text);        
+        //_computer.Status = (Status)status.SelectedIndex;
+        //_computer.EmployeeID = _employeeRep.GetEmployee(employee.Text, null, null).ID;
+        //_computer.ExplDate = explStart.Value;
+
+        //if (_computer.ID == 0)
         //{
-        //    MessageBox.Show("Некорректные данные");
+        //    _computerRep.Create(_computer);
+        //    _propertyRep.Create(_properties);
+        //    MessageBox.Show("устройство успешно дабавленно");
+        //    _context.Close();
+        //    Close();
         //}
-        //_context.Close();
+        //else
+        //{
+        //    _computerRep.Update(_computer);
+        //    _propertyRep.Update(_properties);
+        //    MessageBox.Show("устройство успешно обнавленно");
+        //    _context.Close();
+        //    Close();
+        //}
+       
+        _context.Close();
     }
 
     private void AddItemsToComboBoxes()
     {
         _context.Open();        
-        employee.Items.AddRange(_employeeRep.GetAll().Select(e => e.Name).ToArray());
+        employee.Items.AddRange(_employeeRep.GetAll(10,0).Select(e => e.Name).ToArray());
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         _context.Close();
-        //перенести в библиотеку дб
-        var fields = typeof(CPUs).GetFields();
+        GetAttributes(typeof(CPUs), cpu);
+        GetAttributes(typeof(RAMs), ram);
+        GetAttributes(typeof(MotherBoards), motherBoard);
+        GetAttributes(typeof(GraphicsCard), graphicsCard);
+        GetAttributes(typeof(Cases), caseBox);
+        GetAttributes(typeof(Memory), memory);
+        GetAttributes(typeof(PowerSupply), powerSupply);        
+    }
+
+    private static void GetAttributes(Type type, ComboBox box)
+    {        
+        var fields = type.GetFields();
         foreach (var field in fields)
         {
             var at = field?.GetCustomAttribute<DescriptionAttribute>();
             if (at != null)
             {
-                cpu.Items.Add(at.Description);
-            }                       
+                box.Items.Add(at.Description);
+            }
         }
     }
 }
