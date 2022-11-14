@@ -6,8 +6,8 @@ namespace Accounting;
 
 public partial class RegistrationForm : Form
 {
-    private DbContext _context;
-    private EmployeeRep _employeeRep;
+    private readonly DbContext _context;
+    private readonly EmployeeRep _employeeRep;
     public RegistrationForm(DbContext context)
     {
         _context = context;

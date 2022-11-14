@@ -53,9 +53,4 @@ public partial class LoginForm : Form
         var form = new RegistrationForm(_context);
         form.ShowDialog();
     }
-
-    private void LoginForm_Load(object sender, EventArgs e)
-    {
-
-    }
 }

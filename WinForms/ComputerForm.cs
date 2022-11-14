@@ -89,11 +89,10 @@ public partial class ComputerForm : Form
             return;
         }
 
-        if (_computer is null)
-        {
-            _computer = new Computer();
-            _computer.Properties = new Dictionary<PropType, Property>();       
-        }
+        _computer ??= new Computer
+            {
+                Properties = new Dictionary<PropType, Property>()
+            };
         if (!_computer.Properties.ContainsKey(PropType.CPU))
         {
             _computer.Properties.Add(PropType.CPU, new Property());
