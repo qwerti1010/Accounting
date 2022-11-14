@@ -35,6 +35,7 @@ partial class MainForm
             this.chengeOperation = new System.Windows.Forms.Button();
             this.addComputer = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.position = new System.Windows.Forms.ComboBox();
             this.deleteEmployee = new System.Windows.Forms.Button();
             this.addEmployee = new System.Windows.Forms.Button();
             this.updateEmployee = new System.Windows.Forms.Button();
@@ -45,9 +46,7 @@ partial class MainForm
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.status = new System.Windows.Forms.ComboBox();
-            this.regCheckBox = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.regDatePicker = new System.Windows.Forms.DateTimePicker();
             this.applyFilters = new System.Windows.Forms.Button();
             this.price = new System.Windows.Forms.TextBox();
             this.computerName = new System.Windows.Forms.TextBox();
@@ -56,7 +55,7 @@ partial class MainForm
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgv = new System.Windows.Forms.DataGridView();
-            this.position = new System.Windows.Forms.ComboBox();
+            this.employeeID = new System.Windows.Forms.TextBox();
             this.mainFormTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -152,6 +151,15 @@ partial class MainForm
             this.tabPage2.Text = "Сотрудники";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // position
+            // 
+            this.position.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.position.FormattingEnabled = true;
+            this.position.Location = new System.Drawing.Point(214, 116);
+            this.position.Name = "position";
+            this.position.Size = new System.Drawing.Size(218, 33);
+            this.position.TabIndex = 9;
+            // 
             // deleteEmployee
             // 
             this.deleteEmployee.Enabled = false;
@@ -227,10 +235,9 @@ partial class MainForm
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.employeeID);
             this.tabPage3.Controls.Add(this.status);
-            this.tabPage3.Controls.Add(this.regCheckBox);
             this.tabPage3.Controls.Add(this.label7);
-            this.tabPage3.Controls.Add(this.regDatePicker);
             this.tabPage3.Controls.Add(this.applyFilters);
             this.tabPage3.Controls.Add(this.price);
             this.tabPage3.Controls.Add(this.computerName);
@@ -254,33 +261,14 @@ partial class MainForm
             this.status.Size = new System.Drawing.Size(267, 33);
             this.status.TabIndex = 13;
             // 
-            // regCheckBox
-            // 
-            this.regCheckBox.AutoSize = true;
-            this.regCheckBox.Location = new System.Drawing.Point(474, 247);
-            this.regCheckBox.Name = "regCheckBox";
-            this.regCheckBox.Size = new System.Drawing.Size(22, 21);
-            this.regCheckBox.TabIndex = 12;
-            this.regCheckBox.UseVisualStyleBackColor = true;
-            this.regCheckBox.CheckedChanged += new System.EventHandler(this.RegCheckBox_CheckedChanged);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(11, 249);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(157, 25);
+            this.label7.Size = new System.Drawing.Size(100, 25);
             this.label7.TabIndex = 11;
-            this.label7.Text = "Дата регистрации";
-            // 
-            // regDatePicker
-            // 
-            this.regDatePicker.Enabled = false;
-            this.regDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.regDatePicker.Location = new System.Drawing.Point(186, 243);
-            this.regDatePicker.Name = "regDatePicker";
-            this.regDatePicker.Size = new System.Drawing.Size(267, 31);
-            this.regDatePicker.TabIndex = 10;
+            this.label7.Text = "Сотрудник";
             // 
             // applyFilters
             // 
@@ -357,14 +345,12 @@ partial class MainForm
             this.dgv.TabIndex = 1;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
             // 
-            // position
+            // employeeID
             // 
-            this.position.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.position.FormattingEnabled = true;
-            this.position.Location = new System.Drawing.Point(214, 116);
-            this.position.Name = "position";
-            this.position.Size = new System.Drawing.Size(218, 33);
-            this.position.TabIndex = 9;
+            this.employeeID.Location = new System.Drawing.Point(186, 245);
+            this.employeeID.Name = "employeeID";
+            this.employeeID.Size = new System.Drawing.Size(267, 31);
+            this.employeeID.TabIndex = 14;
             // 
             // MainForm
             // 
@@ -417,8 +403,7 @@ partial class MainForm
     private Label label5;
     private Label label4;
     private Label label7;
-    private DateTimePicker regDatePicker;
-    private CheckBox regCheckBox;
     private ComboBox status;
     private ComboBox position;
+    private TextBox employeeID;
 }

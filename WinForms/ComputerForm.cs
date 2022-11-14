@@ -82,54 +82,82 @@ public partial class ComputerForm : Form
     }
 
     private void Update_Click(object sender, EventArgs e)
-    {
-        //_context.Open();
-        //if (_computer is null)
-        //{
-        //    _computer = new Computer();
-        //    _properties = new List<Property>
-        //    {
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.CPU, Value = cpu.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.RAM, Value = ram.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.GraphicsCard, Value = graphicsCard.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.Memory, Value = memory.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.Case, Value = caseBox.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.MotherBoard, Value = motherBoard.Text },
-        //        new Property { ComputerID = _computer.ID, TypeID = PropType.PowerSupply, Value = powerSupply.Text }
-        //    };
-        //}
-        //cpu.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.CPU)?.Value;
-        //ram.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.RAM)?.Value;
-        //graphicsCard.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.GraphicsCard)?.Value;
-        //memory.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Memory)?.Value;
-        //motherBoard.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.MotherBoard)?.Value;
-        //powerSupply.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.PowerSupply)?.Value;
-        //memory.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Memory)?.Value;
-        //caseBox.Text = _properties.FirstOrDefault(p => p.TypeID == PropType.Case)?.Value;
-        //_computer.Name = name.Text;
-        //_computer.RegDate = regDate.Value;
-        //_computer.Price = decimal.Parse(price.Text);        
-        //_computer.Status = (Status)status.SelectedIndex;
-        //_computer.EmployeeID = _employeeRep.GetEmployee(employee.Text, null, null).ID;
-        //_computer.ExplDate = explStart.Value;
+    {        
+        if(!FieldsArentEmpty())
+        {
+            MessageBox.Show("Поля не могут быть пустыми");
+            return;
+        }
 
-        //if (_computer.ID == 0)
-        //{
-        //    _computerRep.Create(_computer);
-        //    _propertyRep.Create(_properties);
-        //    MessageBox.Show("устройство успешно дабавленно");
-        //    _context.Close();
-        //    Close();
-        //}
-        //else
-        //{
-        //    _computerRep.Update(_computer);
-        //    _propertyRep.Update(_properties);
-        //    MessageBox.Show("устройство успешно обнавленно");
-        //    _context.Close();
-        //    Close();
-        //}
-       
+        if (_computer is null)
+        {
+            _computer = new Computer();
+            _computer.Properties = new Dictionary<PropType, Property>();       
+        }
+        if (!_computer.Properties.ContainsKey(PropType.CPU))
+        {
+            _computer.Properties.Add(PropType.CPU, new Property());
+        }
+        _computer.Properties[PropType.CPU].Value = cpu.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.MotherBoard))
+        {
+            _computer.Properties.Add(PropType.MotherBoard, new Property());
+        }
+        _computer.Properties[PropType.MotherBoard].Value = motherBoard.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.Case))
+        {
+            _computer.Properties.Add(PropType.Case, new Property());
+        }
+        _computer.Properties[PropType.Case].Value = caseBox.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.GraphicsCard))
+        {
+            _computer.Properties.Add(PropType.GraphicsCard, new Property());
+        }
+        _computer.Properties[PropType.GraphicsCard].Value = graphicsCard.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.Memory))
+        {
+            _computer.Properties.Add(PropType.Memory, new Property());
+        }
+        _computer.Properties[PropType.Memory].Value = memory.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.RAM))
+        {
+            _computer.Properties.Add(PropType.RAM, new Property());
+        }
+        _computer.Properties[PropType.RAM].Value = ram.Text;
+
+        if (!_computer.Properties.ContainsKey(PropType.PowerSupply))
+        {
+            _computer.Properties.Add(PropType.PowerSupply, new Property());
+        }       
+        _computer.Properties[PropType.PowerSupply].Value = powerSupply.Text;
+        _context.Open();
+        _computer.Name = name.Text;
+        _computer.RegDate = regDate.Value;
+        decimal.TryParse(price.Text, out decimal p);
+        _computer.Price = p;
+        _computer.Status = (Status)status.SelectedIndex;
+        _computer.EmployeeID = _employeeRep.GetEmployees(employee.Text, null, null)[0].ID;
+        _computer.ExplDate = explStart.Value;
+        if (_computer.ID == 0)
+        {
+            _computerRep.Create(_computer);            
+            MessageBox.Show("устройство успешно дабавленно");
+            _context.Close();
+            Close();
+        }
+        else
+        {
+            _computerRep.Update(_computer);            
+            MessageBox.Show("устройство успешно обнавленно");
+            _context.Close();
+            Close();
+        }
+
         _context.Close();
     }
 
@@ -159,6 +187,18 @@ public partial class ComputerForm : Form
                 box.Items.Add(at.Description);
             }
         }
+    }
+
+    private bool FieldsArentEmpty()
+    {
+        foreach(var control in Controls)
+        {
+            if (control is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
+                return false;
+            if (control is ComboBox cb && string.IsNullOrWhiteSpace(cb.Text))
+                return false;
+        }   
+        return true;
     }
 }
 

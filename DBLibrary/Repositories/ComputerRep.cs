@@ -17,8 +17,10 @@ public class ComputerRep : IComputerRepository
     public List<Computer> GetAll(int take, int skip)
     {
         var computers = new List<Computer>();
-        var commandString = "SELECT * FROM computers WHERE isDeleted = 0 LIMIT 10";          
+        var commandString = "SELECT * FROM computers WHERE isDeleted = 0 LIMIT @skip, @take";          
         var command = new MySqlCommand(commandString, _connection);
+        command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
+        command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
         var reader = command.ExecuteReader();
         while (reader.Read())
         {
@@ -32,7 +34,8 @@ public class ComputerRep : IComputerRepository
         return computers;
     }
 
-    public List<Computer> Filter(string? name = null, decimal price = 0, int status = 0)
+    //спросить про параметры по умолчанию в интерфейсах
+    public List<Computer> Filter(string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
     {
         var computers = new List<Computer>();
         var commandString = "SELECT * FROM computers WHERE isDeleted = 0";
@@ -51,7 +54,12 @@ public class ComputerRep : IComputerRepository
         {
             command.CommandText += " AND status = @status";
             command.Parameters.Add("@status", MySqlDbType.Int32).Value = status;
-        }        
+        }      
+        if (employeeID != 0)
+        {
+            command.CommandText += " AND employeeID = @employeeID";
+            command.Parameters.Add("@employeeID", MySqlDbType.UInt32).Value = employeeID;
+        }
         var reader = command.ExecuteReader();
         while (reader.Read())
         {
@@ -89,21 +97,24 @@ public class ComputerRep : IComputerRepository
         var commandStr = "INSERT INTO computers (name, registrationDate," +
             " price, status, employeeID, exploitationStart)" +
             " VALUES(@name, @registrationDate, @price, @status, @employeeID, @exploitationStart)";
-
         var command = new MySqlCommand(commandStr, _connection);        
         AddParameters(command, entity);
-        command.ExecuteNonQuery();        
+        command.ExecuteNonQuery();
+        command.CommandText = "SELECT id FROM computers ORDER BY id DESC LIMIT 1";
+        var id = (uint)command.ExecuteScalar()!;
+        Create(entity.Properties!, id);
     }
 
     public void Update(Computer entity)
     {
         var commandStr = "UPDATE computers SET name = @name, registrationDate = @registrationDate," +
-            " price = @price, status = @status employeeID = @employee," +
+            " price = @price, status = @status, employeeID = @employeeID," +
             " exploitationStart = @exploitationStart WHERE id = @id";
-
         var command = new MySqlCommand(commandStr, _connection);        
         AddParameters(command, entity);
-        command.ExecuteNonQuery();        
+        command.ExecuteNonQuery();
+        Update(entity.Properties!);
+
     }
 
     private static Computer Record(IDataRecord record)
@@ -123,7 +134,8 @@ public class ComputerRep : IComputerRepository
 
     public void Delete(uint id)
     {        
-        var commandStr = "UPDATE computers SET isDeleted = 1 WHERE id = @id";
+        var commandStr = "UPDATE computers, properties SET computers.isDeleted = 1," +
+            " properties.isDeleted = 1 WHERE computers.id = @id AND properties.computerID = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
         command.ExecuteNonQuery();
@@ -140,7 +152,7 @@ public class ComputerRep : IComputerRepository
         command.Parameters.Add("@exploitationStart", MySqlDbType.DateTime).Value = entity.ExplDate;
     }
 
-    public Dictionary<PropType, Property> GetByComputerID(uint id)
+    private Dictionary<PropType, Property> GetByComputerID(uint id)
     {
         var properties = new Dictionary<PropType, Property>();
         var commandStr = "SELECT * FROM properties" +
@@ -166,5 +178,35 @@ public class ComputerRep : IComputerRepository
             TypeID = (PropType)record["typeID"],
             Value = (string)record["value"]
         };
+    }
+
+    private void Update(Dictionary<PropType,Property> properties)
+    {
+        var commandStr = "UPDATE properties SET value = @value WHERE computerID = @computerID AND typeID = @typeID";
+        var command = new MySqlCommand(commandStr, _connection);
+        foreach (var key in properties.Keys)
+        {
+            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = properties[key].Value;
+            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = properties[key].ComputerID;
+            command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)key;
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+        }
+    }
+
+    private void Create(Dictionary<PropType, Property> properties, uint computerID)
+    {
+        var commandStr = "INSERT INTO properties (computerID, typeID, value)" +
+           " VALUES(@computerID, @typeID, @value)";
+        var command = new MySqlCommand(commandStr, _connection);
+        foreach(var key in properties.Keys)
+        {
+            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = properties[key].Value;
+            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = computerID;
+            command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)key;
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+        }
+        
     }
 }

@@ -42,8 +42,8 @@ public partial class RegistrationForm : Form
         }
 
         _context.Open();
-        var employee = _employeeRep.GetEmployee(name.Text, phone.Text, login.Text);
-        if (employee != null)
+        var employees = _employeeRep.GetEmployees(name.Text, phone.Text, login.Text);
+        if (employees.Count > 0)
         {
             MessageBox.Show("Неверные данные");
             _context.Close();

@@ -17,8 +17,10 @@ public class EmployeeRep : IEmployeeRepository
     public List<Employee> GetAll(int take, int skip)
     {
         var employees = new List<Employee>();
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 LIMIT 10";
+        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 LIMIT @skip, @take";
         var command = new MySqlCommand(commandString, _connection);
+        command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
+        command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {            
@@ -75,7 +77,8 @@ public class EmployeeRep : IEmployeeRepository
 
     public void Delete(uint id)
     {        
-        var commandStr = "UPDATE employees SET isDeleted = 1 WHERE id = @id";
+        var commandStr = "UPDATE employees, computers SET employees.isDeleted = 1," +
+            " computers.isDeleted = 1 WHERE employees.id = @id AND computers.employeeID = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
         command.ExecuteNonQuery();        
@@ -104,20 +107,26 @@ public class EmployeeRep : IEmployeeRepository
         return null;
     }
     
-    public Employee? GetEmployee(string? name = null, string? phone = null, string? login = null)
+    public List<Employee> GetEmployees(string name, string phone, string? login = null)
     {
+        var employees = new List<Employee>();
         var commandString = "SELECT * FROM employees WHERE isDeleted = 0" +
-            " AND (phone = @phone OR login = @login OR name = @name) LIMIT 1";
+            " AND (phone = @phone  OR name = @name ";
         var command = new MySqlCommand(commandString, _connection);
         command.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
         command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = phone;
-        command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
+        if (login != null)
+        {
+            command.CommandText += "OR login = @login";
+            command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
+        }
+        command.CommandText += ") LIMIT 2";
         using var reader = command.ExecuteReader();       
         while (reader.Read())
         {
-            return Record(reader);
+            employees.Add(Record(reader));
         }
-        return null;
+        return employees;
     }
 }
 

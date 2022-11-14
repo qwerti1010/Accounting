@@ -1,6 +1,7 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
 using DBLibrary.Interfaces;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Accounting;
@@ -79,7 +80,7 @@ public partial class MainForm : Form
     }
 
     private void ReadSingleRow(Computer computer)
-    {               
+    {
         dgv.Rows.Add(computer.ID, computer.Name, computer.RegDate, computer.Price,
             computer.Properties.ContainsKey(PropType.CPU) ? computer.Properties[PropType.CPU].Value : PropType.None,
             computer.Properties.ContainsKey(PropType.RAM) ? computer.Properties[PropType.RAM].Value : PropType.None,
@@ -87,12 +88,13 @@ public partial class MainForm : Form
             computer.Status, _employeeRep.GetByID(computer.EmployeeID).Name,
             computer.Properties.ContainsKey(PropType.Case) ? computer.Properties[PropType.Case].Value : PropType.None,
             computer.ExplDate,
-            computer.Properties.ContainsKey(PropType.Memory) ? computer.Properties[PropType.Memory].Value : PropType.None);
+            computer.Properties.ContainsKey(PropType.Memory) ? computer.Properties[PropType.Memory].Value : PropType.None);      
     }
 
     private void RefreshDataGrid(DataGridViewCondition condition)
     {
         dgv.Rows.Clear();
+        _context.Open();
         switch (condition)
         {
             case DataGridViewCondition.DeviceTab:
@@ -120,6 +122,7 @@ public partial class MainForm : Form
                     break;
                 }
         }
+        _context.Close();
     }
 
     private void ClearTextBoxes()
@@ -149,8 +152,8 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employee = _employeeRep.GetEmployee(nameTextBox.Text, phoneTextBox.Text, null);
-        if (employee != null)
+        var employees = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text, null);
+        if (employees.Count > 1 || employees[0].ID != _employee.ID)
         {
             MessageBox.Show("Эти данные уже существуют");
             _context.Close();
@@ -160,11 +163,11 @@ public partial class MainForm : Form
         _employee.Phone = phoneTextBox.Text;
         _employee.Position = (PositionEnum)position.SelectedIndex;
         _employeeRep.Update(_employee);
+        _context.Close();
         ClearTextBoxes();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
         _employees = _employeeRep.GetAll(10, 0);
-        _context.Close();
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);        
     }
 
@@ -172,12 +175,13 @@ public partial class MainForm : Form
     {
         ClearTextBoxes();        
         _context.Open();
-        _employeeRep.Delete(_employee.ID);        
+        _employeeRep.Delete(_employee.ID);
+        _employees = _employeeRep.GetAll(10, 0);
+        _computers = _computerRep.GetAll(10, 0);
+        _context.Close();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll(10, 0);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
-        _context.Close();
     }
 
     private void CreateEmployee_Click(object sender, EventArgs e)
@@ -196,8 +200,8 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employee = _employeeRep.GetEmployee(nameTextBox.Text, phoneTextBox.Text, null);
-        if (employee != null)
+        var employee = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text, null);
+        if (employee.Count > 0)
         {
             MessageBox.Show("Эти данные уже существуют");
             _context.Close();
@@ -280,8 +284,8 @@ public partial class MainForm : Form
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
         _computers = _computerRep.GetAll(10, 0);
-        RefreshDataGrid(DataGridViewCondition.DeviceTab);
         _context.Close();
+        RefreshDataGrid(DataGridViewCondition.DeviceTab);
     }
 
     private void CreateComputer_Click(object sender, EventArgs e)
@@ -302,27 +306,19 @@ public partial class MainForm : Form
     {
         _context.Open();
         string nameFilter = null;
-        var priceFilter = 0M;
         var statusFilter = status.SelectedIndex;
         if (!string.IsNullOrWhiteSpace(computerName.Text))
         {
             nameFilter = computerName.Text;
-        }
-        if (!string.IsNullOrWhiteSpace(price.Text))
-        {
-            decimal.TryParse(price.Text, out priceFilter);
-        }
+        }                   
         if (statusFilter < 0)
         {
             statusFilter = 0;
         }
-        _filredComputers = _computerRep.Filter(nameFilter, priceFilter, statusFilter);
+        decimal.TryParse(price.Text, out decimal priceFilter);
+        uint.TryParse(employeeID.Text, out uint empIDFilter);        
+        _filredComputers = _computerRep.Filter(nameFilter, priceFilter, statusFilter, empIDFilter);
         _context.Close();
         RefreshDataGrid(DataGridViewCondition.FilterTab);
-    }
-
-    private void RegCheckBox_CheckedChanged(object sender, EventArgs e)
-    {
-        regDatePicker.Enabled = !regDatePicker.Enabled;
-    }
+    }  
 }
