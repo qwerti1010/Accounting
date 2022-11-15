@@ -2,7 +2,7 @@
 
 namespace DBLibrary;
 
-public class DbContext
+public class DbContext : IDisposable
 {
     private readonly MySqlConnection _connection;
 

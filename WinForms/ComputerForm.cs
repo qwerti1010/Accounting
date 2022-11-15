@@ -7,12 +7,12 @@ namespace Accounting;
 
 public partial class ComputerForm : Form
 {
-    private Computer _computer;
+    private Computer? _computer;
     private readonly IComputerRepository _computerRep;
     private readonly DbContext _context;
     private readonly IEmployeeRepository _employeeRep;
 
-    public ComputerForm(Computer computer, DbContext context)
+    public ComputerForm(DbContext context, Computer? computer = null)
     {
         InitializeComponent();
         _computer = computer;
@@ -42,7 +42,7 @@ public partial class ComputerForm : Form
         name.Text = _computer.Name;
         _context.Open();
         status.Text = _computer.Status.ToString();
-        employee.Text = _employeeRep.GetByID(_computer.EmployeeID).Name;
+        employee.Text = _employeeRep.GetByID(_computer.EmployeeID)?.Name;
         _context.Close();
         regDate.Value = _computer.RegDate;
         price.Text = _computer.Price.ToString();
@@ -89,10 +89,8 @@ public partial class ComputerForm : Form
             return;
         }
 
-        _computer ??= new Computer
-            {
-                Properties = new Dictionary<PropType, Property>()
-            };
+        _computer ??= new Computer();
+           
         if (!_computer.Properties.ContainsKey(PropType.CPU))
         {
             _computer.Properties.Add(PropType.CPU, new Property());
@@ -140,7 +138,7 @@ public partial class ComputerForm : Form
         decimal.TryParse(price.Text, out decimal p);
         _computer.Price = p;
         _computer.Status = (Status)status.SelectedIndex;
-        _computer.EmployeeID = _employeeRep.GetEmployees(employee.Text, null, null)[0].ID;
+        _computer.EmployeeID = _employeeRep.GetEmployees(employee.Text)[0].ID;
         _computer.ExplDate = explStart.Value;
         if (_computer.ID == 0)
         {

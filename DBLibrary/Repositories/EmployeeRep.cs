@@ -107,7 +107,7 @@ public class EmployeeRep : IEmployeeRepository
         return null;
     }
     
-    public List<Employee> GetEmployees(string name, string phone, string? login = null)
+    public List<Employee> GetEmployees(string name, string? phone = null, string? login = null)
     {
         var employees = new List<Employee>();
         var commandString = "SELECT * FROM employees WHERE isDeleted = 0" +

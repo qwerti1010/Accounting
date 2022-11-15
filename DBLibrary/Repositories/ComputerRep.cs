@@ -13,29 +13,8 @@ public class ComputerRep : IComputerRepository
     {
         _connection = context.GetConnection();
     }
-
-    public List<Computer> GetAll(int take, int skip)
-    {
-        var computers = new List<Computer>();
-        var commandString = "SELECT * FROM computers WHERE isDeleted = 0 LIMIT @skip, @take";          
-        var command = new MySqlCommand(commandString, _connection);
-        command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
-        command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
-        var reader = command.ExecuteReader();
-        while (reader.Read())
-        {
-            computers.Add(Record(reader));
-        }
-        reader.Close();
-        foreach (var computer in computers)
-        {
-            computer.Properties = GetByComputerID(computer.ID);
-        }
-        return computers;
-    }
-
-    //спросить про параметры по умолчанию в интерфейсах
-    public List<Computer> Filter(string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
+   
+    public List<Computer> Filter(int skip, int take, string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
     {
         var computers = new List<Computer>();
         var commandString = "SELECT * FROM computers WHERE isDeleted = 0";
@@ -60,6 +39,9 @@ public class ComputerRep : IComputerRepository
             command.CommandText += " AND employeeID = @employeeID";
             command.Parameters.Add("@employeeID", MySqlDbType.UInt32).Value = employeeID;
         }
+        command.CommandText += " LIMIT @skip, @take";
+        command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
+        command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
         var reader = command.ExecuteReader();
         while (reader.Read())
         {
@@ -100,9 +82,9 @@ public class ComputerRep : IComputerRepository
         var command = new MySqlCommand(commandStr, _connection);        
         AddParameters(command, entity);
         command.ExecuteNonQuery();
-        command.CommandText = "SELECT id FROM computers ORDER BY id DESC LIMIT 1";
-        var id = (uint)command.ExecuteScalar()!;
-        Create(entity.Properties!, id);
+        command.CommandText = "SELECT LAST_INSERT_ID()";
+        entity.ID = Convert.ToUInt32(command.ExecuteScalar()!);
+        CreateProp(entity);
     }
 
     public void Update(Computer entity)
@@ -194,15 +176,15 @@ public class ComputerRep : IComputerRepository
         }
     }
 
-    private void Create(Dictionary<PropType, Property> properties, uint computerID)
+    private void CreateProp(Computer computer)
     {
         var commandStr = "INSERT INTO properties (computerID, typeID, value)" +
            " VALUES(@computerID, @typeID, @value)";
         var command = new MySqlCommand(commandStr, _connection);
-        foreach(var key in properties.Keys)
+        foreach(var key in computer.Properties.Keys)
         {
-            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = properties[key].Value;
-            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = computerID;
+            command.Parameters.Add("@value", MySqlDbType.VarChar).Value = computer.Properties[key].Value;
+            command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = computer.ID;
             command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)key;
             command.ExecuteNonQuery();
             command.Parameters.Clear();

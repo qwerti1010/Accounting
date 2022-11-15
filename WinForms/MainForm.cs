@@ -9,9 +9,9 @@ namespace Accounting;
 public partial class MainForm : Form
 {
     private Employee _employee;
-    private Computer _computer;
-    private List<Employee> _employees;
-    private List<Computer> _computers;
+    private Computer? _computer;
+    private List<Employee> _employees = null!;
+    private List<Computer> _computers = null!;
     private List<Computer> _filredComputers;
     private readonly IEmployeeRepository _employeeRep;
     private readonly IComputerRepository _computerRep;
@@ -57,7 +57,7 @@ public partial class MainForm : Form
         Text = "Привет, " + _employee.Name;
         _context.Open();
         _employees = _employeeRep.GetAll(10,0);
-        _computers = _computerRep.GetAll(10,0);
+        _computers = _computerRep.Filter(0,10);
         _context.Close();
         CreateColumns(_empColumns);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
@@ -85,7 +85,7 @@ public partial class MainForm : Form
             computer.Properties.ContainsKey(PropType.CPU) ? computer.Properties[PropType.CPU].Value : PropType.None,
             computer.Properties.ContainsKey(PropType.RAM) ? computer.Properties[PropType.RAM].Value : PropType.None,
             computer.Properties.ContainsKey(PropType.GraphicsCard) ? computer.Properties[PropType.GraphicsCard].Value : PropType.None,
-            computer.Status, _employeeRep.GetByID(computer.EmployeeID).Name,
+            computer.Status, _employeeRep.GetByID(computer.EmployeeID)?.Name,
             computer.Properties.ContainsKey(PropType.Case) ? computer.Properties[PropType.Case].Value : PropType.None,
             computer.ExplDate,
             computer.Properties.ContainsKey(PropType.Memory) ? computer.Properties[PropType.Memory].Value : PropType.None);      
@@ -152,7 +152,7 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employees = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text, null);
+        var employees = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text);
         if (employees.Count > 1 || employees[0].ID != _employee.ID)
         {
             MessageBox.Show("Эти данные уже существуют");
@@ -177,7 +177,7 @@ public partial class MainForm : Form
         _context.Open();
         _employeeRep.Delete(_employee.ID);
         _employees = _employeeRep.GetAll(10, 0);
-        _computers = _computerRep.GetAll(10, 0);
+        _computers = _computerRep.Filter(0,10);
         _context.Close();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
@@ -200,7 +200,7 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employee = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text, null);
+        var employee = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text);
         if (employee.Count > 0)
         {
             MessageBox.Show("Эти данные уже существуют");
@@ -249,18 +249,18 @@ public partial class MainForm : Form
 
     private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
-        _context.Open();
-        if (mainFormTabPage.SelectedIndex == 1 && e.RowIndex >= 0)
+        _context.Open();        
+        if (mainFormTabPage.SelectedIndex == (int)DataGridViewCondition.EmployeeTab && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];            
-            _employee = _employeeRep.GetByID((uint)row.Cells[0].Value);
-            nameTextBox.Text = _employee.Name;
-            phoneTextBox.Text = _employee.Phone;
-            position.Text = _employee.Position.ToString();
+            _employee = _employeeRep.GetByID((uint)row.Cells[0].Value)!;
+            nameTextBox.Text = _employee?.Name;
+            phoneTextBox.Text = _employee?.Phone;
+            position.Text = _employee?.Position.ToString();
             updateEmployee.Enabled = true;
             deleteEmployee.Enabled = true;
         }
-        else if (mainFormTabPage.SelectedIndex == 0 && e.RowIndex >= 0)
+        else if (mainFormTabPage.SelectedIndex == (int)DataGridViewCondition.DeviceTab && e.RowIndex >= 0)
         {
             var row = dgv.Rows[e.RowIndex];
             _computer = _computerRep.GetByID((uint)row.Cells[0].Value);
@@ -273,31 +273,31 @@ public partial class MainForm : Form
     private void GetComputer_Click(object sender, EventArgs e)
     {
         
-        var form = new ComputerForm(_computer, _context);
+        var form = new ComputerForm(_context, _computer);
         form.ShowDialog();
     }
 
     private void DeleteComputer_Click(object sender, EventArgs e)
     {
         _context.Open();
-        _computerRep.Delete(_computer.ID);
+        _computerRep.Delete(_computer!.ID);
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
-        _computers = _computerRep.GetAll(10, 0);
+        _computers = _computerRep.Filter(0, 10);
         _context.Close();
         RefreshDataGrid(DataGridViewCondition.DeviceTab);
     }
 
     private void CreateComputer_Click(object sender, EventArgs e)
     {
-        var form = new ComputerForm(null, _context);
+        var form = new ComputerForm(_context);
         form.ShowDialog();
     }
 
     private void RefreshDbState_Click(object sender, EventArgs e)
     {
         _context.Open();
-        _computers = _computerRep.GetAll(10, 0).ToList();
+        _computers = _computerRep.Filter(0, 10);
         _context.Close();
         RefreshDataGrid(DataGridViewCondition.DeviceTab);
     }
@@ -305,7 +305,7 @@ public partial class MainForm : Form
     private void ApplyFilters_Click(object sender, EventArgs e)
     {
         _context.Open();
-        string nameFilter = null;
+        string? nameFilter = null;
         var statusFilter = status.SelectedIndex;
         if (!string.IsNullOrWhiteSpace(computerName.Text))
         {
@@ -317,7 +317,7 @@ public partial class MainForm : Form
         }
         decimal.TryParse(price.Text, out decimal priceFilter);
         uint.TryParse(employeeID.Text, out uint empIDFilter);        
-        _filredComputers = _computerRep.Filter(nameFilter, priceFilter, statusFilter, empIDFilter);
+        _filredComputers = _computerRep.Filter(0,10, nameFilter, priceFilter, statusFilter, empIDFilter);
         _context.Close();
         RefreshDataGrid(DataGridViewCondition.FilterTab);
     }  

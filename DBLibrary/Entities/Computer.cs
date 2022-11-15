@@ -10,5 +10,10 @@ public class Computer
     public decimal Price { get; set; }
     public DateTime ExplDate { get; set; }
     public bool IsDeleted { get; set; }
-    public Dictionary<PropType, Property>? Properties;
+    public Dictionary<PropType, Property> Properties { get; set; }
+    
+    public Computer()
+    {
+        Properties = new Dictionary<PropType, Property>();
+    }
 }
