@@ -56,7 +56,7 @@ public partial class MainForm : Form
     {
         Text = "Привет, " + _employee.Name;
         _context.Open();
-        _employees = _employeeRep.GetAll(10,0);
+        _employees = _employeeRep.GetEmployees(10,0);
         _computers = _computerRep.Filter(0,10);
         _context.Close();
         CreateColumns(_empColumns);
@@ -152,7 +152,7 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employees = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text);
+        var employees = _employeeRep.GetEmployees(2,0,nameTextBox.Text, phoneTextBox.Text);
         if (employees.Count > 1 || employees[0].ID != _employee.ID)
         {
             MessageBox.Show("Эти данные уже существуют");
@@ -162,12 +162,12 @@ public partial class MainForm : Form
         _employee.Name = nameTextBox.Text;
         _employee.Phone = phoneTextBox.Text;
         _employee.Position = (PositionEnum)position.SelectedIndex;
-        _employeeRep.Update(_employee);
-        _context.Close();
+        _employeeRep.Update(_employee);        
         ClearTextBoxes();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll(10, 0);
+        _employees = _employeeRep.GetEmployees(10, 0);
+        _context.Close();
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);        
     }
 
@@ -176,7 +176,7 @@ public partial class MainForm : Form
         ClearTextBoxes();        
         _context.Open();
         _employeeRep.Delete(_employee.ID);
-        _employees = _employeeRep.GetAll(10, 0);
+        _employees = _employeeRep.GetEmployees(10, 0);
         _computers = _computerRep.Filter(0,10);
         _context.Close();
         deleteEmployee.Enabled = false;
@@ -200,7 +200,7 @@ public partial class MainForm : Form
         }
 
         _context.Open();
-        var employee = _employeeRep.GetEmployees(nameTextBox.Text, phoneTextBox.Text);
+        var employee = _employeeRep.GetEmployees(2,0,nameTextBox.Text, phoneTextBox.Text);
         if (employee.Count > 0)
         {
             MessageBox.Show("Эти данные уже существуют");
@@ -217,7 +217,7 @@ public partial class MainForm : Form
         ClearTextBoxes();
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetAll(10, 0);
+        _employees = _employeeRep.GetEmployees(10, 0);
         RefreshDataGrid(DataGridViewCondition.EmployeeTab);
         _context.Close();
     }    

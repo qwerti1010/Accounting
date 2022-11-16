@@ -42,7 +42,7 @@ public partial class RegistrationForm : Form
         }
 
         _context.Open();
-        var employees = _employeeRep.GetEmployees(name.Text, phone.Text, login.Text);
+        var employees = _employeeRep.GetEmployees(1,0, name.Text, phone.Text, login.Text);
         if (employees.Count > 0)
         {
             MessageBox.Show("Неверные данные");

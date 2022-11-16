@@ -138,7 +138,7 @@ public partial class ComputerForm : Form
         decimal.TryParse(price.Text, out decimal p);
         _computer.Price = p;
         _computer.Status = (Status)status.SelectedIndex;
-        _computer.EmployeeID = _employeeRep.GetEmployees(employee.Text)[0].ID;
+        _computer.EmployeeID = _employeeRep.GetEmployees(1, 0, employee.Text)[0].ID;
         _computer.ExplDate = explStart.Value;
         if (_computer.ID == 0)
         {
@@ -161,7 +161,7 @@ public partial class ComputerForm : Form
     private void AddItemsToComboBoxes()
     {
         _context.Open();        
-        employee.Items.AddRange(_employeeRep.GetAll(10,0).Select(e => e.Name).ToArray());
+        employee.Items.AddRange(_employeeRep.GetEmployees(10,0).Select(e => e.Name).ToArray());
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         _context.Close();
         GetAttributes(typeof(CPUs), cpu);

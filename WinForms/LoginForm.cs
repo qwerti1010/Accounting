@@ -1,49 +1,39 @@
-﻿using DBLibrary;
+﻿
+using DBLibrary;
 using DBLibrary.Entities;
-using DBLibrary.Interfaces;
+using Services;
 
 namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private readonly IEmployeeRepository _employeeRep;
-    private readonly IVisitRepository _visitRep;
+    private readonly LoginService _loginService;
     private readonly DbContext _context;
-
+    
     public LoginForm()
     {
-        _context = new DbContext();
-        _employeeRep = new EmployeeRep(_context);
-        _visitRep = new VisitRep(_context);
         InitializeComponent();
+        _context = new DbContext();
+        _loginService = new LoginService(_context);
     }
 
     private void SignUp_Click(object sender, EventArgs e)
-    {
-        _context.Open();
-        var employee = _employeeRep.GetByLogin(loginTextBox.Text);
+    {        
         
-        if (employee is null)
+        if (!_loginService.IsEmployeeExist(loginTextBox.Text))
         {
             MessageBox.Show("Неверный логин");
-            _context.Close();
             return;
         }
-
-        if (employee.Password != passTextBox.Text)
+        else if (!_loginService.IsPasswordValid(passTextBox.Text))
         {
             MessageBox.Show("Неверный пароль");
-            _context.Close();
             return;
         }
 
-        _visitRep.Create(new Visit
-        {
-            EmployeeID = employee.ID,
-            VisitTime = DateTime.UtcNow
-        });
-        _context.Close();
-        var form = new MainForm(employee, _context);
+        _loginService.AddVisit();
+        
+        var form = new MainForm(_loginService.Employee!, _context);
         form.ShowDialog();
         Hide();
     }
@@ -52,5 +42,10 @@ public partial class LoginForm : Form
     {
         var form = new RegistrationForm(_context);
         form.ShowDialog();
+    }
+
+    private void LoginForm_Load(object sender, EventArgs e)
+    {
+
     }
 }

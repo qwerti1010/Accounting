@@ -1,7 +1,9 @@
 ﻿using DBLibrary.Entities;
 using DBLibrary.Interfaces;
+using Microsoft.VisualBasic;
 using MySqlConnector;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace DBLibrary;
 
@@ -13,19 +15,39 @@ public class EmployeeRep : IEmployeeRepository
     {
         _connection = context.GetConnection();
     }
+    
 
-    public List<Employee> GetAll(int take, int skip)
+    public List<Employee> GetEmployees(int take, int skip,
+        string? name = null, string? phone = null, string? login = null)
     {
         var employees = new List<Employee>();
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 LIMIT @skip, @take";
+        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 ";
         var command = new MySqlCommand(commandString, _connection);
+        if (name != null)
+        {
+            command.CommandText += " AND name = @name";
+            command.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
+        }
+        
+        if (phone != null)
+        {
+            command.CommandText += " AND phone = @phone";
+            command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = phone;
+        }
+        
+        if (login != null)
+        {
+            command.CommandText += " AND login = @login";
+            command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
+        }
         command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
         command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
+        command.CommandText += " LIMIT @skip, @take";
         using var reader = command.ExecuteReader();
         while (reader.Read())
-        {            
-            employees.Add(Record(reader));           
-        }                
+        {
+            employees.Add(Record(reader));
+        }
         return employees;
     }
 
@@ -107,26 +129,6 @@ public class EmployeeRep : IEmployeeRepository
         return null;
     }
     
-    public List<Employee> GetEmployees(string name, string? phone = null, string? login = null)
-    {
-        var employees = new List<Employee>();
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0" +
-            " AND (phone = @phone  OR name = @name ";
-        var command = new MySqlCommand(commandString, _connection);
-        command.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
-        command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = phone;
-        if (login != null)
-        {
-            command.CommandText += "OR login = @login";
-            command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
-        }
-        command.CommandText += ") LIMIT 2";
-        using var reader = command.ExecuteReader();       
-        while (reader.Read())
-        {
-            employees.Add(Record(reader));
-        }
-        return employees;
-    }
+    
 }
 
