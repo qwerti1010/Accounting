@@ -1,6 +1,6 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
-using DBLibrary.Interfaces;
+using Services.Services;
 using System.Reflection;
 
 namespace Accounting;
@@ -8,17 +8,15 @@ namespace Accounting;
 public partial class ComputerForm : Form
 {
     private Computer? _computer;
-    private readonly IComputerRepository _computerRep;
-    private readonly DbContext _context;
-    private readonly IEmployeeRepository _employeeRep;
+    private readonly ComputerService _computerService;
+    private readonly EmployeeService _employeeService;
 
-    public ComputerForm(DbContext context, Computer? computer = null)
+    public ComputerForm(ComputerService computerService, EmployeeService employeeService, Computer? computer = null)
     {
         InitializeComponent();
-        _computer = computer;
-        _context = context;
-        _computerRep = new ComputerRep(_context);
-        _employeeRep = new EmployeeRep(_context);        
+        _computerService = computerService;
+        _employeeService = employeeService;
+        _computer = computer;    
     }
 
     private void Close_Click(object sender, EventArgs e)
@@ -39,11 +37,9 @@ public partial class ComputerForm : Form
 
         Text = $"Просмотр информации устройства. Номер в базе - {_computer.ID}";
         ChangeState();
-        name.Text = _computer.Name;
-        _context.Open();
+        name.Text = _computer.Name;        
         status.Text = _computer.Status.ToString();
-        employee.Text = _employeeRep.GetByID(_computer.EmployeeID)?.Name;
-        _context.Close();
+        employee.Text = _employeeService.GetByID(_computer.EmployeeID)?.Name;
         regDate.Value = _computer.RegDate;
         price.Text = _computer.Price.ToString();
         cpu.Text = _computer.Properties.ContainsKey(PropType.CPU) ? _computer.Properties[PropType.CPU].Value : null;
@@ -132,38 +128,31 @@ public partial class ComputerForm : Form
             _computer.Properties.Add(PropType.PowerSupply, new Property());
         }       
         _computer.Properties[PropType.PowerSupply].Value = powerSupply.Text;
-        _context.Open();
         _computer.Name = name.Text;
         _computer.RegDate = regDate.Value;
         decimal.TryParse(price.Text, out decimal p);
         _computer.Price = p;
         _computer.Status = (Status)status.SelectedIndex;
-        _computer.EmployeeID = _employeeRep.GetEmployees(1, 0, employee.Text)[0].ID;
+        _computer.EmployeeID = _employeeService.GetByName(employee.Text).Employee!.ID;
         _computer.ExplDate = explStart.Value;
         if (_computer.ID == 0)
         {
-            _computerRep.Create(_computer);            
+            _computerService.Create(_computer);            
             MessageBox.Show("устройство успешно дабавленно");
-            _context.Close();
             Close();
         }
         else
         {
-            _computerRep.Update(_computer);            
+            _computerService.Update(_computer);            
             MessageBox.Show("устройство успешно обнавленно");
-            _context.Close();
             Close();
         }
-
-        _context.Close();
     }
 
     private void AddItemsToComboBoxes()
     {
-        _context.Open();        
-        employee.Items.AddRange(_employeeRep.GetEmployees(10,0).Select(e => e.Name).ToArray());
+        employee.Items.AddRange(_employeeService.GetEmployees(10,0).Select(e => e.Name).ToArray());
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
-        _context.Close();
         GetAttributes(typeof(CPUs), cpu);
         GetAttributes(typeof(RAMs), ram);
         GetAttributes(typeof(MotherBoards), motherBoard);

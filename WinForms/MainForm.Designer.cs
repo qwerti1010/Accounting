@@ -32,7 +32,6 @@ partial class MainForm
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.deleteComputer = new System.Windows.Forms.Button();
             this.getComputer = new System.Windows.Forms.Button();
-            this.chengeOperation = new System.Windows.Forms.Button();
             this.addComputer = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.position = new System.Windows.Forms.ComboBox();
@@ -45,6 +44,7 @@ partial class MainForm
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.employeeID = new System.Windows.Forms.TextBox();
             this.status = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.applyFilters = new System.Windows.Forms.Button();
@@ -55,7 +55,6 @@ partial class MainForm
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgv = new System.Windows.Forms.DataGridView();
-            this.employeeID = new System.Windows.Forms.TextBox();
             this.mainFormTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -80,7 +79,6 @@ partial class MainForm
             // 
             this.tabPage1.Controls.Add(this.deleteComputer);
             this.tabPage1.Controls.Add(this.getComputer);
-            this.tabPage1.Controls.Add(this.chengeOperation);
             this.tabPage1.Controls.Add(this.addComputer);
             this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Name = "tabPage1";
@@ -93,7 +91,7 @@ partial class MainForm
             // deleteComputer
             // 
             this.deleteComputer.Enabled = false;
-            this.deleteComputer.Location = new System.Drawing.Point(580, 148);
+            this.deleteComputer.Location = new System.Drawing.Point(666, 93);
             this.deleteComputer.Name = "deleteComputer";
             this.deleteComputer.Size = new System.Drawing.Size(220, 111);
             this.deleteComputer.TabIndex = 5;
@@ -104,7 +102,7 @@ partial class MainForm
             // getComputer
             // 
             this.getComputer.Enabled = false;
-            this.getComputer.Location = new System.Drawing.Point(156, 148);
+            this.getComputer.Location = new System.Drawing.Point(380, 93);
             this.getComputer.Name = "getComputer";
             this.getComputer.Size = new System.Drawing.Size(220, 111);
             this.getComputer.TabIndex = 3;
@@ -112,19 +110,9 @@ partial class MainForm
             this.getComputer.UseVisualStyleBackColor = true;
             this.getComputer.Click += new System.EventHandler(this.GetComputer_Click);
             // 
-            // chengeOperation
-            // 
-            this.chengeOperation.Location = new System.Drawing.Point(580, 22);
-            this.chengeOperation.Name = "chengeOperation";
-            this.chengeOperation.Size = new System.Drawing.Size(220, 111);
-            this.chengeOperation.TabIndex = 1;
-            this.chengeOperation.Text = "Обновить состояние базы ";
-            this.chengeOperation.UseVisualStyleBackColor = true;
-            this.chengeOperation.Click += new System.EventHandler(this.RefreshDbState_Click);
-            // 
             // addComputer
             // 
-            this.addComputer.Location = new System.Drawing.Point(156, 22);
+            this.addComputer.Location = new System.Drawing.Point(86, 93);
             this.addComputer.Name = "addComputer";
             this.addComputer.Size = new System.Drawing.Size(220, 111);
             this.addComputer.TabIndex = 0;
@@ -252,6 +240,13 @@ partial class MainForm
             this.tabPage3.Text = "Фильтры";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // employeeID
+            // 
+            this.employeeID.Location = new System.Drawing.Point(186, 245);
+            this.employeeID.Name = "employeeID";
+            this.employeeID.Size = new System.Drawing.Size(267, 31);
+            this.employeeID.TabIndex = 14;
+            // 
             // status
             // 
             this.status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -266,9 +261,9 @@ partial class MainForm
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(11, 249);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(100, 25);
+            this.label7.Size = new System.Drawing.Size(129, 25);
             this.label7.TabIndex = 11;
-            this.label7.Text = "Сотрудник";
+            this.label7.Text = "ID сотрудника";
             // 
             // applyFilters
             // 
@@ -345,13 +340,6 @@ partial class MainForm
             this.dgv.TabIndex = 1;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
             // 
-            // employeeID
-            // 
-            this.employeeID.Location = new System.Drawing.Point(186, 245);
-            this.employeeID.Name = "employeeID";
-            this.employeeID.Size = new System.Drawing.Size(267, 31);
-            this.employeeID.TabIndex = 14;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -395,7 +383,6 @@ partial class MainForm
     private Button addComputer;
     private Button deleteComputer;
     private Button getComputer;
-    private Button chengeOperation;
     private Button applyFilters;
     private TextBox price;
     private TextBox computerName;

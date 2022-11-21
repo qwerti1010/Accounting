@@ -1,39 +1,31 @@
 ﻿
 using DBLibrary;
 using DBLibrary.Entities;
-using Services;
+using Services.Services;
 
 namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private readonly LoginService _loginService;
+    private readonly EmployeeService _loginService;
     private readonly DbContext _context;
     
     public LoginForm()
     {
         InitializeComponent();
         _context = new DbContext();
-        _loginService = new LoginService(_context);
+        _loginService = new EmployeeService(_context);
     }
 
     private void SignUp_Click(object sender, EventArgs e)
-    {        
-        
-        if (!_loginService.IsEmployeeExist(loginTextBox.Text))
+    {
+        var status = _loginService.Login(loginTextBox.Text, passTextBox.Text);
+        if (!status.IsSuccess)
         {
-            MessageBox.Show("Неверный логин");
+            MessageBox.Show(status.Message);
             return;
         }
-        else if (!_loginService.IsPasswordValid(passTextBox.Text))
-        {
-            MessageBox.Show("Неверный пароль");
-            return;
-        }
-
-        _loginService.AddVisit();
-        
-        var form = new MainForm(_loginService.Employee!, _context);
+        var form = new MainForm(status.Employee!, _context);
         form.ShowDialog();
         Hide();
     }

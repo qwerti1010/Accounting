@@ -43,10 +43,11 @@ public class EmployeeRep : IEmployeeRepository
         command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
         command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
         command.CommandText += " LIMIT @skip, @take";
+        
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            employees.Add(Record(reader));
+           employees.Add(Record(reader));
         }
         return employees;
     }
@@ -99,11 +100,14 @@ public class EmployeeRep : IEmployeeRepository
 
     public void Delete(uint id)
     {        
-        var commandStr = "UPDATE employees, computers SET employees.isDeleted = 1," +
-            " computers.isDeleted = 1 WHERE employees.id = @id AND computers.employeeID = @id";
+        var commandStr = "UPDATE employees SET isDeleted = 1 WHERE id = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
-        command.ExecuteNonQuery();        
+        command.ExecuteNonQuery();
+        command.CommandText = "UPDATE computers SET isDeleted = 1 WHERE employeeID = @id";
+        command.ExecuteNonQuery();
+        command.CommandText = "UPDATE properties SET isDeleted = 1 WHERE computerID = @id";
+        command.ExecuteNonQuery();
     }
 
     private static void AddParameters(MySqlCommand command, Employee entity)

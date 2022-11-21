@@ -116,10 +116,11 @@ public class ComputerRep : IComputerRepository
 
     public void Delete(uint id)
     {        
-        var commandStr = "UPDATE computers, properties SET computers.isDeleted = 1," +
-            " properties.isDeleted = 1 WHERE computers.id = @id AND properties.computerID = @id";
+        var commandStr = "UPDATE computers SET isDeleted = 1 WHERE id = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+        command.ExecuteNonQuery();
+        command.CommandText = "UPDATE properties SET isDeleted = 1 WHERE computerID = @id";
         command.ExecuteNonQuery();
     }    
 

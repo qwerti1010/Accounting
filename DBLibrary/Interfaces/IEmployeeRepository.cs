@@ -1,4 +1,5 @@
 ﻿using DBLibrary.Entities;
+using System.Data;
 
 namespace DBLibrary.Interfaces;
 

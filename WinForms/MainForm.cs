@@ -1,134 +1,39 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
 using DBLibrary.Interfaces;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+using Services.Services;
 
 namespace Accounting;
 
 public partial class MainForm : Form
 {
     private Employee _employee;
-    private Computer? _computer;
-    private List<Employee> _employees = null!;
-    private List<Computer> _computers = null!;
-    private List<Computer> _filredComputers;
-    private readonly IEmployeeRepository _employeeRep;
-    private readonly IComputerRepository _computerRep;
-    private readonly List<(string, string)> _empColumns;
-    private readonly List<(string, string)> _computerColumns;
-    private readonly DbContext _context;    
+    private Computer _computer = null!;   
+    private readonly EmployeeService _employeeService;
+    private readonly ComputerService _computerService;
     
     public MainForm(Employee employee, DbContext context)
     {
-        _context = context; 
-        _employee = employee;
-        _employeeRep = new EmployeeRep(_context);
-        _computerRep = new ComputerRep(_context);
-        _filredComputers = new List<Computer>();
+        _employee = employee;        
         InitializeComponent();
-        mainFormTabPage.SelectTab(nameof(tabPage2));
-        _empColumns = new List<(string, string)>
-            {
-                ("employeeId", "Id"),
-                ("name", "Имя"),
-                ("position", "Должность"),
-                ("phone","Номер телефона")
-            };
-        _computerColumns = new List<(string, string)>
-            {
-                ("computerId", "Id"),
-                ("name", "Наименование"),
-                ("registrationDate", "Дата постановки на учет"),
-                ("price", "Цена"),
-                ("cpu", "Процессор"),
-                ("ram", "Объем оперативной памяти"),
-                ("graphicsCard", "Видеокарта"),
-                ("status", "Статус"),
-                ("employeeID","ID сотрудника"),
-                ("case","Корпус"),
-                ("explutationStart","Начало эксплуатации"),
-                ("memory","Память")
-            };
+        _employeeService = new EmployeeService(context);
+        _computerService = new ComputerService(context);
+        mainFormTabPage.SelectTab(nameof(tabPage2));       
     }
 
     private void MainForm_Load(object sender, EventArgs e)
     {
         Text = "Привет, " + _employee.Name;
-        _context.Open();
-        _employees = _employeeRep.GetEmployees(10,0);
-        _computers = _computerRep.Filter(0,10);
-        _context.Close();
-        CreateColumns(_empColumns);
-        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
+        var emp = _employeeService.GetEmployees(10, 0);
+        dgv.DataSource = emp;
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         position.Items.AddRange(Enum.GetValues<PositionEnum>().Cast<object>().ToArray());
-    }
-
-    private void CreateColumns(List<(string, string)> columnsNames)
-    {
-        dgv.Columns.Clear();
-        foreach (var name in columnsNames)
-        {
-            dgv.Columns.Add(name.Item1, name.Item2);
-        }
-    }
-
-    private void ReadSingleRow(Employee employee)
-    {
-        dgv.Rows.Add(employee.ID, employee.Name, employee.Position, employee.Phone);
-    }
-
-    private void ReadSingleRow(Computer computer)
-    {
-        dgv.Rows.Add(computer.ID, computer.Name, computer.RegDate, computer.Price,
-            computer.Properties.ContainsKey(PropType.CPU) ? computer.Properties[PropType.CPU].Value : PropType.None,
-            computer.Properties.ContainsKey(PropType.RAM) ? computer.Properties[PropType.RAM].Value : PropType.None,
-            computer.Properties.ContainsKey(PropType.GraphicsCard) ? computer.Properties[PropType.GraphicsCard].Value : PropType.None,
-            computer.Status, _employeeRep.GetByID(computer.EmployeeID)?.Name,
-            computer.Properties.ContainsKey(PropType.Case) ? computer.Properties[PropType.Case].Value : PropType.None,
-            computer.ExplDate,
-            computer.Properties.ContainsKey(PropType.Memory) ? computer.Properties[PropType.Memory].Value : PropType.None);      
-    }
-
-    private void RefreshDataGrid(DataGridViewCondition condition)
-    {
-        dgv.Rows.Clear();
-        _context.Open();
-        switch (condition)
-        {
-            case DataGridViewCondition.DeviceTab:
-                {
-                    foreach (var computer in _computers)
-                    {
-                        ReadSingleRow(computer);
-                    }
-                    break;
-                }
-            case DataGridViewCondition.EmployeeTab:
-                {
-                    foreach (var employee in _employees)
-                    {
-                        ReadSingleRow(employee);
-                    }
-                    break;
-                }
-            case DataGridViewCondition.FilterTab:
-                {
-                    foreach (var computer in _filredComputers)
-                    {
-                        ReadSingleRow(computer);
-                    }
-                    break;
-                }
-        }
-        _context.Close();
-    }
+    }    
 
     private void ClearTextBoxes()
     {
         nameTextBox.Clear();
-        phoneTextBox.Clear();
+        phoneTextBox.Clear();      
     }
 
     private void MainForm_Closed(object sender, FormClosedEventArgs e)
@@ -137,89 +42,41 @@ public partial class MainForm : Form
     }
     
     private void UpdateEmployee_Click(object sender, EventArgs e)
-    {        
-        if (String.IsNullOrWhiteSpace(nameTextBox.Text) || String.IsNullOrWhiteSpace(phoneTextBox.Text))
-        {
-            MessageBox.Show("Поля не могут быть пустыми");            
-            return;
-        }
-
-        var regex = new Regex(@"^[+]7\d{10}$").IsMatch(phoneTextBox.Text);
-        if (!regex)
-        {
-            MessageBox.Show("Неверный формат номера телефона");
-            return;
-        }
-
-        _context.Open();
-        var employees = _employeeRep.GetEmployees(2,0,nameTextBox.Text, phoneTextBox.Text);
-        if (employees.Count > 1 || employees[0].ID != _employee.ID)
-        {
-            MessageBox.Show("Эти данные уже существуют");
-            _context.Close();
-            return;
-        }
+    {
         _employee.Name = nameTextBox.Text;
         _employee.Phone = phoneTextBox.Text;
         _employee.Position = (PositionEnum)position.SelectedIndex;
-        _employeeRep.Update(_employee);        
-        ClearTextBoxes();
-        deleteEmployee.Enabled = false;
-        updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetEmployees(10, 0);
-        _context.Close();
-        RefreshDataGrid(DataGridViewCondition.EmployeeTab);        
+        var status = _employeeService.Update(_employee);
+        MessageBox.Show(status.Message);
+        dgv.DataSource = _employeeService.GetEmployees(10, 0);
+        
     }
 
     private void DeleteEmployee_Click(object sender, EventArgs e)
     {
         ClearTextBoxes();        
-        _context.Open();
-        _employeeRep.Delete(_employee.ID);
-        _employees = _employeeRep.GetEmployees(10, 0);
-        _computers = _computerRep.Filter(0,10);
-        _context.Close();
+        _employeeService.Delete(_employee.ID);
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
+        dgv.DataSource = _employeeService.GetEmployees(10, 0);
     }
 
     private void CreateEmployee_Click(object sender, EventArgs e)
     {
-        if (String.IsNullOrWhiteSpace(nameTextBox.Text) || String.IsNullOrWhiteSpace(phoneTextBox.Text))
-        {
-            MessageBox.Show("Поля не могут быть пустыми");
-            return;
-        }
-
-        var regex = new Regex(@"^[+]7\d{10}$").IsMatch(phoneTextBox.Text);
-        if (!regex)
-        {
-            MessageBox.Show("Неверный формат номера телефона");
-            return;
-        }
-
-        _context.Open();
-        var employee = _employeeRep.GetEmployees(2,0,nameTextBox.Text, phoneTextBox.Text);
-        if (employee.Count > 0)
-        {
-            MessageBox.Show("Эти данные уже существуют");
-            _context.Close();
-            return;
-        }
-
-        _employeeRep.Create(new Employee
+        var employee = new Employee
         {
             Name = nameTextBox.Text,
             Phone = phoneTextBox.Text,
             Position = (PositionEnum)position.SelectedIndex
-        });
-        ClearTextBoxes();
-        deleteEmployee.Enabled = false;
-        updateEmployee.Enabled = false;
-        _employees = _employeeRep.GetEmployees(10, 0);
-        RefreshDataGrid(DataGridViewCondition.EmployeeTab);
-        _context.Close();
+        };
+        //не забыть поправить
+        var status = _employeeService.Registration(employee, null);
+        MessageBox.Show(status.Message);
+        if (status.IsSuccess)
+        {
+            ClearTextBoxes();
+        }
+        dgv.DataSource = _employeeService.GetEmployees(10, 0);
     }    
 
     private void TabPage_Selecting(object sender, TabControlCancelEventArgs e)
@@ -228,20 +85,17 @@ public partial class MainForm : Form
         {
             case 0:
                 {
-                    CreateColumns(_computerColumns);
-                    RefreshDataGrid(DataGridViewCondition.DeviceTab);                    
+                    dgv.DataSource = _computerService.GetComputers(10, 0);
                     break;
                 }
             case 1:
                 {
-                    CreateColumns(_empColumns);
-                    RefreshDataGrid(DataGridViewCondition.EmployeeTab);                    
+                    dgv.DataSource = _employeeService.GetEmployees(10, 0);
                     break;
                 }
             case 2:
                 {
-                    CreateColumns(_computerColumns);
-                    RefreshDataGrid(DataGridViewCondition.FilterTab);
+                    dgv.DataSource = null;
                     break;
                 }
         }
@@ -249,76 +103,55 @@ public partial class MainForm : Form
 
     private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
-        _context.Open();        
-        if (mainFormTabPage.SelectedIndex == (int)DataGridViewCondition.EmployeeTab && e.RowIndex >= 0)
+        if (e.RowIndex < 0) return;
+
+        switch (mainFormTabPage.SelectedIndex)
         {
-            var row = dgv.Rows[e.RowIndex];            
-            _employee = _employeeRep.GetByID((uint)row.Cells[0].Value)!;
-            nameTextBox.Text = _employee?.Name;
-            phoneTextBox.Text = _employee?.Phone;
-            position.Text = _employee?.Position.ToString();
-            updateEmployee.Enabled = true;
-            deleteEmployee.Enabled = true;
+            case (int)DataGridViewCondition.EmployeeTab:
+                {
+                    var row = dgv.Rows[e.RowIndex];
+                    _employee = _employeeService.GetByID((uint)row.Cells[0].Value)!;
+                    nameTextBox.Text = _employee?.Name;
+                    phoneTextBox.Text = _employee?.Phone;
+                    position.Text = _employee?.Position.ToString();
+                    updateEmployee.Enabled = true;
+                    deleteEmployee.Enabled = true;
+                    break;
+                }
+            case (int)DataGridViewCondition.DeviceTab:
+                {
+                    var row = dgv.Rows[e.RowIndex];
+                    _computer = _computerService.GetByID((uint)row.Cells[0].Value);
+                    getComputer.Enabled = true;
+                    deleteComputer.Enabled = true;
+                    break;
+                }
         }
-        else if (mainFormTabPage.SelectedIndex == (int)DataGridViewCondition.DeviceTab && e.RowIndex >= 0)
-        {
-            var row = dgv.Rows[e.RowIndex];
-            _computer = _computerRep.GetByID((uint)row.Cells[0].Value);
-            getComputer.Enabled = true;
-            deleteComputer.Enabled = true;
-        }
-        _context.Close();
     }
 
     private void GetComputer_Click(object sender, EventArgs e)
-    {
-        
-        var form = new ComputerForm(_context, _computer);
+    {        
+        var form = new ComputerForm(_computerService, _employeeService, _computer);
         form.ShowDialog();
     }
 
     private void DeleteComputer_Click(object sender, EventArgs e)
-    {
-        _context.Open();
-        _computerRep.Delete(_computer!.ID);
+    {       
+        _computerService.Delete(_computer.ID);
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
-        _computers = _computerRep.Filter(0, 10);
-        _context.Close();
-        RefreshDataGrid(DataGridViewCondition.DeviceTab);
+        dgv.DataSource = _computerService.GetComputers(10, 0);
     }
 
     private void CreateComputer_Click(object sender, EventArgs e)
     {
-        var form = new ComputerForm(_context);
+        var form = new ComputerForm(_computerService, _employeeService);
         form.ShowDialog();
     }
 
-    private void RefreshDbState_Click(object sender, EventArgs e)
-    {
-        _context.Open();
-        _computers = _computerRep.Filter(0, 10);
-        _context.Close();
-        RefreshDataGrid(DataGridViewCondition.DeviceTab);
-    }
-
     private void ApplyFilters_Click(object sender, EventArgs e)
-    {
-        _context.Open();
-        string? nameFilter = null;
-        var statusFilter = status.SelectedIndex;
-        if (!string.IsNullOrWhiteSpace(computerName.Text))
-        {
-            nameFilter = computerName.Text;
-        }                   
-        if (statusFilter < 0)
-        {
-            statusFilter = 0;
-        }
-        decimal.TryParse(price.Text, out decimal priceFilter);
-        uint.TryParse(employeeID.Text, out uint empIDFilter);        
-        _filredComputers = _computerRep.Filter(0,10, nameFilter, priceFilter, statusFilter, empIDFilter);
-        _context.Close();
-        RefreshDataGrid(DataGridViewCondition.FilterTab);
+    {        
+        dgv.DataSource = _computerService.GetComputers(10, 0,
+            computerName.Text, price.Text, status.SelectedIndex, employeeID.Text);
     }  
 }
