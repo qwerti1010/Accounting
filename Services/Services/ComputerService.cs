@@ -1,17 +1,21 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
+using DBLibrary.Interfaces;
+using DBLibrary.Repositories;
 
 namespace Services.Services;
 
 public class ComputerService
 {
     private readonly DbContext _context;
-    private readonly ComputerRep _computerRep;
+    private readonly IComputerRepository _computerRep;
+    private readonly IPropertyRepository _propertyRep;
 
     public ComputerService(DbContext context)
     {
         _context = context;
         _computerRep = new ComputerRep(_context);
+        _propertyRep = new PropertyRep(_context);
     }
 
     public List<Computer> GetComputers(int take, int skip, string? nameFilter = null,
@@ -29,6 +33,10 @@ public class ComputerService
         uint.TryParse(emplIDFilter, out uint empID);
         _context.Open();
         var computers = _computerRep.Filter(skip, take, nameFilter, price, statusFilter, empID);
+        foreach (var computer in computers)
+        {
+            computer.Properties = _propertyRep.GetByComputerID(computer.ID);
+        }
         _context.Close();
         return computers;
     }
@@ -37,6 +45,7 @@ public class ComputerService
     {
         _context.Open();
         var computer = _computerRep.GetByID(id);
+        computer!.Properties = _propertyRep.GetByComputerID(computer.ID);
         _context.Close();
         return computer!;
     }
@@ -45,6 +54,7 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Delete(id);
+        _propertyRep.Delete(id);
         _context.Close();
     }
 
@@ -52,6 +62,10 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Update(computer);
+        foreach (var key in computer.Properties.Keys)
+        {
+            _propertyRep.Update(computer.Properties[key]);
+        }
         _context.Close();
     }
 
@@ -59,6 +73,10 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Create(computer);
+        foreach (var key in computer.Properties.Keys)
+        {
+            _propertyRep.Create(computer.Properties[key]);
+        }
         _context.Close();
     }
 }

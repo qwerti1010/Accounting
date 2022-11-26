@@ -1,6 +1,5 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
-using DBLibrary.Interfaces;
 using Services.Services;
 
 namespace Accounting;
@@ -90,7 +89,7 @@ public partial class MainForm : Form
                 }
             case 1:
                 {
-                    dgv.DataSource = _employeeService.GetEmployees(10, 0);
+                    dgv.DataSource = _employeeService.GetEmployees(10, 0);                    
                     break;
                 }
             case 2:

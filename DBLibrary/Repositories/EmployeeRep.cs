@@ -1,9 +1,7 @@
 ﻿using DBLibrary.Entities;
 using DBLibrary.Interfaces;
-using Microsoft.VisualBasic;
 using MySqlConnector;
 using System.Data;
-using System.Runtime.CompilerServices;
 
 namespace DBLibrary;
 
@@ -119,20 +117,5 @@ public class EmployeeRep : IEmployeeRepository
         command.Parameters.Add("@login", MySqlDbType.VarChar).Value = entity.Login;
         command.Parameters.Add("@password", MySqlDbType.VarChar).Value = entity.Password;
     }
-
-    public Employee? GetByLogin(string login)
-    {                 
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 AND login = @login";
-        var command = new MySqlCommand(commandString, _connection);
-        command.Parameters.Add("@login", MySqlDbType.VarChar).Value = login;
-        using var reader = command.ExecuteReader();
-        while (reader.Read())
-        {
-            return Record(reader);
-        }        
-        return null;
-    }
-    
-    
 }
 

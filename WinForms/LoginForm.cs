@@ -1,6 +1,7 @@
 ﻿
 using DBLibrary;
-using DBLibrary.Entities;
+using DBLibrary.Interfaces;
+using DBLibrary.Repositories;
 using Services.Services;
 
 namespace Accounting;
@@ -9,12 +10,14 @@ public partial class LoginForm : Form
 {
     private readonly EmployeeService _loginService;
     private readonly DbContext _context;
+    private readonly DBService _dBService;
     
     public LoginForm()
     {
         InitializeComponent();
         _context = new DbContext();
         _loginService = new EmployeeService(_context);
+        _dBService = new DBService(_context);
     }
 
     private void SignUp_Click(object sender, EventArgs e)
@@ -36,6 +39,10 @@ public partial class LoginForm : Form
         form.ShowDialog();
     }
 
+    private void CreateDB_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show(_dBService.Create());
+    }
     private void LoginForm_Load(object sender, EventArgs e)
     {
 

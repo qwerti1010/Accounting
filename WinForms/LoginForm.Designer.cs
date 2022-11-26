@@ -34,13 +34,14 @@ partial class LoginForm
             this.loginTextBox = new System.Windows.Forms.TextBox();
             this.loginLabel = new System.Windows.Forms.Label();
             this.registration = new System.Windows.Forms.LinkLabel();
+            this.createDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // signUp
             // 
-            this.signUp.Location = new System.Drawing.Point(101, 244);
+            this.signUp.Location = new System.Drawing.Point(12, 206);
             this.signUp.Name = "signUp";
-            this.signUp.Size = new System.Drawing.Size(125, 43);
+            this.signUp.Size = new System.Drawing.Size(141, 67);
             this.signUp.TabIndex = 2;
             this.signUp.Text = "Войти";
             this.signUp.UseVisualStyleBackColor = true;
@@ -49,7 +50,7 @@ partial class LoginForm
             // passTextBox
             // 
             this.passTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.passTextBox.Location = new System.Drawing.Point(54, 176);
+            this.passTextBox.Location = new System.Drawing.Point(54, 118);
             this.passTextBox.MaxLength = 16;
             this.passTextBox.Name = "passTextBox";
             this.passTextBox.PasswordChar = '*';
@@ -59,7 +60,7 @@ partial class LoginForm
             // passLabel
             // 
             this.passLabel.AutoSize = true;
-            this.passLabel.Location = new System.Drawing.Point(54, 148);
+            this.passLabel.Location = new System.Drawing.Point(54, 90);
             this.passLabel.Name = "passLabel";
             this.passLabel.Size = new System.Drawing.Size(78, 25);
             this.passLabel.TabIndex = 2;
@@ -67,7 +68,7 @@ partial class LoginForm
             // 
             // loginTextBox
             // 
-            this.loginTextBox.Location = new System.Drawing.Point(54, 98);
+            this.loginTextBox.Location = new System.Drawing.Point(54, 56);
             this.loginTextBox.Name = "loginTextBox";
             this.loginTextBox.Size = new System.Drawing.Size(223, 31);
             this.loginTextBox.TabIndex = 0;
@@ -75,7 +76,7 @@ partial class LoginForm
             // loginLabel
             // 
             this.loginLabel.AutoSize = true;
-            this.loginLabel.Location = new System.Drawing.Point(54, 70);
+            this.loginLabel.Location = new System.Drawing.Point(54, 28);
             this.loginLabel.Name = "loginLabel";
             this.loginLabel.Size = new System.Drawing.Size(66, 25);
             this.loginLabel.TabIndex = 4;
@@ -92,12 +93,23 @@ partial class LoginForm
             this.registration.Text = "Зарегестрироваться";
             this.registration.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Registration_LinkClicked);
             // 
+            // createDB
+            // 
+            this.createDB.Location = new System.Drawing.Point(180, 206);
+            this.createDB.Name = "createDB";
+            this.createDB.Size = new System.Drawing.Size(151, 67);
+            this.createDB.TabIndex = 6;
+            this.createDB.Text = "Создать базу данных";
+            this.createDB.UseVisualStyleBackColor = true;
+            this.createDB.Click += new System.EventHandler(this.CreateDB_Click);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(343, 350);
+            this.Controls.Add(this.createDB);
             this.Controls.Add(this.registration);
             this.Controls.Add(this.loginLabel);
             this.Controls.Add(this.loginTextBox);
@@ -122,4 +134,5 @@ partial class LoginForm
     private TextBox loginTextBox;
     private Label loginLabel;
     private LinkLabel registration;
+    private Button createDB;
 }

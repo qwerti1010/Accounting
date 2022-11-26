@@ -2,6 +2,7 @@
 using DBLibrary;
 using DBLibrary.Entities;
 using System.Text.RegularExpressions;
+using Services.Responses;
 
 namespace Services.Services;
 
@@ -25,14 +26,14 @@ public class EmployeeService
         _visitRep = new VisitRep(_context);
     }
 
-    public EmployeeResponce Login(string login, string password)
+    public EmployeeResponse Login(string login, string password)
     {
         _context.Open();
         var employee = _employeeRep.GetEmployees(1, 0, null, null, login).FirstOrDefault();
         _context.Close();
         if (employee == null)
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Пользователя с таким логином не существует"
@@ -40,7 +41,7 @@ public class EmployeeService
         }
         if (employee.Password != password)
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Неверный пароль"
@@ -49,14 +50,14 @@ public class EmployeeService
         _context.Open();
         _visitRep.Create(new Visit { EmployeeID = employee.ID, VisitTime = DateTime.UtcNow });
         _context.Close();
-        return new EmployeeResponce
+        return new EmployeeResponse
         {
             Employee = employee,
             IsSuccess = true
         };
     }
 
-    public EmployeeResponce Registration(Employee employee, string confirmation)
+    public EmployeeResponse Registration(Employee employee, string confirmation)
     {
         if (string.IsNullOrWhiteSpace(employee.Phone)
             || string.IsNullOrWhiteSpace(employee.Name)
@@ -64,7 +65,7 @@ public class EmployeeService
             || string.IsNullOrWhiteSpace(employee.Login)
             || string.IsNullOrWhiteSpace(employee.Password))
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Форма не заполнена"
@@ -73,7 +74,7 @@ public class EmployeeService
 
         if (!new Regex(@"^[+]79\d{9}$").IsMatch(employee.Phone))
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Неверный формат номера телефона"
@@ -82,7 +83,7 @@ public class EmployeeService
 
         if (employee.Password != confirmation)
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Неверный пароль"
@@ -91,7 +92,7 @@ public class EmployeeService
 
         if (IsEmployeeExist(employee.Name, employee.Phone, employee.Login))
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Такие данные уже существуют"
@@ -102,7 +103,7 @@ public class EmployeeService
         _employeeRep.Create(employee);
         _context.Close();
 
-        return new EmployeeResponce
+        return new EmployeeResponse
         {
             IsSuccess = true,
             Message = "Регистрация успешно завершена"
@@ -140,13 +141,13 @@ public class EmployeeService
         _context.Close();
     }
 
-    public EmployeeResponce Update(Employee employee)
+    public EmployeeResponse Update(Employee employee)
     {
         if (string.IsNullOrWhiteSpace(employee.Phone)
             || string.IsNullOrWhiteSpace(employee.Name)
             || employee.Position == PositionEnum.None)
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Поля не могут быть пустыми"
@@ -155,7 +156,7 @@ public class EmployeeService
 
         if (!new Regex(@"^[+]79\d{9}$").IsMatch(employee.Phone))
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Неверный формат номера телефона"
@@ -168,7 +169,7 @@ public class EmployeeService
             namefilter.Count == 1 && phoneFilter.Count == 1 && namefilter[0].ID != phoneFilter[0].ID)
         {
             _context.Close();
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Такие данные уже есть в базе"
@@ -176,27 +177,27 @@ public class EmployeeService
         }
         _employeeRep.Update(employee);
         _context.Close();
-        return new EmployeeResponce
+        return new EmployeeResponse
         {
             IsSuccess = true,
             Message = "Данные успешно обновлены"
         };
     }
 
-    public EmployeeResponce GetByName(string name)
+    public EmployeeResponse GetByName(string name)
     {
         _context.Open();
         var employee = _employeeRep.GetEmployees(1, 0, name).FirstOrDefault();
         _context.Close();
         if (employee == null)
         {
-            return new EmployeeResponce
+            return new EmployeeResponse
             {
                 IsSuccess = false,
                 Message = "Сотрудник не найден"
             };
         }
-        return new EmployeeResponce
+        return new EmployeeResponse
         {
             IsSuccess = true,
             Message = "Сотрудник найден",

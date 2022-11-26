@@ -1,8 +1,8 @@
 ﻿using DBLibrary.Entities;
 
-namespace Services;
+namespace Services.Responses;
 
-public class EmployeeResponce
+public class EmployeeResponse
 {
     public bool IsSuccess { get; set; }
     public string? Message { get; set; }
