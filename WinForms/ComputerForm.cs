@@ -30,26 +30,61 @@ public partial class ComputerForm : Form
         if (_computer == null)
         {
             Text = "Добавить новое устройство";
-            update.Text = "Добавить";
             enableRedact.Visible = false;
+            update.Visible = false;
             return;
         }
-
+        create.Visible = false;
         Text = $"Просмотр информации устройства. Номер в базе - {_computer.ID}";
         ChangeState();
         name.Text = _computer.Name;        
         status.Text = _computer.Status.ToString();
         employee.Text = _employeeService.GetByID(_computer.EmployeeID)?.Name;
-        regDate.Value = _computer.RegDate;
+        regDate.Value = _computer.RegistrationDate;
         price.Text = _computer.Price.ToString();
-        cpu.Text = _computer.Properties.ContainsKey(PropType.CPU) ? _computer.Properties[PropType.CPU].Value : null;
-        ram.Text = _computer.Properties.ContainsKey(PropType.RAM) ? _computer.Properties[PropType.RAM].Value : null;
-        graphicsCard.Text = _computer.Properties.ContainsKey(PropType.GraphicsCard) ? _computer.Properties[PropType.GraphicsCard].Value : null; 
-        memory.Text = _computer.Properties.ContainsKey(PropType.Memory) ? _computer.Properties[PropType.Memory].Value : null; 
-        motherBoard.Text = _computer.Properties.ContainsKey(PropType.MotherBoard) ? _computer.Properties[PropType.MotherBoard].Value : null; 
-        powerSupply.Text = _computer.Properties.ContainsKey(PropType.PowerSupply) ? _computer.Properties[PropType.PowerSupply].Value : null;        
-        caseBox.Text = _computer.Properties.ContainsKey(PropType.Case) ? _computer.Properties[PropType.Case].Value : null;
-        explStart.Value = _computer.ExplDate;
+        explStart.Value = _computer.ExploitationStart;
+        if (_computer.Properties == null) return;
+        foreach (var property in _computer.Properties)
+        {
+            switch (property.TypeID)
+            {
+                case PropType.CPU:
+                    {
+                        cpu.Text = property.Value;
+                        break;
+                    }
+                case PropType.MotherBoard:
+                    {
+                        motherBoard.Text = property.Value;
+                        break;
+                    }
+                case PropType.Case:
+                    {
+                        caseBox.Text = property.Value;
+                        break;
+                    }
+                case PropType.GraphicsCard:
+                    {
+                        graphicsCard.Text = property.Value;
+                        break;
+                    }
+                case PropType.Memory:
+                    {
+                        memory.Text = property.Value;
+                        break;
+                    }
+                case PropType.RAM:
+                    {
+                        ram.Text = property.Value;
+                        break;
+                    }
+                case PropType.PowerSupply:
+                    {
+                        powerSupply.Text = property.Value;
+                        break;
+                    }
+            }
+        }
     }
 
     private void EnableRedact_CheckStateChanged(object sender, EventArgs e)
@@ -78,75 +113,93 @@ public partial class ComputerForm : Form
     }
 
     private void Update_Click(object sender, EventArgs e)
-    {        
+    {
         if(!FieldsArentEmpty())
         {
             MessageBox.Show("Поля не могут быть пустыми");
             return;
         }
 
-        _computer ??= new Computer();
-           
-        if (!_computer.Properties.ContainsKey(PropType.CPU))
+        foreach (var property in _computer!.Properties!)
         {
-            _computer.Properties.Add(PropType.CPU, new Property());
+            switch (property.TypeID)
+            {
+                case PropType.CPU:
+                    {
+                        property.Value = cpu.Text;
+                        break;
+                    }
+                case PropType.MotherBoard:
+                    {
+                        property.Value = motherBoard.Text;
+                        break;
+                    }
+                case PropType.Case:
+                    {
+                         property.Value = caseBox.Text ;
+                        break;
+                    }
+                case PropType.GraphicsCard:
+                    {
+                        property.Value = graphicsCard.Text;
+                        break;
+                    }
+                case PropType.Memory:
+                    {
+                        property.Value = memory.Text;
+                        break;
+                    }
+                case PropType.RAM:
+                    {
+                        property.Value = ram.Text;
+                        break;
+                    }
+                case PropType.PowerSupply:
+                    {
+                        property.Value = powerSupply.Text;
+                        break;
+                    }
+            }            
         }
-        _computer.Properties[PropType.CPU].Value = cpu.Text;
 
-        if (!_computer.Properties.ContainsKey(PropType.MotherBoard))
-        {
-            _computer.Properties.Add(PropType.MotherBoard, new Property());
-        }
-        _computer.Properties[PropType.MotherBoard].Value = motherBoard.Text;
-
-        if (!_computer.Properties.ContainsKey(PropType.Case))
-        {
-            _computer.Properties.Add(PropType.Case, new Property());
-        }
-        _computer.Properties[PropType.Case].Value = caseBox.Text;
-
-        if (!_computer.Properties.ContainsKey(PropType.GraphicsCard))
-        {
-            _computer.Properties.Add(PropType.GraphicsCard, new Property());
-        }
-        _computer.Properties[PropType.GraphicsCard].Value = graphicsCard.Text;
-
-        if (!_computer.Properties.ContainsKey(PropType.Memory))
-        {
-            _computer.Properties.Add(PropType.Memory, new Property());
-        }
-        _computer.Properties[PropType.Memory].Value = memory.Text;
-
-        if (!_computer.Properties.ContainsKey(PropType.RAM))
-        {
-            _computer.Properties.Add(PropType.RAM, new Property());
-        }
-        _computer.Properties[PropType.RAM].Value = ram.Text;
-
-        if (!_computer.Properties.ContainsKey(PropType.PowerSupply))
-        {
-            _computer.Properties.Add(PropType.PowerSupply, new Property());
-        }       
-        _computer.Properties[PropType.PowerSupply].Value = powerSupply.Text;
         _computer.Name = name.Text;
-        _computer.RegDate = regDate.Value;
-        decimal.TryParse(price.Text, out decimal p);
-        _computer.Price = p;
-        _computer.Status = (Status)status.SelectedIndex;
+        _computer.Price = decimal.Parse(price.Text);
+        _computer.RegistrationDate = regDate.Value;
+        _computer.ExploitationStart = explStart.Value;
         _computer.EmployeeID = _employeeService.GetByName(employee.Text).Employee!.ID;
-        _computer.ExplDate = explStart.Value;
-        if (_computer.ID == 0)
+        _computer.Status = (Status)status.SelectedIndex;
+        _computerService.Update(_computer);
+        MessageBox.Show("Данные обновлены");
+        Close();
+    }
+
+    private void Create_Click(object sender, EventArgs e)
+    {
+
+        _computer = new Computer
         {
-            _computerService.Create(_computer);            
-            MessageBox.Show("устройство успешно дабавленно");
-            Close();
-        }
-        else
+            Name = name.Text,
+            Price = decimal.Parse(price.Text),
+            RegistrationDate = regDate.Value,
+            ExploitationStart = explStart.Value,
+            EmployeeID = _employeeService.GetByName(employee.Text).Employee!.ID,
+            Status = (Status)status.SelectedIndex,
+
+            Properties = new List<Property>
         {
-            _computerService.Update(_computer);            
-            MessageBox.Show("устройство успешно обнавленно");
-            Close();
+            new Property{TypeID = PropType.CPU, Value = cpu.Text},
+            new Property{TypeID = PropType.MotherBoard, Value = motherBoard.Text},
+            new Property{TypeID = PropType.Case, Value = caseBox.Text},
+            new Property{TypeID = PropType.GraphicsCard, Value = graphicsCard.Text},
+            new Property{TypeID = PropType.Memory, Value = memory.Text},
+            new Property{TypeID = PropType.RAM, Value = ram.Text},
+            new Property{TypeID = PropType.PowerSupply, Value = powerSupply.Text}
         }
+        };
+
+        _computerService.Create(_computer);
+        MessageBox.Show("Компьютер создан");
+        Close();
     }
 
     private void AddItemsToComboBoxes()
@@ -183,9 +236,9 @@ public partial class ComputerForm : Form
                 return false;
             if (control is ComboBox cb && string.IsNullOrWhiteSpace(cb.Text))
                 return false;
-        }   
+        }
         return true;
-    }
+    }    
 }
 
 

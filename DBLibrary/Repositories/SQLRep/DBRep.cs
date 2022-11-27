@@ -1,8 +1,7 @@
-﻿
-using DBLibrary.Interfaces;
+﻿using DBLibrary.Interfaces;
 using MySqlConnector;
 
-namespace DBLibrary.Repositories;
+namespace DBLibrary.Repositories.SQLRep;
 
 public class DBRep : IDBRepository
 {
@@ -24,10 +23,10 @@ public class DBRep : IDBRepository
 
     public void Create()
     {
-        var commsndStr = "CREATE DATABASE IF NOT EXISTS accountingdbTEST";
+        var commsndStr = "CREATE DATABASE IF NOT EXISTS accountingdb";
         var command = new MySqlCommand(commsndStr, _connection);
         command.ExecuteNonQuery();
-        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdbTEST.employees" +
+        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdb.employees" +
             "(" +
             "ID INT(10) AUTO_INCREMENT NOT NULL," +
             "Name VARCHAR(30)," +
@@ -40,7 +39,7 @@ public class DBRep : IDBRepository
             ")" +
             "ENGINE = 'InnoDB'" +
             "DEFAULT CHARACTER SET = 'utf8'" +
-            "COLLATE = 'utf8_bin'";        
+            "COLLATE = 'utf8_bin'";
         command.ExecuteNonQuery();
         command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdbTEST.computers" +
             "(" +

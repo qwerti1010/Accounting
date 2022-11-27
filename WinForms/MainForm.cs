@@ -48,7 +48,6 @@ public partial class MainForm : Form
         var status = _employeeService.Update(_employee);
         MessageBox.Show(status.Message);
         dgv.DataSource = _employeeService.GetEmployees(10, 0);
-        
     }
 
     private void DeleteEmployee_Click(object sender, EventArgs e)
@@ -85,6 +84,7 @@ public partial class MainForm : Form
             case 0:
                 {
                     dgv.DataSource = _computerService.GetComputers(10, 0);
+                    computersCount.Text = _computerService.Count();
                     break;
                 }
             case 1:
@@ -94,7 +94,10 @@ public partial class MainForm : Form
                 }
             case 2:
                 {
-                    dgv.DataSource = null;
+                    break;
+                }
+            case 3:
+                {
                     break;
                 }
         }

@@ -4,5 +4,5 @@ namespace DBLibrary.Interfaces;
 
 public interface IPropertyRepository : IRepository<Property>
 {
-    public Dictionary<PropType, Property> GetByComputerID(uint id);
+    public IList<Property> GetByComputerID(uint id);
 }

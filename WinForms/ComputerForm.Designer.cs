@@ -57,6 +57,7 @@ partial class ComputerForm
             this.memory = new System.Windows.Forms.ComboBox();
             this.caseBox = new System.Windows.Forms.ComboBox();
             this.cpu = new System.Windows.Forms.ComboBox();
+            this.create = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // name
@@ -235,7 +236,7 @@ partial class ComputerForm
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(426, 776);
+            this.close.Location = new System.Drawing.Point(470, 777);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(143, 66);
             this.close.TabIndex = 37;
@@ -245,7 +246,7 @@ partial class ComputerForm
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(214, 776);
+            this.update.Location = new System.Drawing.Point(268, 777);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(143, 66);
             this.update.TabIndex = 38;
@@ -318,11 +319,22 @@ partial class ComputerForm
             this.cpu.Size = new System.Drawing.Size(250, 33);
             this.cpu.TabIndex = 47;
             // 
+            // create
+            // 
+            this.create.Location = new System.Drawing.Point(65, 777);
+            this.create.Name = "create";
+            this.create.Size = new System.Drawing.Size(143, 66);
+            this.create.TabIndex = 48;
+            this.create.Text = "Создать";
+            this.create.UseVisualStyleBackColor = true;
+            this.create.Click += new System.EventHandler(this.Create_Click);
+            // 
             // ComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 858);
+            this.Controls.Add(this.create);
             this.Controls.Add(this.cpu);
             this.Controls.Add(this.caseBox);
             this.Controls.Add(this.memory);
@@ -391,4 +403,5 @@ partial class ComputerForm
     private ComboBox memory;
     private ComboBox caseBox;
     private ComboBox cpu;
+    private Button create;
 }

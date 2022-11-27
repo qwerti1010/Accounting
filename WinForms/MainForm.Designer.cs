@@ -30,6 +30,7 @@ partial class MainForm
     {
             this.mainFormTabPage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.computersCount = new System.Windows.Forms.Label();
             this.deleteComputer = new System.Windows.Forms.Button();
             this.getComputer = new System.Windows.Forms.Button();
             this.addComputer = new System.Windows.Forms.Button();
@@ -77,6 +78,7 @@ partial class MainForm
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.computersCount);
             this.tabPage1.Controls.Add(this.deleteComputer);
             this.tabPage1.Controls.Add(this.getComputer);
             this.tabPage1.Controls.Add(this.addComputer);
@@ -87,6 +89,14 @@ partial class MainForm
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Компьютеры";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // computersCount
+            // 
+            this.computersCount.AutoSize = true;
+            this.computersCount.Location = new System.Drawing.Point(0, 265);
+            this.computersCount.Name = "computersCount";
+            this.computersCount.Size = new System.Drawing.Size(0, 25);
+            this.computersCount.TabIndex = 6;
             // 
             // deleteComputer
             // 
@@ -355,6 +365,7 @@ partial class MainForm
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.mainFormTabPage.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -393,4 +404,5 @@ partial class MainForm
     private ComboBox status;
     private ComboBox position;
     private TextBox employeeID;
+    private Label computersCount;
 }

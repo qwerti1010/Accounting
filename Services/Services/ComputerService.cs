@@ -1,7 +1,7 @@
 ﻿using DBLibrary;
+using DBLibrary.Dapper;
 using DBLibrary.Entities;
 using DBLibrary.Interfaces;
-using DBLibrary.Repositories;
 
 namespace Services.Services;
 
@@ -14,11 +14,11 @@ public class ComputerService
     public ComputerService(DbContext context)
     {
         _context = context;
-        _computerRep = new ComputerRep(_context);
-        _propertyRep = new PropertyRep(_context);
+        _computerRep = new DapperComputerRep(_context);
+        _propertyRep = new DapperPropertyRep(_context);
     }
 
-    public List<Computer> GetComputers(int take, int skip, string? nameFilter = null,
+    public IList<Computer> GetComputers(int take, int skip, string? nameFilter = null,
         string? priceFilter = null, int statusFilter = 0, string? emplIDFilter = null)
     {
         if (string.IsNullOrWhiteSpace(nameFilter))
@@ -62,9 +62,14 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Update(computer);
-        foreach (var key in computer.Properties.Keys)
+        if (computer.Properties == null)
         {
-            _propertyRep.Update(computer.Properties[key]);
+            _context.Close();
+            return;
+        }
+        foreach (var prop in computer.Properties)
+        {
+            _propertyRep.Update(prop);
         }
         _context.Close();
     }
@@ -73,10 +78,24 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Create(computer);
-        foreach (var key in computer.Properties.Keys)
+        if (computer.Properties == null)
         {
-            _propertyRep.Create(computer.Properties[key]);
+            _context.Close();
+            return;
+        }
+        foreach (var prop in computer.Properties)
+        {
+            prop.ComputerID = computer.ID;
+            _propertyRep.Create(prop);
         }
         _context.Close();
+    }
+
+    public string Count()
+    {
+        _context.Open();
+        var result = _computerRep.Count();
+        _context.Close();
+        return $"Количество компьютеров: {result}";
     }
 }

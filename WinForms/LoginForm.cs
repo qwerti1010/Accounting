@@ -1,7 +1,5 @@
 ﻿
 using DBLibrary;
-using DBLibrary.Interfaces;
-using DBLibrary.Repositories;
 using Services.Services;
 
 namespace Accounting;
@@ -23,12 +21,12 @@ public partial class LoginForm : Form
     private void SignUp_Click(object sender, EventArgs e)
     {
         var status = _loginService.Login(loginTextBox.Text, passTextBox.Text);
-        if (!status.IsSuccess)
+        if (!status.IsSuccess || status.Employee == null)
         {
             MessageBox.Show(status.Message);
             return;
         }
-        var form = new MainForm(status.Employee!, _context);
+        var form = new MainForm(status.Employee, _context);
         form.ShowDialog();
         Hide();
     }

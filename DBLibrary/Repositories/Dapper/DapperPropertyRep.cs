@@ -16,11 +16,14 @@ public class DapperPropertyRep : IPropertyRepository
 
     public void Create(Property entity)
     {
-        var commandString = "SELECT MAX(id) FROM computers";
-        entity.ComputerID = _connection.Query<uint>(commandString).First();
-        commandString = "INSERT INTO properties (computerID, typeID, value)" +
+        var commandString = "INSERT INTO properties (computerID, typeID, value)" +
             " VALUES(@computerID, @typeID, @value)";
-        _connection.Execute(commandString, entity);
+        var param = new DynamicParameters();
+        param.Add("@computerID", entity.ComputerID);
+        param.Add("@typeID", entity.TypeID);
+        param.Add("@value", entity.Value);
+        _connection.Execute(commandString, param);
+        entity.ID = _connection.Query<uint>("SELECT LAST_INSERT_ID()").FirstOrDefault();
     }
 
     public void Delete(uint id)
@@ -29,11 +32,13 @@ public class DapperPropertyRep : IPropertyRepository
         _connection.Execute(commandStr, new { id });
     }
 
-    public Dictionary<PropType, Property> GetByComputerID(uint id)
+    public IList<Property> GetByComputerID(uint id)
     {
+        var param = new DynamicParameters();
         var commandStr = "SELECT * FROM properties" +
             " WHERE isDeleted = 0 AND computerID = @computerID";
-        return _connection.Query<Property>(commandStr, new {id}).ToDictionary(key => key.TypeID, prop => prop);
+        param.Add("@computerID", id);
+        return _connection.Query<Property>(commandStr, param).ToList();
     }
 
     public Property? GetByID(uint id)
@@ -46,6 +51,9 @@ public class DapperPropertyRep : IPropertyRepository
     public void Update(Property entity)
     {
         var commandStr = "UPDATE properties SET value = @value WHERE id = @id";
-        _connection.Execute(commandStr, entity);
+        var param = new DynamicParameters();
+        param.Add("@value", entity.Value);
+        param.Add("@id", entity.ID);
+        _connection.Execute(commandStr, param);
     }
 }

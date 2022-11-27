@@ -3,7 +3,7 @@ using DBLibrary.Interfaces;
 using MySqlConnector;
 using System.Data;
 
-namespace DBLibrary;
+namespace DBLibrary.Repositories.SQLRep;
 
 public class EmployeeRep : IEmployeeRepository
 {
@@ -13,9 +13,9 @@ public class EmployeeRep : IEmployeeRepository
     {
         _connection = context.GetConnection();
     }
-    
 
-    public List<Employee> GetEmployees(int take, int skip,
+
+    public IList<Employee> GetEmployees(int take, int skip,
         string? name = null, string? phone = null, string? login = null)
     {
         var employees = new List<Employee>();
@@ -26,13 +26,13 @@ public class EmployeeRep : IEmployeeRepository
             command.CommandText += " AND name = @name";
             command.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
         }
-        
+
         if (phone != null)
         {
             command.CommandText += " AND phone = @phone";
             command.Parameters.Add("@phone", MySqlDbType.VarChar).Value = phone;
         }
-        
+
         if (login != null)
         {
             command.CommandText += " AND login = @login";
@@ -41,17 +41,17 @@ public class EmployeeRep : IEmployeeRepository
         command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
         command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
         command.CommandText += " LIMIT @skip, @take";
-        
+
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-           employees.Add(Record(reader));
+            employees.Add(Record(reader));
         }
         return employees;
     }
 
     public Employee? GetByID(uint id)
-    {               
+    {
         var commandStr = "SELECT * FROM employees WHERE id = @id AND isDeleted = 0";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -59,7 +59,7 @@ public class EmployeeRep : IEmployeeRepository
         while (reader.Read())
         {
             return Record(reader);
-        }        
+        }
         return null;
     }
 
@@ -67,18 +67,18 @@ public class EmployeeRep : IEmployeeRepository
     {
         var commandStr = "INSERT INTO employees (name, position, phone, login, password)" +
             " VALUES(@name, @position, @phone, @login, @password)";
-        var command = new MySqlCommand(commandStr, _connection);        
+        var command = new MySqlCommand(commandStr, _connection);
         AddParameters(command, entity);
         command.ExecuteNonQuery();
     }
 
     public void Update(Employee entity)
-    {       
+    {
         var commandStr = "UPDATE employees SET name = @name, position = @position, phone = @phone WHERE id = @id";
         var command = new MySqlCommand(commandStr, _connection);
         AddParameters(command, entity);
-        command.ExecuteNonQuery();        
-    }   
+        command.ExecuteNonQuery();
+    }
 
     private static Employee Record(IDataRecord record)
     {
@@ -90,14 +90,14 @@ public class EmployeeRep : IEmployeeRepository
             Name = (string)record["name"],
             Phone = (string)record["phone"],
             Position = (PositionEnum)record["position"],
-            Login = log == DBNull.Value ? String.Empty : (string)log,
-            Password = pass == DBNull.Value ? String.Empty : (string)pass,
+            Login = log == DBNull.Value ? string.Empty : (string)log,
+            Password = pass == DBNull.Value ? string.Empty : (string)pass,
             IsDeleted = (bool)record["isDeleted"]
         };
     }
 
     public void Delete(uint id)
-    {        
+    {
         var commandStr = "UPDATE employees SET isDeleted = 1 WHERE id = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;

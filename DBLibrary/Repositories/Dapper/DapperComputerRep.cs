@@ -1,6 +1,4 @@
-﻿
-
-using Dapper;
+﻿using Dapper;
 using DBLibrary.Entities;
 using DBLibrary.Interfaces;
 using MySqlConnector;
@@ -16,12 +14,25 @@ public class DapperComputerRep : IComputerRepository
         _connection = context.GetConnection();
     }
 
+    public int Count()
+    {        
+        return _connection.Query<int>("SELECT COUNT(id) FROM computers WHERE isDeleted = 0").FirstOrDefault();
+    }
+
     public void Create(Computer entity)
     {
         var commandStr = "INSERT INTO computers (name, registrationDate," +
             " price, status, employeeID, exploitationStart)" +
             " VALUES(@name, @registrationDate, @price, @status, @employeeID, @exploitationStart)";
-        _connection.Execute(commandStr, entity);
+        var param = new DynamicParameters();
+        param.Add("@name", entity.Name);
+        param.Add("@registrationDate", entity.RegistrationDate);
+        param.Add("@price", entity.Price);
+        param.Add("@status", entity.Status);
+        param.Add("@employeeID", entity.EmployeeID);
+        param.Add("@exploitationStart", entity.ExploitationStart);
+        _connection.Execute(commandStr, param);
+        entity.ID = _connection.Query<uint>("SELECT LAST_INSERT_ID()").FirstOrDefault();
     }
 
     public void Delete(uint id)
@@ -30,32 +41,38 @@ public class DapperComputerRep : IComputerRepository
         _connection.Execute(commandStr, new {id});
     }
 
-    public List<Computer> Filter(int skip, int take, string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
+    public IList<Computer> Filter(int skip, int take, string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
     {
         var commandString = "SELECT * FROM computers WHERE isDeleted = 0";
-        var command = new MySqlCommand(commandString, _connection);
+        var param = new DynamicParameters();
         if (name != null)
         {
             commandString += " AND name = @name";
+            param.Add("@name", name);
         }
 
         if (price != 0)
         {
             commandString += " AND price = @price";
+            param.Add("@price", price);
         }
 
         if (status != 0)
         {
             commandString += " AND status = @status";
+            param.Add("@status", status);
         }
 
         if (employeeID != 0)
         {
             commandString += " AND employeeID = @employeeID";
+            param.Add("@employeeID", employeeID);
         }
-
         commandString += " LIMIT @skip, @take";
-        return _connection.Query<Computer>(commandString, new { name, price, status, employeeID, skip, take }).ToList();
+        param.Add("@skip", skip);
+        param.Add("@take", take);
+        var x = _connection.Query<Computer>(commandString, param).ToList();
+        return x;
     }
 
     public Computer? GetByID(uint id)
@@ -69,6 +86,14 @@ public class DapperComputerRep : IComputerRepository
         var commandStr = "UPDATE computers SET name = @name, registrationDate = @registrationDate," +
             " price = @price, status = @status, employeeID = @employeeID," +
             " exploitationStart = @exploitationStart WHERE id = @id";
-        _connection.Execute(commandStr, entity);
+        var param = new DynamicParameters();
+        param.Add("@name", entity.Name);
+        param.Add("@registrationDate", entity.RegistrationDate);
+        param.Add("@price", entity.Price);
+        param.Add("@status", entity.Status);
+        param.Add("@employeeID", entity.EmployeeID);
+        param.Add("@exploitationStart", entity.ExploitationStart);
+        param.Add("@id", entity.ID);
+        _connection.Execute(commandStr, param);
     }
 }

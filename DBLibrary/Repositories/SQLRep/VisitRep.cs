@@ -1,12 +1,11 @@
-﻿
-using DBLibrary.Entities;
+﻿using DBLibrary.Entities;
 using DBLibrary.Interfaces;
 using MySqlConnector;
 
-namespace DBLibrary;
+namespace DBLibrary.Repositories.SQLRep;
 
 public class VisitRep : IVisitRepository
-{   
+{
     private readonly MySqlConnection _connection;
 
     public VisitRep(DbContext context)

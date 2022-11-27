@@ -3,6 +3,7 @@ using DBLibrary;
 using DBLibrary.Entities;
 using System.Text.RegularExpressions;
 using Services.Responses;
+using DBLibrary.Dapper;
 
 namespace Services.Services;
 
@@ -15,15 +16,15 @@ public class EmployeeService
     public EmployeeService()
     {
         _context = new DbContext();
-        _employeeRep = new EmployeeRep(_context);
-        _visitRep = new VisitRep(_context);
+        _employeeRep = new DapperEmpRep(_context);
+        _visitRep = new DapperVisitRep(_context);
     }
 
     public EmployeeService(DbContext context)
     {
         _context = context;
-        _employeeRep = new EmployeeRep(_context);
-        _visitRep = new VisitRep(_context);
+        _employeeRep = new DapperEmpRep(_context);
+        _visitRep = new DapperVisitRep(_context);
     }
 
     public EmployeeResponse Login(string login, string password)
@@ -46,7 +47,7 @@ public class EmployeeService
                 IsSuccess = false,
                 Message = "Неверный пароль"
             };
-        }
+        }       
         _context.Open();
         _visitRep.Create(new Visit { EmployeeID = employee.ID, VisitTime = DateTime.UtcNow });
         _context.Close();
@@ -118,7 +119,7 @@ public class EmployeeService
         return employee != null;
     }
 
-    public List<Employee> GetEmployees(int take, int skip)
+    public IList<Employee> GetEmployees(int take, int skip)
     {
         _context.Open();
         var dt = _employeeRep.GetEmployees(take, skip);
@@ -194,7 +195,8 @@ public class EmployeeService
             return new EmployeeResponse
             {
                 IsSuccess = false,
-                Message = "Сотрудник не найден"
+                Message = "Сотрудник не найден",
+                Employee = new Employee()             
             };
         }
         return new EmployeeResponse

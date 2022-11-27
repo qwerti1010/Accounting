@@ -1,10 +1,9 @@
-﻿
-using DBLibrary.Entities;
+﻿using DBLibrary.Entities;
 using DBLibrary.Interfaces;
 using MySqlConnector;
 using System.Data;
 
-namespace DBLibrary.Repositories;
+namespace DBLibrary.Repositories.SQLRep;
 
 public class PropertyRep : IPropertyRepository
 {
@@ -12,43 +11,21 @@ public class PropertyRep : IPropertyRepository
 
     public PropertyRep(DbContext context)
     {
-        _connection = context.GetConnection();       
+        _connection = context.GetConnection();
     }
 
-    //??????
     public void Create(Property entity)
     {
-        //так не хочет работать
-        //var commandStr = "SELECT LAST_INSERT_ID() FROM computers";
-        var commandStr = "SELECT MAX(id) FROM computers";
-        var command = new MySqlCommand(commandStr, _connection);
-        entity.ComputerID = Convert.ToUInt32(command.ExecuteScalar()!);
+        var command = new MySqlCommand();
+        command.Connection = _connection;
         command.CommandText = "INSERT INTO properties (computerID, typeID, value)" +
             " VALUES(@computerID, @typeID, @value)";
         command.Parameters.Add("@value", MySqlDbType.VarChar).Value = entity.Value;
         command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = entity.ComputerID;
         command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = entity.TypeID;
-        command.ExecuteNonQuery();
+        command.ExecuteNonQuery();        
     }
 
-    //public void CreateProp(Computer computer)
-    //{
-    //    var commandStr = "SELECT LAST_INSERT_ID()";
-    //    var command = new MySqlCommand(commandStr, _connection);
-    //    computer.ID = Convert.ToUInt32(command.ExecuteScalar()!);
-    //    command.CommandText = "INSERT INTO properties (computerID, typeID, value)" +
-    //       " VALUES(@computerID, @typeID, @value)";
-    //    foreach (var key in computer.Properties.Keys)
-    //    {
-    //        command.Parameters.Add("@value", MySqlDbType.VarChar).Value = computer.Properties[key].Value;
-    //        command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = computer.ID;
-    //        command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = (int)key;
-    //        command.ExecuteNonQuery();
-    //        command.Parameters.Clear();
-    //    }
-    //}
-
-    //compiuterID
     public void Delete(uint id)
     {
         var commandStr = "UPDATE properties SET isDeleted = 1 WHERE computerID = @id";
@@ -76,13 +53,13 @@ public class PropertyRep : IPropertyRepository
         var commandStr = "UPDATE properties SET value = @value WHERE id = @id";
         var command = new MySqlCommand(commandStr, _connection);
         command.Parameters.Add("@value", MySqlDbType.VarChar).Value = entity.Value;
-        command.Parameters.Add("@id", MySqlDbType.UInt32).Value =entity.ID;
+        command.Parameters.Add("@id", MySqlDbType.UInt32).Value = entity.ID;
         command.ExecuteNonQuery();
     }
 
-    public Dictionary<PropType, Property> GetByComputerID(uint id)
+    public IList<Property> GetByComputerID(uint id)
     {
-        var properties = new Dictionary<PropType, Property>();
+        var properties = new List<Property>();
         var commandStr = "SELECT * FROM properties" +
             " WHERE isDeleted = 0 AND computerID = @computerID";
         var command = new MySqlCommand(commandStr, _connection);
@@ -90,8 +67,7 @@ public class PropertyRep : IPropertyRepository
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
-            var property = PropRecord(reader);
-            properties[property.TypeID] = property;
+            properties.Add(PropRecord(reader));
         }
         return properties;
     }

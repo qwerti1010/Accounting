@@ -5,10 +5,11 @@ namespace DBLibrary;
 public class DbContext : IDisposable
 {
     private readonly MySqlConnection _connection;
+    public const string dbName = "accountingdb";
 
     public DbContext()
     {
-        _connection = new MySqlConnection("server=localhost;port=3307;user=root;database=accountingdb;password=root;");        
+        _connection = new MySqlConnection($"server=localhost;port=3307;user=root;database={dbName};password=root;");        
     }
 
     public MySqlConnection GetConnection() => _connection;
