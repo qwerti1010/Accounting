@@ -21,6 +21,12 @@ public partial class RegistrationForm : Form
 
     private void Send_Click(object sender, EventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(password.Text))
+        {
+            MessageBox.Show("Пустой пароль");
+            return;
+        }
+
         var employee = new Employee
         {
             Name = name.Text,
@@ -29,7 +35,7 @@ public partial class RegistrationForm : Form
             Password = password.Text,
             Position = (PositionEnum)position.SelectedIndex
         };
-        var status = _employeeService.Registration(employee, confirmation.Text);
+        var status = _employeeService.Registration(employee);
         MessageBox.Show(status.Message);
         if (status.IsSuccess)
         {
@@ -37,7 +43,6 @@ public partial class RegistrationForm : Form
         }
     }
 
-    //надо тоже перенести в сервис?
     private void RegistrationForm_Load(object sender, EventArgs e)
     {
         position.Items.AddRange(Enum.GetValues<PositionEnum>().Cast<object>().ToArray());

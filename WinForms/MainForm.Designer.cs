@@ -30,11 +30,14 @@ partial class MainForm
     {
             this.mainFormTabPage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.updateDb = new System.Windows.Forms.Button();
             this.computersCount = new System.Windows.Forms.Label();
             this.deleteComputer = new System.Windows.Forms.Button();
             this.getComputer = new System.Windows.Forms.Button();
             this.addComputer = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.login = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.position = new System.Windows.Forms.ComboBox();
             this.deleteEmployee = new System.Windows.Forms.Button();
             this.addEmployee = new System.Windows.Forms.Button();
@@ -78,6 +81,7 @@ partial class MainForm
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.updateDb);
             this.tabPage1.Controls.Add(this.computersCount);
             this.tabPage1.Controls.Add(this.deleteComputer);
             this.tabPage1.Controls.Add(this.getComputer);
@@ -90,6 +94,17 @@ partial class MainForm
             this.tabPage1.Text = "Компьютеры";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // updateDb
+            // 
+            this.updateDb.Enabled = false;
+            this.updateDb.Location = new System.Drawing.Point(726, 170);
+            this.updateDb.Name = "updateDb";
+            this.updateDb.Size = new System.Drawing.Size(220, 111);
+            this.updateDb.TabIndex = 7;
+            this.updateDb.Text = "Обновить базу данных";
+            this.updateDb.UseVisualStyleBackColor = true;
+            this.updateDb.Click += new System.EventHandler(this.UpdateDb_Click);
+            // 
             // computersCount
             // 
             this.computersCount.AutoSize = true;
@@ -101,7 +116,7 @@ partial class MainForm
             // deleteComputer
             // 
             this.deleteComputer.Enabled = false;
-            this.deleteComputer.Location = new System.Drawing.Point(666, 93);
+            this.deleteComputer.Location = new System.Drawing.Point(503, 40);
             this.deleteComputer.Name = "deleteComputer";
             this.deleteComputer.Size = new System.Drawing.Size(220, 111);
             this.deleteComputer.TabIndex = 5;
@@ -112,7 +127,7 @@ partial class MainForm
             // getComputer
             // 
             this.getComputer.Enabled = false;
-            this.getComputer.Location = new System.Drawing.Point(380, 93);
+            this.getComputer.Location = new System.Drawing.Point(273, 170);
             this.getComputer.Name = "getComputer";
             this.getComputer.Size = new System.Drawing.Size(220, 111);
             this.getComputer.TabIndex = 3;
@@ -122,7 +137,7 @@ partial class MainForm
             // 
             // addComputer
             // 
-            this.addComputer.Location = new System.Drawing.Point(86, 93);
+            this.addComputer.Location = new System.Drawing.Point(34, 40);
             this.addComputer.Name = "addComputer";
             this.addComputer.Size = new System.Drawing.Size(220, 111);
             this.addComputer.TabIndex = 0;
@@ -132,6 +147,8 @@ partial class MainForm
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.login);
+            this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.position);
             this.tabPage2.Controls.Add(this.deleteEmployee);
             this.tabPage2.Controls.Add(this.addEmployee);
@@ -148,6 +165,22 @@ partial class MainForm
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Сотрудники";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // login
+            // 
+            this.login.Location = new System.Drawing.Point(213, 243);
+            this.login.Name = "login";
+            this.login.Size = new System.Drawing.Size(219, 31);
+            this.login.TabIndex = 11;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(33, 246);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 25);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Логин";
             // 
             // position
             // 
@@ -192,7 +225,7 @@ partial class MainForm
             // 
             // phoneTextBox
             // 
-            this.phoneTextBox.Location = new System.Drawing.Point(214, 191);
+            this.phoneTextBox.Location = new System.Drawing.Point(213, 188);
             this.phoneTextBox.Name = "phoneTextBox";
             this.phoneTextBox.Size = new System.Drawing.Size(218, 31);
             this.phoneTextBox.TabIndex = 5;
@@ -207,7 +240,7 @@ partial class MainForm
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(33, 194);
+            this.label3.Location = new System.Drawing.Point(33, 191);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(81, 25);
             this.label3.TabIndex = 2;
@@ -405,4 +438,7 @@ partial class MainForm
     private ComboBox position;
     private TextBox employeeID;
     private Label computersCount;
+    private TextBox login;
+    private Label label6;
+    private Button updateDb;
 }

@@ -15,7 +15,7 @@ public class DBRep : IDBRepository
     public int CountOfTables()
     {
         var commandStr = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES" +
-            " WHERE TABLE_SCHEMA = 'accountingdbTEST'";
+            $" WHERE TABLE_SCHEMA = '{DbContext.DbName}'";
         var command = new MySqlCommand(commandStr, _connection);
         var count = command.ExecuteScalar()?.ToString() ?? "0";
         return int.Parse(count);
@@ -23,10 +23,10 @@ public class DBRep : IDBRepository
 
     public void Create()
     {
-        var commsndStr = "CREATE DATABASE IF NOT EXISTS accountingdb";
+        var commsndStr = $"CREATE DATABASE IF NOT EXISTS {DbContext.DbName}";
         var command = new MySqlCommand(commsndStr, _connection);
         command.ExecuteNonQuery();
-        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdb.employees" +
+        command.CommandText = "CREATE TABLE IF NOT EXISTS employees" +
             "(" +
             "ID INT(10) AUTO_INCREMENT NOT NULL," +
             "Name VARCHAR(30)," +
@@ -41,7 +41,7 @@ public class DBRep : IDBRepository
             "DEFAULT CHARACTER SET = 'utf8'" +
             "COLLATE = 'utf8_bin'";
         command.ExecuteNonQuery();
-        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdbTEST.computers" +
+        command.CommandText = "CREATE TABLE IF NOT EXISTS computers" +
             "(" +
             "ID INT(10) AUTO_INCREMENT NOT NULL," +
             "Name VARCHAR(30)," +
@@ -57,7 +57,7 @@ public class DBRep : IDBRepository
             "DEFAULT CHARACTER SET = 'utf8'" +
             "COLLATE = 'utf8_bin'";
         command.ExecuteNonQuery();
-        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdbTEST.properties" +
+        command.CommandText = "CREATE TABLE IF NOT EXISTS properties" +
             "(" +
             "ID INT(10) AUTO_INCREMENT NOT NULL," +
             "IsDeleted TINYINT(1) DEFAULT '0'," +
@@ -70,7 +70,7 @@ public class DBRep : IDBRepository
             "DEFAULT CHARACTER SET = 'utf8'" +
             "COLLATE = 'utf8_bin'";
         command.ExecuteNonQuery();
-        command.CommandText = "CREATE TABLE IF NOT EXISTS accountingdbTEST.visit_history" +
+        command.CommandText = "CREATE TABLE IF NOT EXISTS visit_history" +
             "(" +
             "ID INT(10) AUTO_INCREMENT NOT NULL," +
             "EmployeeID INT(10) NOT NULL," +

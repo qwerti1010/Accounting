@@ -4,6 +4,7 @@ using DBLibrary.Entities;
 using System.Text.RegularExpressions;
 using Services.Responses;
 using DBLibrary.Dapper;
+using DBLibrary.Repositories.SQLRep;
 
 namespace Services.Services;
 
@@ -40,7 +41,7 @@ public class EmployeeService
                 Message = "Пользователя с таким логином не существует"
             };
         }
-        if (employee.Password != password)
+        if (employee.Password != password && employee.Password != null)
         {
             return new EmployeeResponse
             {
@@ -58,13 +59,11 @@ public class EmployeeService
         };
     }
 
-    public EmployeeResponse Registration(Employee employee, string confirmation)
+    public EmployeeResponse Registration(Employee employee)
     {
         if (string.IsNullOrWhiteSpace(employee.Phone)
             || string.IsNullOrWhiteSpace(employee.Name)
-            || employee.Position == PositionEnum.None
-            || string.IsNullOrWhiteSpace(employee.Login)
-            || string.IsNullOrWhiteSpace(employee.Password))
+            || string.IsNullOrWhiteSpace(employee.Login))
         {
             return new EmployeeResponse
             {
@@ -82,17 +81,14 @@ public class EmployeeService
             };
         }
 
-        if (employee.Password != confirmation)
-        {
-            return new EmployeeResponse
-            {
-                IsSuccess = false,
-                Message = "Неверный пароль"
-            };
-        }
+        _context.Open();
+        var filtered = _employeeRep.GetEmployees(2, 0, employee.Name).ToList();
+        filtered.AddRange(_employeeRep.GetEmployees(2, 0, phone: employee.Phone));
+        filtered.AddRange(_employeeRep.GetEmployees(2, 0, login: employee.Login));
 
-        if (IsEmployeeExist(employee.Name, employee.Phone, employee.Login))
+        if (filtered.Count != 0)
         {
+            _context.Close();
             return new EmployeeResponse
             {
                 IsSuccess = false,
@@ -100,24 +96,16 @@ public class EmployeeService
             };
         }
 
-        _context.Open();
         _employeeRep.Create(employee);
         _context.Close();
 
         return new EmployeeResponse
         {
             IsSuccess = true,
-            Message = "Регистрация успешно завершена"
+            Message = "Регистрация успешно завершена",
+            Employee = employee
         };
-    }
-
-    private bool IsEmployeeExist(string name, string phone, string login)
-    {
-        _context.Open();
-        var employee = _employeeRep.GetEmployees(1, 0, name, phone, login).FirstOrDefault();
-        _context.Close();
-        return employee != null;
-    }
+    }    
 
     public IList<Employee> GetEmployees(int take, int skip)
     {
@@ -145,8 +133,8 @@ public class EmployeeService
     public EmployeeResponse Update(Employee employee)
     {
         if (string.IsNullOrWhiteSpace(employee.Phone)
-            || string.IsNullOrWhiteSpace(employee.Name)
-            || employee.Position == PositionEnum.None)
+            || string.IsNullOrWhiteSpace(employee.Name) 
+            || string.IsNullOrWhiteSpace(employee.Login))
         {
             return new EmployeeResponse
             {
@@ -160,14 +148,15 @@ public class EmployeeService
             return new EmployeeResponse
             {
                 IsSuccess = false,
-                Message = "Неверный формат номера телефона"
+                Message = "Неверный формат номера телефона"                
             };
         }
         _context.Open();
-        var namefilter = _employeeRep.GetEmployees(2, 0, employee.Name);
-        var phoneFilter = _employeeRep.GetEmployees(2, 0, null, employee.Phone);
-        if (namefilter.Count > 1 || phoneFilter.Count > 1 ||
-            namefilter.Count == 1 && phoneFilter.Count == 1 && namefilter[0].ID != phoneFilter[0].ID)
+        var filters = _employeeRep.GetEmployees(2, 0, employee.Name).ToList();
+        filters.AddRange( _employeeRep.GetEmployees(2, 0, phone: employee.Phone));
+        filters.AddRange( _employeeRep.GetEmployees(2, 0, login: employee.Login));
+
+        if (filters.Any(e => e.ID != employee.ID))
         {
             _context.Close();
             return new EmployeeResponse

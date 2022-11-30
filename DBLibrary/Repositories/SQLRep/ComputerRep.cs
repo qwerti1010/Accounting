@@ -72,6 +72,8 @@ public class ComputerRep : IComputerRepository
         var command = new MySqlCommand(commandStr, _connection);
         AddParameters(command, entity);
         command.ExecuteNonQuery();
+        command.CommandText = "SELECT LAST_INSERT_ID()";
+        entity.ID = uint.Parse(command.ExecuteScalar()!.ToString()!);
     }
 
     public void Update(Computer entity)

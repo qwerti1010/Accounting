@@ -1,12 +1,13 @@
 ﻿
 using DBLibrary;
+using DBLibrary.Entities;
 using Services.Services;
 
 namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private readonly EmployeeService _loginService;
+    private readonly EmployeeService _employeeService;
     private readonly DbContext _context;
     private readonly DBService _dBService;
     
@@ -14,16 +15,22 @@ public partial class LoginForm : Form
     {
         InitializeComponent();
         _context = new DbContext();
-        _loginService = new EmployeeService(_context);
+        _employeeService = new EmployeeService(_context);
         _dBService = new DBService(_context);
     }
 
     private void SignUp_Click(object sender, EventArgs e)
     {
-        var status = _loginService.Login(loginTextBox.Text, passTextBox.Text);
+        var status = _employeeService.Login(loginTextBox.Text, passTextBox.Text);
         if (!status.IsSuccess || status.Employee == null)
         {
             MessageBox.Show(status.Message);
+            return;
+        }
+        if (status.Employee.Password == null)
+        {
+            var passForm = new PasswordForm(status.Employee, _employeeService);
+            passForm.ShowDialog();
             return;
         }
         var form = new MainForm(status.Employee, _context);

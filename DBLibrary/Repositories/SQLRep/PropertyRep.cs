@@ -23,7 +23,9 @@ public class PropertyRep : IPropertyRepository
         command.Parameters.Add("@value", MySqlDbType.VarChar).Value = entity.Value;
         command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = entity.ComputerID;
         command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = entity.TypeID;
-        command.ExecuteNonQuery();        
+        command.ExecuteNonQuery();
+        command.CommandText = "SELECT LAST_INSERT_ID()";
+        entity.ID = uint.Parse(command.ExecuteScalar()!.ToString()!);
     }
 
     public void Delete(uint id)

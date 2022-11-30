@@ -42,14 +42,14 @@ public class DapperEmpRep : IEmployeeRepository
 
     public IList<Employee> GetEmployees(int take, int skip, string? name = null, string? phone = null, string? login = null)
     {
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 ";
+        var commandString = "SELECT * FROM employees WHERE isDeleted = 0";        
         var param = new DynamicParameters();
         if (name != null)
         {
             commandString += " AND name = @name";
-            param.Add("@name", name);
+            param.Add("name", name);
         }
-
+        
         if (phone != null)
         {
             commandString += " AND phone = @phone";
@@ -70,12 +70,13 @@ public class DapperEmpRep : IEmployeeRepository
 
     public void Update(Employee entity)
     {
-        var commandStr = "UPDATE employees SET name = @name, position = @position, phone = @phone WHERE id = @id";
+        var commandStr = "UPDATE employees SET name = @name, position = @position, phone = @phone, password = @password WHERE id = @id";
         var param = new DynamicParameters();
         param.Add("@name", entity.Name);
         param.Add("@position", entity.Position);
         param.Add("@phone", entity.Phone);
         param.Add("@id", entity.ID);
+        param.Add("@password", entity.Password);
         _connection.Execute(commandStr, param);
     }
 }

@@ -21,6 +21,7 @@ public class DapperVisitRep : IVisitRepository
         var commandString = "INSERT INTO visit_history (employeeID, visitTime)" +
             "VALUES (@employeeID, @visitTime)";
         _connection.Execute(commandString, entity);
+        entity.ID = _connection.ExecuteScalar<uint>("SELECT LAST_INSERT_ID()");
     }
 
     public void Delete(uint id)

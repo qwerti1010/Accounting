@@ -22,10 +22,12 @@ public enum PropType
 
 public enum PositionEnum
 {
-    None,
-    FirstPos = 1,
-    SecondPos = 2,
-    ThirdPos = 3
+    [Description("Пользователь")]
+    User,
+    [Description("Модератор")]
+    Moderator = 1,
+    [Description("Администратор")]
+    Admin = 2
 }
 
 //все процессоры

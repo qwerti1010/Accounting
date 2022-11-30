@@ -19,14 +19,13 @@ public class EmployeeRep : IEmployeeRepository
         string? name = null, string? phone = null, string? login = null)
     {
         var employees = new List<Employee>();
-        var commandString = "SELECT * FROM employees WHERE isDeleted = 0 ";
+        var commandString = "SELECT * FROM employees WHERE isDeleted = 0";
         var command = new MySqlCommand(commandString, _connection);
         if (name != null)
         {
             command.CommandText += " AND name = @name";
             command.Parameters.Add("@name", MySqlDbType.VarChar).Value = name;
-        }
-
+        }      
         if (phone != null)
         {
             command.CommandText += " AND phone = @phone";
@@ -40,8 +39,7 @@ public class EmployeeRep : IEmployeeRepository
         }
         command.Parameters.Add("@skip", MySqlDbType.Int32).Value = skip;
         command.Parameters.Add("@take", MySqlDbType.Int32).Value = take;
-        command.CommandText += " LIMIT @skip, @take";
-
+        command.CommandText += " AND isDeleted = 0 LIMIT @skip, @take";
         using var reader = command.ExecuteReader();
         while (reader.Read())
         {
@@ -70,6 +68,8 @@ public class EmployeeRep : IEmployeeRepository
         var command = new MySqlCommand(commandStr, _connection);
         AddParameters(command, entity);
         command.ExecuteNonQuery();
+        command.CommandText = "SELECT LAST_INSERT_ID()";
+        entity.ID = uint.Parse(command.ExecuteScalar()!.ToString()!);
     }
 
     public void Update(Employee entity)
@@ -117,5 +117,7 @@ public class EmployeeRep : IEmployeeRepository
         command.Parameters.Add("@login", MySqlDbType.VarChar).Value = entity.Login;
         command.Parameters.Add("@password", MySqlDbType.VarChar).Value = entity.Password;
     }
+
+    
 }
 

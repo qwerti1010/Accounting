@@ -27,6 +27,7 @@ public partial class MainForm : Form
         dgv.DataSource = emp;
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         position.Items.AddRange(Enum.GetValues<PositionEnum>().Cast<object>().ToArray());
+        ProvidePositionAccess();
     }    
 
     private void ClearTextBoxes()
@@ -65,13 +66,19 @@ public partial class MainForm : Form
         {
             Name = nameTextBox.Text,
             Phone = phoneTextBox.Text,
-            Position = (PositionEnum)position.SelectedIndex
+            Position = (PositionEnum)position.SelectedIndex,
+            Login = login.Text
         };
-        //не забыть поправить
-        var status = _employeeService.Registration(employee, null);
+        
+        var status = _employeeService.Registration(employee);       
         MessageBox.Show(status.Message);
         if (status.IsSuccess)
         {
+            if (employee.Position == PositionEnum.Admin)
+            {
+                var form = new PasswordForm(employee, _employeeService);
+                form.ShowDialog();
+            }
             ClearTextBoxes();
         }
         dgv.DataSource = _employeeService.GetEmployees(10, 0);
@@ -113,9 +120,10 @@ public partial class MainForm : Form
                 {
                     var row = dgv.Rows[e.RowIndex];
                     _employee = _employeeService.GetByID((uint)row.Cells[0].Value)!;
-                    nameTextBox.Text = _employee?.Name;
-                    phoneTextBox.Text = _employee?.Phone;
-                    position.Text = _employee?.Position.ToString();
+                    nameTextBox.Text = _employee!.Name;
+                    phoneTextBox.Text = _employee!.Phone;
+                    position.Text = _employee!.Position.ToString();
+                    login.Text = _employee!.Login;
                     updateEmployee.Enabled = true;
                     deleteEmployee.Enabled = true;
                     break;
@@ -155,5 +163,31 @@ public partial class MainForm : Form
     {        
         dgv.DataSource = _computerService.GetComputers(10, 0,
             computerName.Text, price.Text, status.SelectedIndex, employeeID.Text);
-    }  
+    }
+
+    private void UpdateDb_Click(object sender, EventArgs e)
+    {
+        dgv.DataSource = _computerService.GetComputers(10, 0);
+    }
+
+    public void ProvidePositionAccess()
+    {
+        switch (_employee.Position)
+        {
+            case PositionEnum.User:
+                {
+                    updateEmployee.Visible = false;
+                    deleteEmployee.Visible = false;
+                    addEmployee.Visible = false;
+                    break;
+                }
+            case PositionEnum.Moderator:
+                {
+                    deleteEmployee.Visible = false;
+                    addEmployee.Visible = false;
+                    position.Enabled = false;
+                    break;
+                }
+        } 
+    }
 }
