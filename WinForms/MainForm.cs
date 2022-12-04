@@ -6,7 +6,8 @@ namespace Accounting;
 
 public partial class MainForm : Form
 {
-    private Employee _employee;
+    private readonly Employee _employee;
+    private Employee? _selectedEmployee;
     private Computer _computer = null!;   
     private readonly EmployeeService _employeeService;
     private readonly ComputerService _computerService;
@@ -44,18 +45,24 @@ public partial class MainForm : Form
     
     private void UpdateEmployee_Click(object sender, EventArgs e)
     {
-        _employee.Name = nameTextBox.Text;
-        _employee.Phone = phoneTextBox.Text;
-        _employee.Position = (PositionEnum)position.SelectedIndex;
-        var status = _employeeService.Update(_employee);
-        MessageBox.Show(status.Message);
-        dgv.DataSource = _employeeService.GetEmployees(10, 0);
+        if(_selectedEmployee != null)
+        {
+            _selectedEmployee.Name = nameTextBox.Text;
+            _selectedEmployee.Phone = phoneTextBox.Text;
+            _selectedEmployee.Position = (PositionEnum)position.SelectedIndex;
+            var status = _employeeService.Update(_selectedEmployee);
+            MessageBox.Show(status.Message);
+            dgv.DataSource = _employeeService.GetEmployees(10, 0);
+        }
     }
 
     private void DeleteEmployee_Click(object sender, EventArgs e)
     {
-        ClearTextBoxes();        
-        _employeeService.Delete(_employee.ID);
+        ClearTextBoxes();  
+        if(_selectedEmployee != null)
+        {
+            _employeeService.Delete(_selectedEmployee.ID);
+        }
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
         dgv.DataSource = _employeeService.GetEmployees(10, 0);
@@ -102,6 +109,7 @@ public partial class MainForm : Form
                 }
             case 2:
                 {
+                    dgv.DataSource = null;
                     break;
                 }
             case 3:
@@ -120,11 +128,11 @@ public partial class MainForm : Form
             case (int)DataGridViewCondition.EmployeeTab:
                 {
                     var row = dgv.Rows[e.RowIndex];
-                    _employee = _employeeService.GetByID((uint)row.Cells[0].Value)!;
-                    nameTextBox.Text = _employee!.Name;
-                    phoneTextBox.Text = _employee!.Phone;
-                    position.Text = _employee!.Position.ToString();
-                    login.Text = _employee!.Login;
+                    _selectedEmployee = _employeeService.GetByID((uint)row.Cells[0].Value)!;
+                    nameTextBox.Text = _selectedEmployee.Name;
+                    phoneTextBox.Text = _selectedEmployee.Phone;
+                    position.Text = _selectedEmployee.Position.ToString();
+                    login.Text = _selectedEmployee.Login;
                     updateEmployee.Enabled = true;
                     deleteEmployee.Enabled = true;
                     break;
