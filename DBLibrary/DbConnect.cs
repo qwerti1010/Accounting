@@ -2,12 +2,12 @@
 
 namespace DBLibrary;
 
-public class DbContext : IDisposable
+public class DbConnect : IDisposable
 {
     private readonly MySqlConnection _connection;
     public const string DbName = "accountingdb";
 
-    public DbContext()
+    public DbConnect()
     {
         _connection = new MySqlConnection($"server=localhost;port=3307;user=root;database={DbName};password=root;");        
     }

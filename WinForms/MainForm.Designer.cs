@@ -48,6 +48,7 @@ partial class MainForm
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.employeeID = new System.Windows.Forms.TextBox();
             this.status = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -59,6 +60,8 @@ partial class MainForm
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgv = new System.Windows.Forms.DataGridView();
+            this.splitter2 = new System.Windows.Forms.Splitter();
+            this.splitter3 = new System.Windows.Forms.Splitter();
             this.mainFormTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -75,7 +78,7 @@ partial class MainForm
             this.mainFormTabPage.Location = new System.Drawing.Point(-3, -3);
             this.mainFormTabPage.Name = "mainFormTabPage";
             this.mainFormTabPage.SelectedIndex = 0;
-            this.mainFormTabPage.Size = new System.Drawing.Size(989, 325);
+            this.mainFormTabPage.Size = new System.Drawing.Size(989, 353);
             this.mainFormTabPage.TabIndex = 0;
             this.mainFormTabPage.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabPage_Selecting);
             // 
@@ -89,14 +92,13 @@ partial class MainForm
             this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(981, 287);
+            this.tabPage1.Size = new System.Drawing.Size(981, 315);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Компьютеры";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // updateDb
             // 
-            this.updateDb.Enabled = false;
             this.updateDb.Location = new System.Drawing.Point(726, 170);
             this.updateDb.Name = "updateDb";
             this.updateDb.Size = new System.Drawing.Size(220, 111);
@@ -161,7 +163,7 @@ partial class MainForm
             this.tabPage2.Location = new System.Drawing.Point(4, 34);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(981, 287);
+            this.tabPage2.Size = new System.Drawing.Size(981, 315);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Сотрудники";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -266,6 +268,8 @@ partial class MainForm
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.splitter3);
+            this.tabPage3.Controls.Add(this.splitter1);
             this.tabPage3.Controls.Add(this.employeeID);
             this.tabPage3.Controls.Add(this.status);
             this.tabPage3.Controls.Add(this.label7);
@@ -278,10 +282,18 @@ partial class MainForm
             this.tabPage3.Location = new System.Drawing.Point(4, 34);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(981, 287);
+            this.tabPage3.Size = new System.Drawing.Size(981, 315);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Фильтры";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(3, 3);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(4, 309);
+            this.splitter1.TabIndex = 15;
+            this.splitter1.TabStop = false;
             // 
             // employeeID
             // 
@@ -364,7 +376,7 @@ partial class MainForm
             this.tabPage4.Location = new System.Drawing.Point(4, 34);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(981, 287);
+            this.tabPage4.Size = new System.Drawing.Size(981, 315);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "О программе";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -374,20 +386,37 @@ partial class MainForm
             this.dgv.AllowUserToAddRows = false;
             this.dgv.AllowUserToDeleteRows = false;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv.Location = new System.Drawing.Point(5, 324);
+            this.dgv.Location = new System.Drawing.Point(5, 352);
             this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
             this.dgv.RowHeadersWidth = 62;
             this.dgv.RowTemplate.Height = 33;
-            this.dgv.Size = new System.Drawing.Size(977, 223);
+            this.dgv.Size = new System.Drawing.Size(977, 195);
             this.dgv.TabIndex = 1;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
+            // 
+            // splitter2
+            // 
+            this.splitter2.Location = new System.Drawing.Point(0, 0);
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(4, 547);
+            this.splitter2.TabIndex = 2;
+            this.splitter2.TabStop = false;
+            // 
+            // splitter3
+            // 
+            this.splitter3.Location = new System.Drawing.Point(7, 3);
+            this.splitter3.Name = "splitter3";
+            this.splitter3.Size = new System.Drawing.Size(4, 309);
+            this.splitter3.TabIndex = 16;
+            this.splitter3.TabStop = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 547);
+            this.Controls.Add(this.splitter2);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.mainFormTabPage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -441,4 +470,7 @@ partial class MainForm
     private TextBox login;
     private Label label6;
     private Button updateDb;
+    private Splitter splitter1;
+    private Splitter splitter3;
+    private Splitter splitter2;
 }

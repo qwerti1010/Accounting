@@ -11,7 +11,7 @@ public class DapperVisitRep : IVisitRepository
 {
     private readonly MySqlConnection _connection;
 
-    public DapperVisitRep(DbContext context)
+    public DapperVisitRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

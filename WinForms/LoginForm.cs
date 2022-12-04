@@ -8,13 +8,13 @@ namespace Accounting;
 public partial class LoginForm : Form
 {
     private readonly EmployeeService _employeeService;
-    private readonly DbContext _context;
+    private readonly DbConnect _context;
     private readonly DBService _dBService;
     
     public LoginForm()
     {
         InitializeComponent();
-        _context = new DbContext();
+        _context = new DbConnect();
         _employeeService = new EmployeeService(_context);
         _dBService = new DBService(_context);
     }

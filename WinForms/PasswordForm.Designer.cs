@@ -69,6 +69,7 @@
             this.Controls.Add(this.label1);
             this.Name = "PasswordForm";
             this.Text = "PasswordForm";
+            this.Load += new System.EventHandler(this.PasswordForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -9,10 +9,10 @@ namespace Services.Services;
 
 public class DBService
 {
-    private readonly DbContext _context;
+    private readonly DbConnect _context;
     private readonly IDBRepository _repository;
 
-    public DBService(DbContext context)
+    public DBService(DbConnect context)
     {
         _context = context;
         _repository = new DBRep(_context);

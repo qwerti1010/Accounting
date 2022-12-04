@@ -7,7 +7,7 @@ public class DBRep : IDBRepository
 {
     private readonly MySqlConnection _connection;
 
-    public DBRep(DbContext context)
+    public DBRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }
@@ -15,7 +15,7 @@ public class DBRep : IDBRepository
     public int CountOfTables()
     {
         var commandStr = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES" +
-            $" WHERE TABLE_SCHEMA = '{DbContext.DbName}'";
+            $" WHERE TABLE_SCHEMA = '{DbConnect.DbName}'";
         var command = new MySqlCommand(commandStr, _connection);
         var count = command.ExecuteScalar()?.ToString() ?? "0";
         return int.Parse(count);
@@ -23,7 +23,7 @@ public class DBRep : IDBRepository
 
     public void Create()
     {
-        var commsndStr = $"CREATE DATABASE IF NOT EXISTS {DbContext.DbName}";
+        var commsndStr = $"CREATE DATABASE IF NOT EXISTS {DbConnect.DbName}";
         var command = new MySqlCommand(commsndStr, _connection);
         command.ExecuteNonQuery();
         command.CommandText = "CREATE TABLE IF NOT EXISTS employees" +

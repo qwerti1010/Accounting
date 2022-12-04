@@ -8,7 +8,7 @@ public partial class RegistrationForm : Form
 {
     private readonly EmployeeService _employeeService;
     
-    public RegistrationForm(DbContext context)
+    public RegistrationForm(DbConnect context)
     {
         _employeeService = new EmployeeService(context);
         InitializeComponent();
@@ -33,7 +33,7 @@ public partial class RegistrationForm : Form
             Phone = phone.Text,
             Login = login.Text,
             Password = password.Text,
-            Position = (PositionEnum)position.SelectedIndex
+            Position = PositionEnum.User
         };
         var status = _employeeService.Registration(employee);
         MessageBox.Show(status.Message);
@@ -41,10 +41,5 @@ public partial class RegistrationForm : Form
         {
             Close();
         }
-    }
-
-    private void RegistrationForm_Load(object sender, EventArgs e)
-    {
-        position.Items.AddRange(Enum.GetValues<PositionEnum>().Cast<object>().ToArray());
     }
 }

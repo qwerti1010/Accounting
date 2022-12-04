@@ -10,7 +10,7 @@ public class DapperEmpRep : IEmployeeRepository
 {
     private readonly MySqlConnection _connection;
 
-    public DapperEmpRep(DbContext context)
+    public DapperEmpRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

@@ -9,7 +9,7 @@ public class DapperPropertyRep : IPropertyRepository
 {
     private readonly MySqlConnection _connection;
 
-    public DapperPropertyRep(DbContext context)
+    public DapperPropertyRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

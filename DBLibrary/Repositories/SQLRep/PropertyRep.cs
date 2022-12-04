@@ -9,7 +9,7 @@ public class PropertyRep : IPropertyRepository
 {
     private readonly MySqlConnection _connection;
 
-    public PropertyRep(DbContext context)
+    public PropertyRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

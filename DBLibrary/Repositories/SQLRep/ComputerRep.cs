@@ -9,7 +9,7 @@ public class ComputerRep : IComputerRepository
 {
     private readonly MySqlConnection _connection;
 
-    public ComputerRep(DbContext context)
+    public ComputerRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

@@ -1,5 +1,8 @@
-﻿namespace DBLibrary.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace DBLibrary.Entities;
+
+[Table("computers")]
 public class Computer
 {
     public uint ID { get; set; }
@@ -10,5 +13,6 @@ public class Computer
     public uint EmployeeID { get; set; }    
     public DateTime ExploitationStart { get; set; }
     public bool IsDeleted { get; set; }
+    [NotMapped]
     public IList<Property>? Properties { get; set; }    
 }

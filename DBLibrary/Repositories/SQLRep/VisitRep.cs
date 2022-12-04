@@ -8,7 +8,7 @@ public class VisitRep : IVisitRepository
 {
     private readonly MySqlConnection _connection;
 
-    public VisitRep(DbContext context)
+    public VisitRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

@@ -10,13 +10,15 @@ public partial class ComputerForm : Form
     private Computer? _computer;
     private readonly ComputerService _computerService;
     private readonly EmployeeService _employeeService;
+    private List<Employee> _employees;
 
     public ComputerForm(ComputerService computerService, EmployeeService employeeService, Computer? computer = null)
     {
         InitializeComponent();
         _computerService = computerService;
         _employeeService = employeeService;
-        _computer = computer;    
+        _computer = computer;
+        _employees = _employeeService.GetEmployees(10, 0).ToList();
     }
 
     private void Close_Click(object sender, EventArgs e)
@@ -114,7 +116,7 @@ public partial class ComputerForm : Form
 
     private void Update_Click(object sender, EventArgs e)
     {
-        if(!FieldsArentEmpty())
+        if(FieldsAreEmpty())
         {
             MessageBox.Show("Поля не могут быть пустыми");
             return;
@@ -166,8 +168,9 @@ public partial class ComputerForm : Form
         _computer.Price = decimal.Parse(price.Text);
         _computer.RegistrationDate = regDate.Value;
         _computer.ExploitationStart = explStart.Value;
-        _computer.EmployeeID = _employeeService.GetByName(employee.Text).Employee!.ID;
+        _computer.EmployeeID = _employees.First(e => e.Name == employee.Text).ID;
         _computer.Status = (Status)status.SelectedIndex;
+
         _computerService.Update(_computer);
         MessageBox.Show("Данные обновлены");
         Close();
@@ -175,14 +178,13 @@ public partial class ComputerForm : Form
 
     private void Create_Click(object sender, EventArgs e)
     {
-
         _computer = new Computer
         {
             Name = name.Text,
             Price = decimal.Parse(price.Text),
             RegistrationDate = regDate.Value,
             ExploitationStart = explStart.Value,
-            EmployeeID = _employeeService.GetByName(employee.Text).Employee!.ID,
+            EmployeeID = _employees.First(e => e.Name == employee.Text).ID,
             Status = (Status)status.SelectedIndex,
 
             Properties = new List<Property>
@@ -204,7 +206,7 @@ public partial class ComputerForm : Form
 
     private void AddItemsToComboBoxes()
     {
-        employee.Items.AddRange(_employeeService.GetEmployees(10,0).Select(e => e.Name).ToArray());
+        employee.Items.AddRange(_employees.Select(e => e.Name).ToArray());
         status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
         GetAttributes(typeof(CPUs), cpu);
         GetAttributes(typeof(RAMs), ram);
@@ -228,16 +230,16 @@ public partial class ComputerForm : Form
         }
     }
 
-    private bool FieldsArentEmpty()
+    private bool FieldsAreEmpty()
     {
         foreach(var control in Controls)
         {
             if (control is TextBox tb && string.IsNullOrWhiteSpace(tb.Text))
-                return false;
+                return true;
             if (control is ComboBox cb && string.IsNullOrWhiteSpace(cb.Text))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }    
 }
 

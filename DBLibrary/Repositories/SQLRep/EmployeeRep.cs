@@ -9,7 +9,7 @@ public class EmployeeRep : IEmployeeRepository
 {
     private readonly MySqlConnection _connection;
 
-    public EmployeeRep(DbContext context)
+    public EmployeeRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

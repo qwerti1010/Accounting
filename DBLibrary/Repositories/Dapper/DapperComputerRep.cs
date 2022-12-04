@@ -9,7 +9,7 @@ public class DapperComputerRep : IComputerRepository
 {
     private readonly MySqlConnection _connection;
 
-    public DapperComputerRep(DbContext context)
+    public DapperComputerRep(DbConnect context)
     {
         _connection = context.GetConnection();
     }

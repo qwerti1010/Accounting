@@ -11,7 +11,7 @@ public partial class MainForm : Form
     private readonly EmployeeService _employeeService;
     private readonly ComputerService _computerService;
     
-    public MainForm(Employee employee, DbContext context)
+    public MainForm(Employee employee, DbConnect context)
     {
         _employee = employee;        
         InitializeComponent();
@@ -33,7 +33,8 @@ public partial class MainForm : Form
     private void ClearTextBoxes()
     {
         nameTextBox.Clear();
-        phoneTextBox.Clear();      
+        phoneTextBox.Clear();
+        login.Clear();
     }
 
     private void MainForm_Closed(object sender, FormClosedEventArgs e)
@@ -70,9 +71,9 @@ public partial class MainForm : Form
             Login = login.Text
         };
         
-        var status = _employeeService.Registration(employee);       
-        MessageBox.Show(status.Message);
-        if (status.IsSuccess)
+        var responce = _employeeService.Registration(employee);       
+        MessageBox.Show(responce.Message);
+        if (responce.IsSuccess)
         {
             if (employee.Position == PositionEnum.Admin)
             {
@@ -179,6 +180,8 @@ public partial class MainForm : Form
                     updateEmployee.Visible = false;
                     deleteEmployee.Visible = false;
                     addEmployee.Visible = false;
+                    addComputer.Visible = false;
+                    deleteComputer.Visible = false;
                     break;
                 }
             case PositionEnum.Moderator:
@@ -186,8 +189,10 @@ public partial class MainForm : Form
                     deleteEmployee.Visible = false;
                     addEmployee.Visible = false;
                     position.Enabled = false;
+                    addComputer.Visible = false;
+                    deleteComputer.Visible = false;
                     break;
                 }
         } 
-    }
+    }   
 }

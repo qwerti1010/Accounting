@@ -2,20 +2,21 @@
 using DBLibrary.Dapper;
 using DBLibrary.Entities;
 using DBLibrary.Interfaces;
+using DBLibrary.Repositories.EF;
 
 namespace Services.Services;
 
 public class ComputerService
 {
-    private readonly DbContext _context;
+    private readonly DbConnect _context;
     private readonly IComputerRepository _computerRep;
     private readonly IPropertyRepository _propertyRep;
 
-    public ComputerService(DbContext context)
+    public ComputerService(DbConnect context)
     {
         _context = context;
-        _computerRep = new DapperComputerRep(_context);
-        _propertyRep = new DapperPropertyRep(_context);
+        _computerRep = new EfComputerRep(_context);
+        _propertyRep = new EfPropertyRep(_context);
     }
 
     public IList<Computer> GetComputers(int take, int skip, string? nameFilter = null,

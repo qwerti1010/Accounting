@@ -1,5 +1,8 @@
-﻿namespace DBLibrary.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace DBLibrary.Entities;
+
+[Table("employees")]
 public class Employee
 {
     public uint ID { get; set; }

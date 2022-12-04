@@ -3,8 +3,7 @@ using DBLibrary;
 using DBLibrary.Entities;
 using System.Text.RegularExpressions;
 using Services.Responses;
-using DBLibrary.Dapper;
-using DBLibrary.Repositories.SQLRep;
+using DBLibrary.Repositories.EF;
 
 namespace Services.Services;
 
@@ -12,20 +11,13 @@ public class EmployeeService
 {
     private readonly IEmployeeRepository _employeeRep;
     private readonly IVisitRepository _visitRep;
-    private readonly DbContext _context;
+    private readonly DbConnect _context;
 
-    public EmployeeService()
-    {
-        _context = new DbContext();
-        _employeeRep = new DapperEmpRep(_context);
-        _visitRep = new DapperVisitRep(_context);
-    }
-
-    public EmployeeService(DbContext context)
+    public EmployeeService(DbConnect context)
     {
         _context = context;
-        _employeeRep = new DapperEmpRep(_context);
-        _visitRep = new DapperVisitRep(_context);
+        _employeeRep = new EfEmployeeRep(_context);
+        _visitRep = new EfVisitRep(_context);
     }
 
     public EmployeeResponse Login(string login, string password)
@@ -171,28 +163,6 @@ public class EmployeeService
         {
             IsSuccess = true,
             Message = "Данные успешно обновлены"
-        };
-    }
-
-    public EmployeeResponse GetByName(string name)
-    {
-        _context.Open();
-        var employee = _employeeRep.GetEmployees(1, 0, name).FirstOrDefault();
-        _context.Close();
-        if (employee == null)
-        {
-            return new EmployeeResponse
-            {
-                IsSuccess = false,
-                Message = "Сотрудник не найден",
-                Employee = new Employee()             
-            };
-        }
-        return new EmployeeResponse
-        {
-            IsSuccess = true,
-            Message = "Сотрудник найден",
-            Employee = employee
         };
     }
 }
