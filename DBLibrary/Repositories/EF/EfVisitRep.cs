@@ -34,14 +34,17 @@ public class EfVisitRep : DbContext, IVisitRepository
         {
             visit.IsDeleted = true;
             Update(visit);
+            SaveChanges();
         }        
     }
 
-    public Visit? GetByID(uint id) => Visits.FirstOrDefault(v => v.ID == id && v.IsDeleted == false);
+    public Visit? GetByID(uint id) => Visits.FirstOrDefault(v => v.ID == id && !v.IsDeleted);
 
     public void Update(Visit entity)
     {
         Visits.Update(entity);
         SaveChanges();
     }
+
+    public int Count() => Visits.Where(v => !v.IsDeleted).Count();
 }

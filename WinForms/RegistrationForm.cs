@@ -32,7 +32,7 @@ public partial class RegistrationForm : Form
             Name = name.Text,
             Phone = phone.Text,
             Login = login.Text,
-            Password = password.Text,
+            Password = EmployeeService.HashPassword(password.Text),
             Position = PositionEnum.User
         };
         var status = _employeeService.Registration(employee);
@@ -41,5 +41,10 @@ public partial class RegistrationForm : Form
         {
             Close();
         }
+    }
+
+    private void RegistrationForm_Load(object sender, EventArgs e)
+    {
+
     }
 }

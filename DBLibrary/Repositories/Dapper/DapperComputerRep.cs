@@ -16,7 +16,7 @@ public class DapperComputerRep : IComputerRepository
 
     public int Count()
     {        
-        return _connection.Query<int>("SELECT COUNT(id) FROM computers WHERE isDeleted = 0").FirstOrDefault();
+        return _connection.ExecuteScalar<int>("SELECT COUNT(id) FROM computers WHERE isDeleted = 0");
     }
 
     public void Create(Computer entity)

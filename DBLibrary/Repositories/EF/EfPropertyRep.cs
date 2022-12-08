@@ -33,19 +33,22 @@ public class EfPropertyRep : DbContext, IPropertyRepository
         {
             prop.IsDeleted = true;
             Update(prop);
+            SaveChanges();
         }
     }
 
     public IList<Property> GetByComputerID(uint id)
     {
-        return Properties.Where(p => p.ComputerID == id && p.IsDeleted == false).ToList() ?? new List<Property>(); 
+        return Properties.Where(p => p.ComputerID == id && !p.IsDeleted).ToList() ?? new List<Property>(); 
     }
 
-    public Property? GetByID(uint id) => Properties.FirstOrDefault(p => p.ID == id && p.IsDeleted == false);
+    public Property? GetByID(uint id) => Properties.FirstOrDefault(p => p.ID == id && !p.IsDeleted);
 
     public void Update(Property entity)
     {
         Properties.Update(entity);
         SaveChanges();
     }
+
+    public int Count() => Properties.Where(p => !p.IsDeleted).Count();
 }

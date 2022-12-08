@@ -14,6 +14,11 @@ public class DapperPropertyRep : IPropertyRepository
         _connection = context.GetConnection();
     }
 
+    public int Count()
+    {
+        return _connection.ExecuteScalar<int>("SELECT COUNT(id) FROM properties WHERE isDeleted = 0");
+    }
+
     public void Create(Property entity)
     {
         var commandString = "INSERT INTO properties (computerID, typeID, value)" +

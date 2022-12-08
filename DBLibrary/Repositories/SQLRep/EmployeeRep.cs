@@ -118,6 +118,12 @@ public class EmployeeRep : IEmployeeRepository
         command.Parameters.Add("@password", MySqlDbType.VarChar).Value = entity.Password;
     }
 
-    
+    public int Count()
+    {
+        var commandString = "SELECT COUNT(id) FROM employees WHERE isDeleted = 0";
+        var command = new MySqlCommand(commandString, _connection);
+        var count = command.ExecuteScalar()?.ToString() ?? "0";
+        return int.Parse(count);
+    }
 }
 

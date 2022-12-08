@@ -14,6 +14,12 @@ public class DapperEmpRep : IEmployeeRepository
     {
         _connection = context.GetConnection();
     }
+
+    public int Count()
+    {
+        return _connection.ExecuteScalar<int>("SELECT COUNT(id) FROM employees WHERE isDeleted = 0");
+    }
+
     public void Create(Employee entity)
     {
         var commandStr = "INSERT INTO employees (name, position, phone, login, password)" +

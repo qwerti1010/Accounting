@@ -92,11 +92,11 @@ public class ComputerService
         _context.Close();
     }
 
-    public string Count()
+    public int Count()
     {
         _context.Open();
         var result = _computerRep.Count();
         _context.Close();
-        return $"Количество компьютеров: {result}";
+        return result;
     }
 }

@@ -10,7 +10,7 @@ public partial class ComputerForm : Form
     private Computer? _computer;
     private readonly ComputerService _computerService;
     private readonly EmployeeService _employeeService;
-    private List<Employee> _employees;
+    private readonly List<Employee> _employees;
 
     public ComputerForm(ComputerService computerService, EmployeeService employeeService, Computer? computer = null)
     {

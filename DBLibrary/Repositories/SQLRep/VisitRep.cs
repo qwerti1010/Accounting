@@ -13,6 +13,14 @@ public class VisitRep : IVisitRepository
         _connection = context.GetConnection();
     }
 
+    public int Count()
+    {
+        var commandString = "SELECT COUNT(id) FROM visit_history WHERE isDeleted = 0";
+        var command = new MySqlCommand(commandString, _connection);
+        var count = command.ExecuteScalar()?.ToString() ?? "0";
+        return int.Parse(count);
+    }
+
     public void Create(Visit entity)
     {
         var commandString = "INSERT INTO visit_history (employeeID, visitTime)" +

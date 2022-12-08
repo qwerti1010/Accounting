@@ -16,10 +16,12 @@ public class PropertyRep : IPropertyRepository
 
     public void Create(Property entity)
     {
-        var command = new MySqlCommand();
-        command.Connection = _connection;
-        command.CommandText = "INSERT INTO properties (computerID, typeID, value)" +
-            " VALUES(@computerID, @typeID, @value)";
+        var command = new MySqlCommand
+        {
+            Connection = _connection,
+            CommandText = "INSERT INTO properties (computerID, typeID, value)" +
+            " VALUES(@computerID, @typeID, @value)"
+        };
         command.Parameters.Add("@value", MySqlDbType.VarChar).Value = entity.Value;
         command.Parameters.Add("@computerID", MySqlDbType.UInt32).Value = entity.ComputerID;
         command.Parameters.Add("@typeID", MySqlDbType.Int32).Value = entity.TypeID;
@@ -98,5 +100,13 @@ public class PropertyRep : IPropertyRepository
             TypeID = (PropType)record["typeID"],
             Value = (string)record["value"]
         };
+    }
+
+    public int Count()
+    {
+        var commandString = "SELECT COUNT(id) FROM properties WHERE isDeleted = 0";
+        var command = new MySqlCommand(commandString, _connection);
+        var count = command.ExecuteScalar()?.ToString() ?? "0";
+        return int.Parse(count);
     }
 }

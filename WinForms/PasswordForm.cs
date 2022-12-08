@@ -16,7 +16,7 @@ public partial class PasswordForm : Form
 
     private void Send_Click(object sender, EventArgs e)
     {
-        _employee.Password = password.Text;
+        _employee.Password = EmployeeService.HashPassword(password.Text);
         var status = _employeeService.Update(_employee);
         MessageBox.Show(status.Message);
         if (status.IsSuccess)

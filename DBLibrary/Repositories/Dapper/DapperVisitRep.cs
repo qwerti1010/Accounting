@@ -16,6 +16,11 @@ public class DapperVisitRep : IVisitRepository
         _connection = context.GetConnection();
     }
 
+    public int Count()
+    {
+        return _connection.ExecuteScalar<int>("SELECT COUNT(id) FROM visit_history WHERE isDeleted = 0");
+    }
+
     public void Create(Visit entity)
     {
         var commandString = "INSERT INTO visit_history (employeeID, visitTime)" +

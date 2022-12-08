@@ -1,6 +1,5 @@
 ﻿
 using DBLibrary;
-using DBLibrary.Entities;
 using Services.Services;
 
 namespace Accounting;
@@ -21,7 +20,8 @@ public partial class LoginForm : Form
 
     private void SignUp_Click(object sender, EventArgs e)
     {
-        var status = _employeeService.Login(loginTextBox.Text, passTextBox.Text);
+        var pass = EmployeeService.HashPassword(passTextBox.Text);
+        var status = _employeeService.Login(loginTextBox.Text, pass);
         if (!status.IsSuccess || status.Employee == null)
         {
             MessageBox.Show(status.Message);

@@ -4,6 +4,8 @@ using DBLibrary.Entities;
 using System.Text.RegularExpressions;
 using Services.Responses;
 using DBLibrary.Repositories.EF;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Services.Services;
 
@@ -87,7 +89,6 @@ public class EmployeeService
                 Message = "Такие данные уже существуют"
             };
         }
-
         _employeeRep.Create(employee);
         _context.Close();
 
@@ -157,6 +158,7 @@ public class EmployeeService
                 Message = "Такие данные уже есть в базе"
             };
         }
+
         _employeeRep.Update(employee);
         _context.Close();
         return new EmployeeResponse
@@ -164,5 +166,26 @@ public class EmployeeService
             IsSuccess = true,
             Message = "Данные успешно обновлены"
         };
+    }
+
+    public int Count()
+    {
+        _context.Open();
+        var result = _employeeRep.Count();
+        _context.Close();
+        return result;
+    }
+
+    public static string HashPassword(string password)
+    {
+        var md = MD5.Create();
+        var bytes = Encoding.ASCII.GetBytes(password);
+        var hash = md.ComputeHash(bytes);
+        var sb = new StringBuilder();
+        foreach (var item in hash)
+        {
+            sb.Append(item.ToString("X2"));
+        }
+        return sb.ToString();
     }
 }

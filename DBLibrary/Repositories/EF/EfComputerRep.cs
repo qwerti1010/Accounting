@@ -8,7 +8,6 @@ namespace DBLibrary.Repositories.EF;
 public class EfComputerRep : DbContext, IComputerRepository
 {
     private readonly MySqlConnection _connection;
-    //как правильно называть
     private DbSet<Computer> Computers => Set<Computer>();
     
     public EfComputerRep(DbConnect context)
@@ -21,7 +20,7 @@ public class EfComputerRep : DbContext, IComputerRepository
         optionsBuilder.UseMySQL(_connection);
     }
 
-    public int Count() => Computers.Count();
+    public int Count() => Computers.Where(c => !c.IsDeleted).Count();
 
     public void Create(Computer entity)
     {
@@ -34,21 +33,23 @@ public class EfComputerRep : DbContext, IComputerRepository
         var computer = GetByID(id);
         if (computer != null)
         {
-            computer.IsDeleted = false;
+            computer.IsDeleted = true;
             Update(computer);
+            SaveChanges();
         }
     }
 
     public IList<Computer> Filter(int skip, int take, string? name = null, decimal price = 0, int status = 0, uint employeeID = 0)
     {
-        return Computers.Where(c => (name == null || name == c.Name)
-                                  && (price == 0 || price == c.Price)
-                                  && (status == 0 || status == (int)c.Status)
-                                  && (employeeID == 0 || employeeID == c.EmployeeID)
-                                  && c.IsDeleted == false).ToList();
+        
+        return Computers.Where(c => (c.Name == name || name == null)
+                                  && (c.Price == price  || price == 0)
+                                  && ((int)c.Status == status || status == 0)
+                                  && (c.EmployeeID == employeeID || employeeID == 0)
+                                  && !c.IsDeleted).Skip(skip).Take(take).ToList();
     }
 
-    public Computer? GetByID(uint id) => Computers.FirstOrDefault(c => c.ID == id && c.IsDeleted == false);
+    public Computer? GetByID(uint id) => Computers.FirstOrDefault(c => c.ID == id && !c.IsDeleted);
 
     public void Update(Computer entity)
     {

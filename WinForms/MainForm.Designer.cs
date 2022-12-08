@@ -30,12 +30,15 @@ partial class MainForm
     {
             this.mainFormTabPage = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.previous = new System.Windows.Forms.Button();
+            this.next = new System.Windows.Forms.Button();
             this.updateDb = new System.Windows.Forms.Button();
-            this.computersCount = new System.Windows.Forms.Label();
             this.deleteComputer = new System.Windows.Forms.Button();
             this.getComputer = new System.Windows.Forms.Button();
             this.addComputer = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.previousEmp = new System.Windows.Forms.Button();
+            this.nextEmp = new System.Windows.Forms.Button();
             this.login = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.position = new System.Windows.Forms.ComboBox();
@@ -48,6 +51,7 @@ partial class MainForm
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.splitter3 = new System.Windows.Forms.Splitter();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.employeeID = new System.Windows.Forms.TextBox();
             this.status = new System.Windows.Forms.ComboBox();
@@ -61,7 +65,6 @@ partial class MainForm
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgv = new System.Windows.Forms.DataGridView();
             this.splitter2 = new System.Windows.Forms.Splitter();
-            this.splitter3 = new System.Windows.Forms.Splitter();
             this.mainFormTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -84,8 +87,9 @@ partial class MainForm
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.previous);
+            this.tabPage1.Controls.Add(this.next);
             this.tabPage1.Controls.Add(this.updateDb);
-            this.tabPage1.Controls.Add(this.computersCount);
             this.tabPage1.Controls.Add(this.deleteComputer);
             this.tabPage1.Controls.Add(this.getComputer);
             this.tabPage1.Controls.Add(this.addComputer);
@@ -97,9 +101,29 @@ partial class MainForm
             this.tabPage1.Text = "Компьютеры";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // previous
+            // 
+            this.previous.Location = new System.Drawing.Point(788, 236);
+            this.previous.Name = "previous";
+            this.previous.Size = new System.Drawing.Size(137, 41);
+            this.previous.TabIndex = 9;
+            this.previous.Text = "Предыдущие";
+            this.previous.UseVisualStyleBackColor = true;
+            this.previous.Click += new System.EventHandler(this.Previous_Click);
+            // 
+            // next
+            // 
+            this.next.Location = new System.Drawing.Point(788, 166);
+            this.next.Name = "next";
+            this.next.Size = new System.Drawing.Size(137, 43);
+            this.next.TabIndex = 8;
+            this.next.Text = "Следующие";
+            this.next.UseVisualStyleBackColor = true;
+            this.next.Click += new System.EventHandler(this.Next_Click);
+            // 
             // updateDb
             // 
-            this.updateDb.Location = new System.Drawing.Point(726, 170);
+            this.updateDb.Location = new System.Drawing.Point(402, 166);
             this.updateDb.Name = "updateDb";
             this.updateDb.Size = new System.Drawing.Size(220, 111);
             this.updateDb.TabIndex = 7;
@@ -107,18 +131,10 @@ partial class MainForm
             this.updateDb.UseVisualStyleBackColor = true;
             this.updateDb.Click += new System.EventHandler(this.UpdateDb_Click);
             // 
-            // computersCount
-            // 
-            this.computersCount.AutoSize = true;
-            this.computersCount.Location = new System.Drawing.Point(0, 265);
-            this.computersCount.Name = "computersCount";
-            this.computersCount.Size = new System.Drawing.Size(0, 25);
-            this.computersCount.TabIndex = 6;
-            // 
             // deleteComputer
             // 
             this.deleteComputer.Enabled = false;
-            this.deleteComputer.Location = new System.Drawing.Point(503, 40);
+            this.deleteComputer.Location = new System.Drawing.Point(402, 24);
             this.deleteComputer.Name = "deleteComputer";
             this.deleteComputer.Size = new System.Drawing.Size(220, 111);
             this.deleteComputer.TabIndex = 5;
@@ -129,7 +145,7 @@ partial class MainForm
             // getComputer
             // 
             this.getComputer.Enabled = false;
-            this.getComputer.Location = new System.Drawing.Point(273, 170);
+            this.getComputer.Location = new System.Drawing.Point(45, 166);
             this.getComputer.Name = "getComputer";
             this.getComputer.Size = new System.Drawing.Size(220, 111);
             this.getComputer.TabIndex = 3;
@@ -139,7 +155,7 @@ partial class MainForm
             // 
             // addComputer
             // 
-            this.addComputer.Location = new System.Drawing.Point(34, 40);
+            this.addComputer.Location = new System.Drawing.Point(45, 24);
             this.addComputer.Name = "addComputer";
             this.addComputer.Size = new System.Drawing.Size(220, 111);
             this.addComputer.TabIndex = 0;
@@ -149,6 +165,8 @@ partial class MainForm
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.previousEmp);
+            this.tabPage2.Controls.Add(this.nextEmp);
             this.tabPage2.Controls.Add(this.login);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.position);
@@ -167,6 +185,26 @@ partial class MainForm
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Сотрудники";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // previousEmp
+            // 
+            this.previousEmp.Location = new System.Drawing.Point(574, 266);
+            this.previousEmp.Name = "previousEmp";
+            this.previousEmp.Size = new System.Drawing.Size(137, 41);
+            this.previousEmp.TabIndex = 13;
+            this.previousEmp.Text = "Предыдущие";
+            this.previousEmp.UseVisualStyleBackColor = true;
+            this.previousEmp.Click += new System.EventHandler(this.PreviousEmp_Click);
+            // 
+            // nextEmp
+            // 
+            this.nextEmp.Location = new System.Drawing.Point(747, 265);
+            this.nextEmp.Name = "nextEmp";
+            this.nextEmp.Size = new System.Drawing.Size(137, 43);
+            this.nextEmp.TabIndex = 12;
+            this.nextEmp.Text = "Следующие";
+            this.nextEmp.UseVisualStyleBackColor = true;
+            this.nextEmp.Click += new System.EventHandler(this.NextEmp_Click);
             // 
             // login
             // 
@@ -287,6 +325,14 @@ partial class MainForm
             this.tabPage3.Text = "Фильтры";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // splitter3
+            // 
+            this.splitter3.Location = new System.Drawing.Point(7, 3);
+            this.splitter3.Name = "splitter3";
+            this.splitter3.Size = new System.Drawing.Size(4, 309);
+            this.splitter3.TabIndex = 16;
+            this.splitter3.TabStop = false;
+            // 
             // splitter1
             // 
             this.splitter1.Location = new System.Drawing.Point(3, 3);
@@ -403,14 +449,6 @@ partial class MainForm
             this.splitter2.TabIndex = 2;
             this.splitter2.TabStop = false;
             // 
-            // splitter3
-            // 
-            this.splitter3.Location = new System.Drawing.Point(7, 3);
-            this.splitter3.Name = "splitter3";
-            this.splitter3.Size = new System.Drawing.Size(4, 309);
-            this.splitter3.TabIndex = 16;
-            this.splitter3.TabStop = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -427,7 +465,6 @@ partial class MainForm
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.mainFormTabPage.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -466,11 +503,14 @@ partial class MainForm
     private ComboBox status;
     private ComboBox position;
     private TextBox employeeID;
-    private Label computersCount;
     private TextBox login;
     private Label label6;
     private Button updateDb;
     private Splitter splitter1;
     private Splitter splitter3;
     private Splitter splitter2;
+    private Button previous;
+    private Button next;
+    private Button previousEmp;
+    private Button nextEmp;
 }
