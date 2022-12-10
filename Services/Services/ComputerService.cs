@@ -15,8 +15,8 @@ public class ComputerService
     public ComputerService(DbConnect context)
     {
         _context = context;
-        _computerRep = new EfComputerRep(_context);
-        _propertyRep = new EfPropertyRep(_context);
+        _computerRep = new DapperComputerRep(_context);
+        _propertyRep = new DapperPropertyRep(_context);
     }
 
     public IList<Computer> GetComputers(int take, int skip, string? nameFilter = null,
@@ -36,7 +36,7 @@ public class ComputerService
         var computers = _computerRep.Filter(skip, take, nameFilter, price, statusFilter, empID);
         foreach (var computer in computers)
         {
-            computer.Properties = _propertyRep.GetByComputerID(computer.ID);
+            computer.Properties = new PropList(_propertyRep.GetByComputerID(computer.ID));
         }
         _context.Close();
         return computers;
@@ -46,7 +46,7 @@ public class ComputerService
     {
         _context.Open();
         var computer = _computerRep.GetByID(id);
-        computer!.Properties = _propertyRep.GetByComputerID(computer.ID);
+        computer!.Properties = new PropList(_propertyRep.GetByComputerID(computer.ID));
         _context.Close();
         return computer!;
     }
@@ -68,7 +68,7 @@ public class ComputerService
             _context.Close();
             return;
         }
-        foreach (var prop in computer.Properties)
+        foreach (var prop in computer.Properties.Props)
         {
             _propertyRep.Update(prop);
         }
@@ -84,7 +84,7 @@ public class ComputerService
             _context.Close();
             return;
         }
-        foreach (var prop in computer.Properties)
+        foreach (var prop in computer.Properties.Props)
         {
             prop.ComputerID = computer.ID;
             _propertyRep.Create(prop);

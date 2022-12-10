@@ -2,6 +2,7 @@
 using DBLibrary.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using System.Diagnostics;
 
 namespace DBLibrary.Repositories.EF;
 
@@ -17,7 +18,7 @@ public class EfComputerRep : DbContext, IComputerRepository
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseMySQL(_connection);
+        optionsBuilder.UseMySQL(_connection).LogTo(message => Debug.WriteLine(message));
     }
 
     public int Count() => Computers.Where(c => !c.IsDeleted).Count();
@@ -53,7 +54,17 @@ public class EfComputerRep : DbContext, IComputerRepository
 
     public void Update(Computer entity)
     {
-        Computers.Update(entity);
-        SaveChanges();
+        var e = Computers.Find(entity.ID);
+        if (e != null)
+        {
+            e.Name = entity.Name;
+            e.Price = entity.Price;
+            e.RegistrationDate = entity.RegistrationDate;
+            e.Status = entity.Status;
+            e.ExploitationStart = entity.ExploitationStart;
+            e.EmployeeID = entity.EmployeeID;
+            Computers.Update(e);
+            SaveChanges();
+        }
     }
 }

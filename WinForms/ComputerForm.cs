@@ -46,7 +46,7 @@ public partial class ComputerForm : Form
         price.Text = _computer.Price.ToString();
         explStart.Value = _computer.ExploitationStart;
         if (_computer.Properties == null) return;
-        foreach (var property in _computer.Properties)
+        foreach (var property in _computer.Properties.Props)
         {
             switch (property.TypeID)
             {
@@ -122,7 +122,7 @@ public partial class ComputerForm : Form
             return;
         }
 
-        foreach (var property in _computer!.Properties!)
+        foreach (var property in _computer!.Properties!.Props)
         {
             switch (property.TypeID)
             {
@@ -187,16 +187,17 @@ public partial class ComputerForm : Form
             EmployeeID = _employees.First(e => e.Name == employee.Text).ID,
             Status = (Status)status.SelectedIndex,
 
-            Properties = new List<Property>
-        {
-            new Property{TypeID = PropType.CPU, Value = cpu.Text},
-            new Property{TypeID = PropType.MotherBoard, Value = motherBoard.Text},
-            new Property{TypeID = PropType.Case, Value = caseBox.Text},
-            new Property{TypeID = PropType.GraphicsCard, Value = graphicsCard.Text},
-            new Property{TypeID = PropType.Memory, Value = memory.Text},
-            new Property{TypeID = PropType.RAM, Value = ram.Text},
-            new Property{TypeID = PropType.PowerSupply, Value = powerSupply.Text}
-        }
+            Properties = new PropList(new List<Property>
+            {
+                new Property { TypeID = PropType.CPU, Value = cpu.Text },
+                new Property { TypeID = PropType.MotherBoard, Value = motherBoard.Text },
+                new Property { TypeID = PropType.Case, Value = caseBox.Text },
+                new Property { TypeID = PropType.GraphicsCard, Value = graphicsCard.Text },
+                new Property { TypeID = PropType.Memory, Value = memory.Text },
+                new Property { TypeID = PropType.RAM, Value = ram.Text },
+                new Property { TypeID = PropType.PowerSupply, Value = powerSupply.Text }
+            }),
+            
         };
 
         _computerService.Create(_computer);

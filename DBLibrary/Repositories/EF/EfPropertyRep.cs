@@ -37,18 +37,25 @@ public class EfPropertyRep : DbContext, IPropertyRepository
         }
     }
 
-    public IList<Property> GetByComputerID(uint id)
-    {
-        return Properties.Where(p => p.ComputerID == id && !p.IsDeleted).ToList() ?? new List<Property>(); 
-    }
+    public IList<Property> GetByComputerID(uint id) =>
+        Properties.Where(p => p.ComputerID == id && !p.IsDeleted).ToList();
+     
+    
 
     public Property? GetByID(uint id) => Properties.FirstOrDefault(p => p.ID == id && !p.IsDeleted);
 
     public void Update(Property entity)
     {
-        Properties.Update(entity);
-        SaveChanges();
+        var e = Properties.Find(entity.ID);
+        if (e != null)
+        {
+            e.Value = entity.Value;
+            Properties.Update(e);
+            SaveChanges();
+        }
     }
 
     public int Count() => Properties.Where(p => !p.IsDeleted).Count();
+
+    
 }

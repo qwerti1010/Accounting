@@ -13,5 +13,6 @@ public class Computer
     public uint EmployeeID { get; set; }    
     public DateTime ExploitationStart { get; set; }
     public bool IsDeleted { get; set; }
-    public IList<Property>? Properties { get; set; }    
+    [NotMapped]
+    public PropList? Properties { get; set; }    
 }

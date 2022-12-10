@@ -1,7 +1,6 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
 using Services.Services;
-using System.Windows.Forms;
 
 namespace Accounting;
 
@@ -61,7 +60,8 @@ public partial class MainForm : Form
                 }
             case 2:
                 {
-                    ComputerToDataGridView();
+                    dgv.DataSource = _computerService.GetComputers(10, 0,
+                        computerName.Text, price.Text, status.SelectedIndex, employeeID.Text);
                     break;
                 }
         }
@@ -153,20 +153,19 @@ public partial class MainForm : Form
 
     private Computer GetComputerOfDataGridView(int rowIndex)
     {
-        var c = new Computer();
-        var x = dgv["Properties", rowIndex].Value;
         return new Computer
         {
-            Properties = new List<Property>()
+            ID = (uint)dgv["ID", rowIndex].Value,
+            Name = dgv["Name", rowIndex].Value.ToString(),
+            RegistrationDate = (DateTime)dgv["RegistrationDate", rowIndex].Value,
+            Price = (decimal)dgv["Price", rowIndex].Value,
+            Status = (Status)dgv["Status", rowIndex].Value,
+            EmployeeID = (uint)dgv["EmployeeID", rowIndex].Value,
+            ExploitationStart = (DateTime)dgv["ExploitationStart", rowIndex].Value,     
+            IsDeleted = (bool)dgv["isDeleted", rowIndex].Value,
+            Properties = (PropList)dgv["Properties", rowIndex].Value
         };
-    }
-
-    private void ComputerToDataGridView()
-    {
-        dgv.DataSource = _computerService.GetComputers(10, 0);
-        dgv.Columns["isDeleted"].Visible = false;
-        dgv.Columns["Properties"].Visible = false;
-    }
+    }    
 
     private void Next_Click(object sender, EventArgs e)
     {
