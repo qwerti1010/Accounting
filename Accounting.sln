@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBLibrary", "DBLibrary\DBLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{1A8BEE53-C750-4B07-A979-8C98C3FD1C6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAccounting", "WebAccounting\WebAccounting.csproj", "{0BA95818-B4B9-46A3-B3D5-1587DE1868FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1A8BEE53-C750-4B07-A979-8C98C3FD1C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A8BEE53-C750-4B07-A979-8C98C3FD1C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A8BEE53-C750-4B07-A979-8C98C3FD1C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BA95818-B4B9-46A3-B3D5-1587DE1868FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BA95818-B4B9-46A3-B3D5-1587DE1868FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BA95818-B4B9-46A3-B3D5-1587DE1868FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BA95818-B4B9-46A3-B3D5-1587DE1868FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
