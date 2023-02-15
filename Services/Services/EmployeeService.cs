@@ -6,6 +6,7 @@ using Services.Responses;
 using DBLibrary.Repositories.EF;
 using System.Security.Cryptography;
 using System.Text;
+using DBLibrary.Entities.DTOs;
 
 namespace Services.Services;
 
@@ -21,9 +22,10 @@ public class EmployeeService
         _employeeRep = new EfEmployeeRep(_context);
         _visitRep = new EfVisitRep(_context);
     }
-
+    #region Работа с db
     public EmployeeResponse Login(string login, string password)
     {
+        password = HashPassword(password);
         _context.Open();
         var employee = _employeeRep.GetEmployees(1, 0, null, null, login).FirstOrDefault();
         _context.Close();
@@ -73,6 +75,11 @@ public class EmployeeService
                 IsSuccess = false,
                 Message = "Неверный формат номера телефона"
             };
+        }
+
+        if (employee.Password != null)
+        {
+            employee.Password = HashPassword(employee.Password);
         }
 
         _context.Open();
@@ -175,7 +182,7 @@ public class EmployeeService
         _context.Close();
         return result;
     }
-
+    #endregion
     public static string HashPassword(string password)
     {
         var md = MD5.Create();
@@ -188,4 +195,6 @@ public class EmployeeService
         }
         return sb.ToString();
     }
+
+    
 }

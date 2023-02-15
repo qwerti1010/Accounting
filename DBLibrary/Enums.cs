@@ -3,8 +3,11 @@ namespace DBLibrary;
 
 public enum Status
 {
+    [Description("Отсутствует")]
     None,
+    [Description("Эксплуатируется")]
     Exploitation = 1,
+    [Description("В ремонте")]
     Repair = 2
 }
 

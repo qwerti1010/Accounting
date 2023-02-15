@@ -1,6 +1,7 @@
 ﻿using DBLibrary;
 using DBLibrary.Dapper;
 using DBLibrary.Entities;
+using DBLibrary.Entities.DTOs;
 using DBLibrary.Interfaces;
 using DBLibrary.Repositories.EF;
 
@@ -15,8 +16,8 @@ public class ComputerService
     public ComputerService(DbConnect context)
     {
         _context = context;
-        _computerRep = new DapperComputerRep(_context);
-        _propertyRep = new DapperPropertyRep(_context);
+        _computerRep = new EfComputerRep(_context);
+        _propertyRep = new EfPropertyRep(_context);
     }
 
     public IList<Computer> GetComputers(int take, int skip, string? nameFilter = null,
@@ -42,10 +43,12 @@ public class ComputerService
         return computers;
     }
 
-    public Computer GetByID(uint id)
+    public Computer? GetByID(uint id)
     {
         _context.Open();
         var computer = _computerRep.GetByID(id);
+        if (computer == null) return null;
+
         computer!.Properties = new PropList(_propertyRep.GetByComputerID(computer.ID));
         _context.Close();
         return computer!;
@@ -98,5 +101,5 @@ public class ComputerService
         var result = _computerRep.Count();
         _context.Close();
         return result;
-    }
+    }   
 }

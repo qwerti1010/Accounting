@@ -63,7 +63,6 @@ public class EfComputerRep : DbContext, IComputerRepository
             e.Status = entity.Status;
             e.ExploitationStart = entity.ExploitationStart;
             e.EmployeeID = entity.EmployeeID;
-            Computers.Update(e);
             SaveChanges();
         }
     }
