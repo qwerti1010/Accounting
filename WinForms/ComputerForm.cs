@@ -1,24 +1,23 @@
 ﻿using DBLibrary;
-using DBLibrary.Entities;
-using Services.Services;
+using DBLibrary.Entities.DTOs;
+using DesktopClientServices;
 using System.Reflection;
 
 namespace Accounting;
 
 public partial class ComputerForm : Form
 {
-    private Computer? _computer;
-    private readonly ComputerService _computerService;
-    private readonly EmployeeService _employeeService;
-    private readonly List<Employee> _employees;
+    private readonly ComputerDTO? _computer;
+    private readonly CompService _compService;
+    private readonly IList<EmployeeDTO> _employees;
 
-    public ComputerForm(ComputerService computerService, EmployeeService employeeService, Computer? computer = null)
+    public ComputerForm(CompService computerService, IList<EmployeeDTO> employees, ComputerDTO? computer = null)
     {
         InitializeComponent();
-        _computerService = computerService;
-        _employeeService = employeeService;
         _computer = computer;
-        _employees = _employeeService.GetEmployees(10, 0).ToList();
+        _compService = computerService;
+        _computer = computer;
+        _employees = employees;
     }
 
     private void Close_Click(object sender, EventArgs e)
@@ -40,47 +39,47 @@ public partial class ComputerForm : Form
         Text = $"Просмотр информации устройства. Номер в базе - {_computer.ID}";
         ChangeState();
         name.Text = _computer.Name;        
-        status.Text = _computer.Status.ToString();
-        employee.Text = _employeeService.GetByID(_computer.EmployeeID)?.Name;
+        status.Text = _computer.Status!.ToString();
         regDate.Value = _computer.RegistrationDate;
         price.Text = _computer.Price.ToString();
         explStart.Value = _computer.ExploitationStart;
+        employees.Text = _employees.FirstOrDefault(emp => emp.ID == _computer.EmployeeID)!.Name;
         if (_computer.Properties == null) return;
-        foreach (var property in _computer.Properties.Props)
+        foreach (var property in _computer.Properties)
         {
             switch (property.TypeID)
             {
-                case PropType.CPU:
+                case "CPU":
                     {
                         cpu.Text = property.Value;
                         break;
                     }
-                case PropType.MotherBoard:
+                case "MotherBoard":
                     {
                         motherBoard.Text = property.Value;
                         break;
                     }
-                case PropType.Case:
+                case "Case":
                     {
                         caseBox.Text = property.Value;
                         break;
                     }
-                case PropType.GraphicsCard:
+                case "GraphicsCard":
                     {
                         graphicsCard.Text = property.Value;
                         break;
                     }
-                case PropType.Memory:
+                case "Memory":
                     {
                         memory.Text = property.Value;
                         break;
                     }
-                case PropType.RAM:
+                case "RAM":
                     {
                         ram.Text = property.Value;
                         break;
                     }
-                case PropType.PowerSupply:
+                case "PowerSupply":
                     {
                         powerSupply.Text = property.Value;
                         break;
@@ -114,7 +113,7 @@ public partial class ComputerForm : Form
         update.Visible = !update.Visible;
     }
 
-    private void Update_Click(object sender, EventArgs e)
+    private async void Update_Click(object sender, EventArgs e)
     {
         if(FieldsAreEmpty())
         {
@@ -122,41 +121,41 @@ public partial class ComputerForm : Form
             return;
         }
 
-        foreach (var property in _computer!.Properties!.Props)
+        foreach (var property in _computer!.Properties!)
         {
             switch (property.TypeID)
             {
-                case PropType.CPU:
+                case "CPU":
                     {
                         property.Value = cpu.Text;
                         break;
                     }
-                case PropType.MotherBoard:
+                case "MotherBoard":
                     {
                         property.Value = motherBoard.Text;
                         break;
                     }
-                case PropType.Case:
+                case "Case":
                     {
-                         property.Value = caseBox.Text ;
+                        property.Value = caseBox.Text ;
                         break;
                     }
-                case PropType.GraphicsCard:
+                case "GraphicsCard":
                     {
                         property.Value = graphicsCard.Text;
                         break;
                     }
-                case PropType.Memory:
+                case "Memory":
                     {
                         property.Value = memory.Text;
                         break;
                     }
-                case PropType.RAM:
+                case "RAM":
                     {
                         property.Value = ram.Text;
                         break;
                     }
-                case PropType.PowerSupply:
+                case "PowerSupply":
                     {
                         property.Value = powerSupply.Text;
                         break;
@@ -168,47 +167,41 @@ public partial class ComputerForm : Form
         _computer.Price = decimal.Parse(price.Text);
         _computer.RegistrationDate = regDate.Value;
         _computer.ExploitationStart = explStart.Value;
-        _computer.EmployeeID = _employees.First(e => e.Name == employee.Text).ID;
-        _computer.Status = (Status)status.SelectedIndex;
-
-        _computerService.Update(_computer);
-        MessageBox.Show("Данные обновлены");
-        Close();
+        _computer.Status = status.Text.ToString();
+        _computer.EmployeeID = _employees.First(emp => emp.Name == employees.Text).ID;
+        var response = await _compService.UpdateAsync(_computer);
+        MessageBox.Show(response.Message);
+        if (response.IsSuccess)
+        {
+            Close();
+        }
     }
 
-    private void Create_Click(object sender, EventArgs e)
+    private async void Create_ClickAsync(object sender, EventArgs e)
     {
-        _computer = new Computer
+        var id = _employees.First(e => e.Name == employees.Text).ID;
+        var prop = new List<PropertyDTO>
         {
-            Name = name.Text,
-            Price = decimal.Parse(price.Text),
-            RegistrationDate = regDate.Value,
-            ExploitationStart = explStart.Value,
-            EmployeeID = _employees.First(e => e.Name == employee.Text).ID,
-            Status = (Status)status.SelectedIndex,
-
-            Properties = new PropList(new List<Property>
-            {
-                new Property { TypeID = PropType.CPU, Value = cpu.Text },
-                new Property { TypeID = PropType.MotherBoard, Value = motherBoard.Text },
-                new Property { TypeID = PropType.Case, Value = caseBox.Text },
-                new Property { TypeID = PropType.GraphicsCard, Value = graphicsCard.Text },
-                new Property { TypeID = PropType.Memory, Value = memory.Text },
-                new Property { TypeID = PropType.RAM, Value = ram.Text },
-                new Property { TypeID = PropType.PowerSupply, Value = powerSupply.Text }
-            }),
-            
+            new PropertyDTO { TypeID = "CPU", Value = cpu.Text },
+            new PropertyDTO { TypeID = "MotherBoard", Value = motherBoard.Text },
+            new PropertyDTO { TypeID = "Case", Value = caseBox.Text },
+            new PropertyDTO { TypeID = "GraphicsCard", Value = graphicsCard.Text },
+            new PropertyDTO { TypeID = "Memory", Value = memory.Text },
+            new PropertyDTO { TypeID = "RAM", Value = ram.Text },
+            new PropertyDTO { TypeID = "PowerSupply", Value = powerSupply.Text }
         };
-
-        _computerService.Create(_computer);
-        MessageBox.Show("Компьютер создан");
-        Close();
+        var response = await _compService.CreateAsync(name.Text, regDate.Value, price.Text, status.Text, id, explStart.Value, prop);
+        MessageBox.Show(response.Message);
+        if (response.IsSuccess)
+        {
+            Close();
+        }
     }
 
     private void AddItemsToComboBoxes()
     {
-        employee.Items.AddRange(_employees.Select(e => e.Name).ToArray());
-        status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
+        employees.Items.AddRange(_employees.Select(e => e.Name).ToArray());
+        GetAttributes(typeof(Status), status);
         GetAttributes(typeof(CPUs), cpu);
         GetAttributes(typeof(RAMs), ram);
         GetAttributes(typeof(MotherBoards), motherBoard);

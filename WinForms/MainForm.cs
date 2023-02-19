@@ -1,33 +1,36 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
-using Services.Services;
+using DBLibrary.Entities.DTOs;
+using DesktopClientServices;
+using DesktopClientServices.Responses;
+using Microsoft.OpenApi.Extensions;
 
 namespace Accounting;
 
 public partial class MainForm : Form
 {
-    private readonly Employee _employee;
-    private Employee _selectedEmployee = null!;
-    private Computer _computer = null!;   
-    private readonly EmployeeService _employeeService;
-    private readonly ComputerService _computerService;
-    private int _computersPage;
-    private int _employeesPage;
+    private readonly EmployeeDTO _employee;
+    private EmployeeDTO _selectedEmployee = null!;
+    private ComputerDTO _computer = null!;
+    private readonly EmpService _empService;
+    private readonly CompService _compService;
     
-    public MainForm(Employee employee, DbConnect context)
+    public MainForm(EmployeeDTO employee, HttpClient httpClient, EmpService empService)
     {
         _employee = employee;        
         InitializeComponent();
-        _employeeService = new EmployeeService(context);
-        _computerService = new ComputerService(context);
+        _empService = empService;
+        _compService = new CompService(httpClient);
         mainFormTabPage.SelectTab(nameof(tabPage2));
     }
 
-    private void MainForm_Load(object sender, EventArgs e)
+    private async void MainForm_Load(object sender, EventArgs e)
     {
         Text = "Привет, " + _employee.Name;
-        EmployeesToDataGridView(10, 0);
-        status.Items.AddRange(Enum.GetValues<Status>().Cast<object>().ToArray());
+        dgv.DataSource = await _empService.GetAllAsync();
+        status.Items.AddRange(Enum.GetValues<Status>()
+                                  .Select(st => st.GetAttributeOfType<DescriptionAttribute>().Description)                                  
+                                  .ToArray());
         position.Items.AddRange(Enum.GetValues<PositionEnum>().Cast<object>().ToArray());
         ProvidePositionAccess();
     }    
@@ -44,24 +47,23 @@ public partial class MainForm : Form
         Application.Exit();
     }    
 
-    private void TabPage_Selecting(object sender, TabControlCancelEventArgs e)
+    private async void TabPage_Selecting(object sender, TabControlCancelEventArgs e)
     {
         switch (e.TabPageIndex)
         {
             case 0:
                 {
-                    dgv.DataSource = _computerService.GetComputers(10, 0);
+                    dgv.DataSource = await _compService.GetAllAsync();
                     break;
                 }
             case 1:
                 {
-                    EmployeesToDataGridView(10, _employeesPage * 10);                    
+                    dgv.DataSource = await _empService.GetAllAsync();                    
                     break;
                 }
             case 2:
                 {
-                    dgv.DataSource = _computerService.GetComputers(10, 0,
-                        computerName.Text, price.Text, status.SelectedIndex, employeeID.Text);
+                    dgv.DataSource = await _compService.GetFilteredAsync(computerName.Text, price.Text, status.Text, employeeID.Text);
                     break;
                 }
         }
@@ -78,7 +80,7 @@ public partial class MainForm : Form
                     _selectedEmployee = GetEmpOfDataGridView(e.RowIndex);
                     nameTextBox.Text = _selectedEmployee.Name;
                     phoneTextBox.Text = _selectedEmployee.Phone;
-                    position.Text = _selectedEmployee.Position.ToString();
+                    position.Text = _selectedEmployee.Position;
                     login.Text = _selectedEmployee.Login;
                     updateEmployee.Enabled = true;
                     deleteEmployee.Enabled = true;
@@ -98,7 +100,7 @@ public partial class MainForm : Form
     {
         switch (_employee.Position)
         {
-            case PositionEnum.User:
+            case "User":
                 {
                     updateEmployee.Visible = false;
                     deleteEmployee.Visible = false;
@@ -107,7 +109,7 @@ public partial class MainForm : Form
                     deleteComputer.Visible = false;
                     break;
                 }
-            case PositionEnum.Moderator:
+            case "Moderator":
                 {
                     deleteEmployee.Visible = false;
                     addEmployee.Visible = false;
@@ -120,153 +122,128 @@ public partial class MainForm : Form
     }
 
     #region ComputerRegion
-    private void GetComputer_Click(object sender, EventArgs e)
+    private async void GetComputer_Click(object sender, EventArgs e)
     {
-        var form = new ComputerForm(_computerService, _employeeService, _computer);
+        var employees = await _empService.GetAllAsync();
+        employees ??= new List<EmployeeDTO>();
+        var form = new ComputerForm(_compService, employees, _computer);
         form.ShowDialog();
     }
 
-    private void DeleteComputer_Click(object sender, EventArgs e)
+    private async void DeleteComputer_Click(object sender, EventArgs e)
     {
-        _computerService.Delete(_computer.ID);
+        var response = await _compService.DeleteAsync(_computer.ID);
+        MessageBox.Show(response);
         deleteComputer.Enabled = false;
         getComputer.Enabled = false;
-        dgv.DataSource = _computerService.GetComputers(10, 0);
+        dgv.DataSource = await _compService.GetAllAsync();
     }
 
-    private void CreateComputer_Click(object sender, EventArgs e)
+    private async void CreateComputer_Click(object sender, EventArgs e)
     {
-        var form = new ComputerForm(_computerService, _employeeService);
+        var employees = await _empService.GetAllAsync();
+        employees ??= new List<EmployeeDTO>();
+        var form = new ComputerForm(_compService, employees);
         form.ShowDialog();
     }
 
-    private void ApplyFilters_Click(object sender, EventArgs e)
+    private async void ApplyFilters_Click(object sender, EventArgs e)
     {
-        dgv.DataSource = _computerService.GetComputers(10, 0,
-            computerName.Text, price.Text, status.SelectedIndex, employeeID.Text);
+        dgv.DataSource = await _compService.GetFilteredAsync(computerName.Text, price.Text, status.Text, employeeID.Text);
     }
 
-    private void UpdateDb_Click(object sender, EventArgs e)
+    private async void UpdateDb_ClickAsync(object sender, EventArgs e)
     {
-        dgv.DataSource = _computerService.GetComputers(10, 0);
+        dgv.DataSource = await _compService.GetAllAsync();
     }
 
-    private Computer GetComputerOfDataGridView(int rowIndex)
+
+    //надо починить список свойств
+    private ComputerDTO GetComputerOfDataGridView(int rowIndex)
     {
-        return new Computer
+        return new ComputerDTO
         {
             ID = (uint)dgv["ID", rowIndex].Value,
             Name = dgv["Name", rowIndex].Value.ToString(),
             RegistrationDate = (DateTime)dgv["RegistrationDate", rowIndex].Value,
             Price = (decimal)dgv["Price", rowIndex].Value,
-            Status = (Status)dgv["Status", rowIndex].Value,
+            Status = dgv["Status", rowIndex].Value.ToString(),
             EmployeeID = (uint)dgv["EmployeeID", rowIndex].Value,
-            ExploitationStart = (DateTime)dgv["ExploitationStart", rowIndex].Value,     
-            IsDeleted = (bool)dgv["isDeleted", rowIndex].Value,
-            Properties = (PropList)dgv["Properties", rowIndex].Value
+            ExploitationStart = (DateTime)dgv["ExploitationStart", rowIndex].Value,
+            Properties = (IList<PropertyDTO>)dgv["Properties", rowIndex].Value
         };
-    }    
-
-    private void Next_Click(object sender, EventArgs e)
-    {
-        var count = _computerService.Count();
-        if (_computersPage * 10 > count - 10) return;
-        dgv.DataSource = _computerService.GetComputers(10, ++_computersPage * 10);
-
     }
 
-    private void Previous_Click(object sender, EventArgs e)
+    private async void Next_Click(object sender, EventArgs e)
     {
-        if (_computersPage == 0) return;
-        dgv.DataSource = _computerService.GetComputers(10, --_computersPage * 10);
+        dgv.DataSource = await _compService.GetNextAsync();
+    }
+
+    private async void Previous_Click(object sender, EventArgs e)
+    {
+        dgv.DataSource = await _compService.GetPreviousAsync();
     }
     #endregion
 
 
     #region EmployeeRegion
-    private void UpdateEmployee_Click(object sender, EventArgs e)
+    private async void UpdateEmployee_Click(object sender, EventArgs e)
     {
         if (_selectedEmployee != null)
         {
             _selectedEmployee.Name = nameTextBox.Text;
             _selectedEmployee.Phone = phoneTextBox.Text;
-            _selectedEmployee.Position = (PositionEnum)position.SelectedIndex;
+            _selectedEmployee.Position = position.Text;
             _selectedEmployee.Login = login.Text;
-            var status = _employeeService.Update(_selectedEmployee);
-            MessageBox.Show(status.Message);
-            EmployeesToDataGridView(10, 0);
+            var response = await _empService.UpdateAsync(_selectedEmployee);
+            MessageBox.Show(response.Message);
+            if (response.IsSuccess)
+            {
+                dgv.DataSource = await _empService.GetAllAsync();
+            }
         }
     }
 
-    private void DeleteEmployee_Click(object sender, EventArgs e)
+    private async void DeleteEmployee_Click(object sender, EventArgs e)
     {
         ClearTextBoxes();
         if (_selectedEmployee != null)
         {
-            _employeeService.Delete(_selectedEmployee.ID);
+            var response = await _empService.DeleteAsync(_selectedEmployee.ID);
+            MessageBox.Show(response);
         }
         deleteEmployee.Enabled = false;
         updateEmployee.Enabled = false;
-        EmployeesToDataGridView(10,0);
+        dgv.DataSource = await _empService.GetAllAsync();
     }
 
+    
     private void CreateEmployee_Click(object sender, EventArgs e)
     {
-        var employee = new Employee
-        {
-            Name = nameTextBox.Text,
-            Phone = phoneTextBox.Text,
-            Position = (PositionEnum)position.SelectedIndex,
-            Login = login.Text
-        };
-
-        var responce = _employeeService.Registration(employee);
-        MessageBox.Show(responce.Message);
-        if (responce.IsSuccess)
-        {
-            if (employee.Position == PositionEnum.Admin)
-            {
-                var form = new PasswordForm(employee, _employeeService);
-                form.ShowDialog();
-            }
-            ClearTextBoxes();
-        }
-        EmployeesToDataGridView(10, 0);
+        var form = new RegistrationForm(_empService);
+        form.Show();        
     }
 
-    private Employee GetEmpOfDataGridView(int rowIndex)
+    private EmployeeDTO GetEmpOfDataGridView(int rowIndex)
     {
-        return new Employee
+        return new EmployeeDTO
         {
             ID = (uint)dgv["ID", rowIndex].Value,
             Name = dgv["Name", rowIndex].Value.ToString(),
             Phone = dgv["Phone", rowIndex].Value.ToString(),
-            Position = (PositionEnum)dgv["Position", rowIndex].Value,
+            Position = dgv["Position", rowIndex].Value.ToString(),
             Login = dgv["Login", rowIndex].Value.ToString(),
-            Password = dgv["Password", rowIndex]?.Value?.ToString(),
-            IsDeleted = (bool)dgv["IsDeleted", rowIndex].Value
         };
     }
 
-    private void PreviousEmp_Click(object sender, EventArgs e)
+    private async void PreviousEmp_ClickAsync(object sender, EventArgs e)
     {
-        if (_employeesPage == 0) return;
-        dgv.DataSource = _employeeService.GetEmployees(10, --_employeesPage * 10);
+        dgv.DataSource = await _empService.GetPreviousAsync();
     }
 
-    private void NextEmp_Click(object sender, EventArgs e)
+    private async void NextEmp_ClickAsync(object sender, EventArgs e)
     {
-        var count = _employeeService.Count();
-        if (_employeesPage * 10 > count - 10) return;
-        dgv.DataSource = _employeeService.GetEmployees(10, ++_employeesPage * 10);
-    }
-
-    public void EmployeesToDataGridView(int take, int skip)
-    {
-        dgv.DataSource = _employeeService.GetEmployees(take, skip);
-        dgv.Columns["Password"].Visible = false;
-        dgv.Columns["isDeleted"].Visible = false;
-        _employeesPage = 0;
-    }
+        dgv.DataSource = await _empService.GetNextAsync();
+    }    
     #endregion
 }

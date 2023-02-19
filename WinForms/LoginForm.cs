@@ -1,55 +1,48 @@
-﻿
-using DBLibrary;
-using Services.Services;
+﻿using DBLibrary;
+using DesktopClientServices;
 
 namespace Accounting;
 
 public partial class LoginForm : Form
 {
-    private readonly EmployeeService _employeeService;
-    private readonly DbConnect _context;
-    private readonly DBService _dBService;
-    
-    public LoginForm()
+    private readonly HttpClient _httpClient;
+    private EmpService _service;
+    public LoginForm(HttpClient client)
     {
         InitializeComponent();
-        _context = new DbConnect();
-        _employeeService = new EmployeeService(_context);
-        _dBService = new DBService(_context);
-    }
-
-    private void SignUp_Click(object sender, EventArgs e)
-    {
-        var pass = EmployeeService.HashPassword(passTextBox.Text);
-        var status = _employeeService.Login(loginTextBox.Text, pass);
-        if (!status.IsSuccess || status.Employee == null)
-        {
-            MessageBox.Show(status.Message);
-            return;
-        }
-        if (status.Employee.Password == null)
-        {
-            var passForm = new PasswordForm(status.Employee, _employeeService);
-            passForm.ShowDialog();
-            return;
-        }
-        var form = new MainForm(status.Employee, _context);
-        form.ShowDialog();
-        Hide();
-    }
+        _httpClient = client;
+        _service = new EmpService(_httpClient);        
+    }    
 
     private void Registration_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        var form = new RegistrationForm(_context);
+        var form = new RegistrationForm(_service);
         form.ShowDialog();
     }
 
-    private void CreateDB_Click(object sender, EventArgs e)
+    private async void CreateDB_Click(object sender, EventArgs e)
     {
-        MessageBox.Show(_dBService.Create());
+        var result = await _service.CreateDb();
+        MessageBox.Show(result);
     }
     private void LoginForm_Load(object sender, EventArgs e)
     {
+       
+    }
 
+    private async void SignUp_Click(object sender, EventArgs e)
+    {
+        var response = await _service.LoginAsync(loginTextBox.Text, passTextBox.Text);
+
+        if (!response.IsSuccess)
+        {
+            MessageBox.Show(response.Message);
+            return;
+        }
+
+        MessageBox.Show(response.Message);
+        var form = new MainForm(response.Value!, _httpClient, _service);
+        form.Show();
+        Hide();
     }
 }

@@ -1,16 +1,17 @@
 ﻿using DBLibrary;
 using DBLibrary.Entities;
-using Services.Services;
+using DBLibrary.Entities.DTOs;
+using DesktopClientServices;
 
 namespace Accounting;
 
 public partial class RegistrationForm : Form
 {
-    private readonly EmployeeService _employeeService;
-    
-    public RegistrationForm(DbConnect context)
+    private readonly EmpService _service;
+
+    public RegistrationForm(EmpService service)
     {
-        _employeeService = new EmployeeService(context);
+        _service = service;
         InitializeComponent();
     }
 
@@ -19,7 +20,7 @@ public partial class RegistrationForm : Form
         Close();
     }
 
-    private void Send_Click(object sender, EventArgs e)
+    private async void Send_Click(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(password.Text))
         {
@@ -27,20 +28,12 @@ public partial class RegistrationForm : Form
             return;
         }
 
-        var employee = new Employee
-        {
-            Name = name.Text,
-            Phone = phone.Text,
-            Login = login.Text,
-            Password = EmployeeService.HashPassword(password.Text),
-            Position = PositionEnum.User
-        };
-        var status = _employeeService.Registration(employee);
-        MessageBox.Show(status.Message);
-        if (status.IsSuccess)
+        var response = await _service.RegistrationAsync(name.Text, phone.Text, login.Text, password.Text);
+        MessageBox.Show(response.Message);
+        if (response.IsSuccess)
         {
             Close();
-        }
+        } 
     }
 
     private void RegistrationForm_Load(object sender, EventArgs e)

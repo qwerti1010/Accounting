@@ -75,6 +75,11 @@ public class DapperComputerRep : IComputerRepository
         return x;
     }
 
+    public IList<Computer> GetByEmpID(uint id)
+    {
+        throw new NotImplementedException();
+    }
+
     public Computer? GetByID(uint id)
     {
         var commandStr = "SELECT * FROM computers WHERE id = @id AND isDeleted = 0";

@@ -129,7 +129,7 @@ partial class MainForm
             this.updateDb.TabIndex = 7;
             this.updateDb.Text = "Обновить базу данных";
             this.updateDb.UseVisualStyleBackColor = true;
-            this.updateDb.Click += new System.EventHandler(this.UpdateDb_Click);
+            this.updateDb.Click += new System.EventHandler(this.UpdateDb_ClickAsync);
             // 
             // deleteComputer
             // 
@@ -194,7 +194,7 @@ partial class MainForm
             this.previousEmp.TabIndex = 13;
             this.previousEmp.Text = "Предыдущие";
             this.previousEmp.UseVisualStyleBackColor = true;
-            this.previousEmp.Click += new System.EventHandler(this.PreviousEmp_Click);
+            this.previousEmp.Click += new System.EventHandler(this.PreviousEmp_ClickAsync);
             // 
             // nextEmp
             // 
@@ -204,7 +204,7 @@ partial class MainForm
             this.nextEmp.TabIndex = 12;
             this.nextEmp.Text = "Следующие";
             this.nextEmp.UseVisualStyleBackColor = true;
-            this.nextEmp.Click += new System.EventHandler(this.NextEmp_Click);
+            this.nextEmp.Click += new System.EventHandler(this.NextEmp_ClickAsync);
             // 
             // login
             // 

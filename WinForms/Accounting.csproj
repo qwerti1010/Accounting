@@ -9,6 +9,7 @@
   </PropertyGroup> 
 
   <ItemGroup>
+    <ProjectReference Include="..\DesktopClientServices\DesktopClientServices.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   

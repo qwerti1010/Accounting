@@ -1,4 +1,5 @@
-﻿using DBLibrary.Entities.DTOs;
+﻿using DBLibrary.Entities;
+using DBLibrary.Entities.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Services;
@@ -6,14 +7,14 @@ using WebAccounting.Extensions;
 
 namespace WebAccounting.Controllers;
 
+[Route("api/[controller]")]
 [ApiController]
-[Authorize]
-public class EmploeeController : ControllerBase
+public class EmployeeController : ControllerBase
 {
     private readonly EmployeeService _service;
     private static int _pageNumber;
 
-    public EmploeeController(EmployeeService service)
+    public EmployeeController(EmployeeService service)
     {
         _service = service;
     }
@@ -22,9 +23,8 @@ public class EmploeeController : ControllerBase
     [Route("GetAll")]
     public ActionResult<IList<EmployeeDTO>> GetEmployees()
     {
-        var x = HttpContext.Request.Headers.Authorization[0];
         var employees = _service.GetEmployees(10, 0);
-        if (employees.Count == 0) return NotFound();
+        if (employees.Count == 0) return NotFound(new List<EmployeeDTO>());
 
         var result = employees.ToDto();
         return Ok(result);
@@ -32,7 +32,7 @@ public class EmploeeController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetByID"), FeatureEnabled(IsEnabled = false)]
+    [Route("GetByID/{id}"), FeatureEnabled(IsEnabled = false)]
     public ActionResult<EmployeeDTO> GetByID(uint id)
     {
         var employee = _service.GetByID(id);
@@ -42,9 +42,8 @@ public class EmploeeController : ControllerBase
     }
 
     [HttpPost]
-    [Route("CreateEmployee")]
-    [Authorize(Roles = "Admin")]
-    //нужна отдельная форма с ролью
+    [Route("Create")]
+    //[Authorize(Roles = "Admin")]
     public ActionResult<string> Create([FromBody]EmpCreateDTO request)
     {
         var employee = request.ToEmp();
@@ -58,7 +57,7 @@ public class EmploeeController : ControllerBase
 
     [HttpPut]
     [Route("ChangeEmployee")]
-    [Authorize(Roles = "Admin, Moderator")]
+    //[Authorize(Roles = "Admin, Moderator")]
     public ActionResult<string> Update([FromBody] EmployeeDTO request)
     {
         var employee = request.ToEmp();
@@ -72,22 +71,31 @@ public class EmploeeController : ControllerBase
 
     [HttpDelete]
     [Route("Delete")]
-    [Authorize(Roles ="Admin")]
-    //сделать сервис.делит возвращаемым эмплойереспонс
-    public ActionResult Delete(uint id)
+    //[Authorize(Roles ="Admin")]
+    public ActionResult<string> Delete(uint id)
     {
-        _service.Delete(id);
-        return Ok();
+        var result = _service.Delete(id);
+        if (!result.IsSuccess)
+        {
+            return NotFound(result.Message);
+        }
+        return Ok(result.Message);
     }
 
     [HttpGet]
-    [Route("GetNext")]
+    [Route("Next")]
     public ActionResult<IList<EmployeeDTO>> GetNext()
     {
+        IList<Employee> employees;
         var count = _service.Count();
-        if (_pageNumber * 10 > count - 10) return NoContent();
-
-        var employees = _service.GetEmployees(10, ++_pageNumber * 10);
+        if (_pageNumber * 10 > count - 10)
+        {
+            employees = _service.GetEmployees(10, _pageNumber * 10);
+        }
+        else
+        {
+            employees = _service.GetEmployees(10, ++_pageNumber * 10);
+        }
         var result = employees.ToDto();
         return Ok(result);        
     }
@@ -96,9 +104,15 @@ public class EmploeeController : ControllerBase
     [Route("Previous")]
     public ActionResult<IList<EmployeeDTO>> GetPrevious()
     {
-        if (_pageNumber == 0) return NoContent();
-
-        var employees = _service.GetEmployees(10, --_pageNumber * 10);
+        IList<Employee> employees;
+        if (_pageNumber == 0)
+        {
+            employees = _service.GetEmployees(10, 0);
+        }
+        else
+        {
+            employees = _service.GetEmployees(10, --_pageNumber * 10);
+        }
         var result = employees.ToDto();
         return Ok(result);
     }

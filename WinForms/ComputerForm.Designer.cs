@@ -32,13 +32,11 @@ partial class ComputerForm
             this.price = new System.Windows.Forms.TextBox();
             this.motherBoard = new System.Windows.Forms.ComboBox();
             this.status = new System.Windows.Forms.ComboBox();
-            this.employee = new System.Windows.Forms.ComboBox();
             this.regDate = new System.Windows.Forms.DateTimePicker();
             this.explStart = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -58,6 +56,8 @@ partial class ComputerForm
             this.caseBox = new System.Windows.Forms.ComboBox();
             this.cpu = new System.Windows.Forms.ComboBox();
             this.create = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.employees = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // name
@@ -69,7 +69,7 @@ partial class ComputerForm
             // 
             // price
             // 
-            this.price.Location = new System.Drawing.Point(268, 350);
+            this.price.Location = new System.Drawing.Point(268, 299);
             this.price.Name = "price";
             this.price.Size = new System.Drawing.Size(250, 31);
             this.price.TabIndex = 6;
@@ -92,19 +92,10 @@ partial class ComputerForm
             this.status.Size = new System.Drawing.Size(250, 33);
             this.status.TabIndex = 17;
             // 
-            // employee
-            // 
-            this.employee.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.employee.FormattingEnabled = true;
-            this.employee.Location = new System.Drawing.Point(268, 185);
-            this.employee.Name = "employee";
-            this.employee.Size = new System.Drawing.Size(250, 33);
-            this.employee.TabIndex = 18;
-            // 
             // regDate
             // 
             this.regDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.regDate.Location = new System.Drawing.Point(268, 296);
+            this.regDate.Location = new System.Drawing.Point(268, 245);
             this.regDate.Name = "regDate";
             this.regDate.Size = new System.Drawing.Size(250, 31);
             this.regDate.TabIndex = 19;
@@ -112,7 +103,7 @@ partial class ComputerForm
             // explStart
             // 
             this.explStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.explStart.Location = new System.Drawing.Point(268, 690);
+            this.explStart.Location = new System.Drawing.Point(268, 639);
             this.explStart.Name = "explStart";
             this.explStart.Size = new System.Drawing.Size(250, 31);
             this.explStart.TabIndex = 20;
@@ -144,19 +135,10 @@ partial class ComputerForm
             this.label3.TabIndex = 23;
             this.label3.Text = "Статус";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 193);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 25);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "Сотрудник";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 248);
+            this.label5.Location = new System.Drawing.Point(26, 197);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(121, 25);
             this.label5.TabIndex = 25;
@@ -165,7 +147,7 @@ partial class ComputerForm
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(26, 302);
+            this.label6.Location = new System.Drawing.Point(26, 251);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(213, 25);
             this.label6.TabIndex = 26;
@@ -174,7 +156,7 @@ partial class ComputerForm
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(26, 356);
+            this.label7.Location = new System.Drawing.Point(26, 305);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(102, 25);
             this.label7.TabIndex = 27;
@@ -183,7 +165,7 @@ partial class ComputerForm
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(26, 412);
+            this.label9.Location = new System.Drawing.Point(26, 361);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(105, 25);
             this.label9.TabIndex = 29;
@@ -192,7 +174,7 @@ partial class ComputerForm
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(26, 469);
+            this.label11.Location = new System.Drawing.Point(26, 418);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(182, 25);
             this.label11.TabIndex = 31;
@@ -201,7 +183,7 @@ partial class ComputerForm
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 528);
+            this.label12.Location = new System.Drawing.Point(26, 477);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(107, 25);
             this.label12.TabIndex = 32;
@@ -210,7 +192,7 @@ partial class ComputerForm
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 585);
+            this.label13.Location = new System.Drawing.Point(26, 534);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(156, 25);
             this.label13.TabIndex = 33;
@@ -219,7 +201,7 @@ partial class ComputerForm
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(26, 645);
+            this.label14.Location = new System.Drawing.Point(26, 594);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(71, 25);
             this.label14.TabIndex = 34;
@@ -228,7 +210,7 @@ partial class ComputerForm
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(26, 696);
+            this.label15.Location = new System.Drawing.Point(26, 645);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(224, 25);
             this.label15.TabIndex = 35;
@@ -236,7 +218,7 @@ partial class ComputerForm
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(470, 777);
+            this.close.Location = new System.Drawing.Point(470, 749);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(143, 66);
             this.close.TabIndex = 37;
@@ -246,7 +228,7 @@ partial class ComputerForm
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(268, 777);
+            this.update.Location = new System.Drawing.Point(268, 749);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(143, 66);
             this.update.TabIndex = 38;
@@ -257,7 +239,7 @@ partial class ComputerForm
             // enableRedact
             // 
             this.enableRedact.AutoSize = true;
-            this.enableRedact.Location = new System.Drawing.Point(524, 287);
+            this.enableRedact.Location = new System.Drawing.Point(524, 236);
             this.enableRedact.Name = "enableRedact";
             this.enableRedact.Size = new System.Drawing.Size(173, 54);
             this.enableRedact.TabIndex = 40;
@@ -269,7 +251,7 @@ partial class ComputerForm
             // 
             this.powerSupply.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.powerSupply.FormattingEnabled = true;
-            this.powerSupply.Location = new System.Drawing.Point(268, 240);
+            this.powerSupply.Location = new System.Drawing.Point(268, 189);
             this.powerSupply.Name = "powerSupply";
             this.powerSupply.Size = new System.Drawing.Size(250, 33);
             this.powerSupply.TabIndex = 41;
@@ -278,7 +260,7 @@ partial class ComputerForm
             // 
             this.ram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ram.FormattingEnabled = true;
-            this.ram.Location = new System.Drawing.Point(268, 461);
+            this.ram.Location = new System.Drawing.Point(268, 410);
             this.ram.Name = "ram";
             this.ram.Size = new System.Drawing.Size(250, 33);
             this.ram.TabIndex = 43;
@@ -287,7 +269,7 @@ partial class ComputerForm
             // 
             this.graphicsCard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.graphicsCard.FormattingEnabled = true;
-            this.graphicsCard.Location = new System.Drawing.Point(268, 520);
+            this.graphicsCard.Location = new System.Drawing.Point(268, 469);
             this.graphicsCard.Name = "graphicsCard";
             this.graphicsCard.Size = new System.Drawing.Size(250, 33);
             this.graphicsCard.TabIndex = 44;
@@ -296,7 +278,7 @@ partial class ComputerForm
             // 
             this.memory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.memory.FormattingEnabled = true;
-            this.memory.Location = new System.Drawing.Point(268, 577);
+            this.memory.Location = new System.Drawing.Point(268, 526);
             this.memory.Name = "memory";
             this.memory.Size = new System.Drawing.Size(250, 33);
             this.memory.TabIndex = 45;
@@ -305,7 +287,7 @@ partial class ComputerForm
             // 
             this.caseBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.caseBox.FormattingEnabled = true;
-            this.caseBox.Location = new System.Drawing.Point(268, 637);
+            this.caseBox.Location = new System.Drawing.Point(268, 586);
             this.caseBox.Name = "caseBox";
             this.caseBox.Size = new System.Drawing.Size(250, 33);
             this.caseBox.TabIndex = 46;
@@ -314,26 +296,46 @@ partial class ComputerForm
             // 
             this.cpu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cpu.FormattingEnabled = true;
-            this.cpu.Location = new System.Drawing.Point(268, 409);
+            this.cpu.Location = new System.Drawing.Point(268, 358);
             this.cpu.Name = "cpu";
             this.cpu.Size = new System.Drawing.Size(250, 33);
             this.cpu.TabIndex = 47;
             // 
             // create
             // 
-            this.create.Location = new System.Drawing.Point(65, 777);
+            this.create.Location = new System.Drawing.Point(65, 749);
             this.create.Name = "create";
             this.create.Size = new System.Drawing.Size(143, 66);
             this.create.TabIndex = 48;
             this.create.Text = "Создать";
             this.create.UseVisualStyleBackColor = true;
-            this.create.Click += new System.EventHandler(this.Create_Click);
+            this.create.Click += new System.EventHandler(this.Create_ClickAsync);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(26, 694);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(100, 25);
+            this.label4.TabIndex = 49;
+            this.label4.Text = "Сотрудник";
+            // 
+            // employees
+            // 
+            this.employees.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.employees.FormattingEnabled = true;
+            this.employees.Location = new System.Drawing.Point(268, 694);
+            this.employees.Name = "employees";
+            this.employees.Size = new System.Drawing.Size(250, 33);
+            this.employees.TabIndex = 50;
             // 
             // ComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 858);
+            this.Controls.Add(this.employees);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.create);
             this.Controls.Add(this.cpu);
             this.Controls.Add(this.caseBox);
@@ -353,13 +355,11 @@ partial class ComputerForm
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.explStart);
             this.Controls.Add(this.regDate);
-            this.Controls.Add(this.employee);
             this.Controls.Add(this.status);
             this.Controls.Add(this.motherBoard);
             this.Controls.Add(this.price);
@@ -378,13 +378,11 @@ partial class ComputerForm
     private TextBox price;
     private ComboBox motherBoard;
     private ComboBox status;
-    private ComboBox employee;
     private DateTimePicker regDate;
     private DateTimePicker explStart;
     private Label label1;
     private Label label2;
     private Label label3;
-    private Label label4;
     private Label label5;
     private Label label6;
     private Label label7;
@@ -404,4 +402,6 @@ partial class ComputerForm
     private ComboBox caseBox;
     private ComboBox cpu;
     private Button create;
+    private Label label4;
+    private ComboBox employees;
 }

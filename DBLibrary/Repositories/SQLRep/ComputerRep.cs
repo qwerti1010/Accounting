@@ -127,4 +127,9 @@ public class ComputerRep : IComputerRepository
         var count = command.ExecuteScalar()?.ToString() ?? "0";
         return int.Parse(count);
     }
+
+    public IList<Computer> GetByEmpID(uint id)
+    {
+        throw new NotImplementedException();
+    }
 }

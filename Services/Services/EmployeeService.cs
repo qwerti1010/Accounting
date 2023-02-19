@@ -6,14 +6,15 @@ using Services.Responses;
 using DBLibrary.Repositories.EF;
 using System.Security.Cryptography;
 using System.Text;
-using DBLibrary.Entities.DTOs;
 
 namespace Services.Services;
 
 public class EmployeeService
 {
     private readonly IEmployeeRepository _employeeRep;
+    private readonly IComputerRepository _computerRep;
     private readonly IVisitRepository _visitRep;
+    private readonly IPropertyRepository _propRep;
     private readonly DbConnect _context;
 
     public EmployeeService(DbConnect context)
@@ -21,6 +22,8 @@ public class EmployeeService
         _context = context;
         _employeeRep = new EfEmployeeRep(_context);
         _visitRep = new EfVisitRep(_context);
+        _computerRep = new EfComputerRep(_context);
+        _propRep = new EfPropertyRep(_context);
     }
     #region Работа с db
     public EmployeeResponse Login(string login, string password)
@@ -123,11 +126,34 @@ public class EmployeeService
         return employee;
     }
 
-    public void Delete(uint id)
+    public EmployeeResponse Delete(uint id)
     {
-        _context.Open();
+        _context.Open();                
+        var result = _employeeRep.GetByID(id);
+       
+        
+        if (result == null)
+        {
+            _context.Close();
+            return new EmployeeResponse
+            {
+                Message = $"Пользователь с id:{id} не найден"
+            };            
+        }
+
         _employeeRep.Delete(id);
+        var computers = _computerRep.GetByEmpID(id);
+        foreach (var computer in computers)
+        {
+            _computerRep.Delete(computer.ID);
+            _propRep.Delete(computer.ID);
+        }
         _context.Close();
+        return new EmployeeResponse
+        {
+            IsSuccess = true,
+            Message = $"Пользователь с id:{id} успешно удален"
+        };        
     }
 
     public EmployeeResponse Update(Employee employee)
@@ -195,6 +221,4 @@ public class EmployeeService
         }
         return sb.ToString();
     }
-
-    
 }

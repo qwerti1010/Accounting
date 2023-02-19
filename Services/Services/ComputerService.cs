@@ -58,7 +58,6 @@ public class ComputerService
     {
         _context.Open();
         _computerRep.Delete(id);
-        _propertyRep.Delete(id);
         _context.Close();
     }
 

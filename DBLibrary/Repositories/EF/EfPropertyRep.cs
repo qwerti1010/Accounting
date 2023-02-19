@@ -28,8 +28,8 @@ public class EfPropertyRep : DbContext, IPropertyRepository
 
     public void Delete(uint id)
     {
-        var prop = GetByID(id);
-        if (prop != null)
+        var props = GetByComputerID(id);
+        foreach (var prop in props)
         {
             prop.IsDeleted = true;
             Update(prop);

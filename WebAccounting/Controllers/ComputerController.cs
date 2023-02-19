@@ -13,7 +13,7 @@ public class ComputerController : ControllerBase
 {
     //по идее тоже должен быть интерфейс
     private readonly ComputerService _service;
-
+    private static int _pageNumber;
     public ComputerController(ComputerService service)
     {
         _service = service;
@@ -24,7 +24,7 @@ public class ComputerController : ControllerBase
     public ActionResult<IList<ComputerDTO>> GetComputers()
     {
         var computers = _service.GetComputers(10,0);
-        if (computers.Count == 0) return NotFound();
+        if (computers.Count == 0) return NotFound(new List<ComputerDTO>());
 
         var result = computers.ToDto();
         return Ok(result);
@@ -63,7 +63,7 @@ public class ComputerController : ControllerBase
     {
         var computer = request.ToComputer();
 
-        if (computer == null) return BadRequest("Неверный статус/данные");
+        if (computer == null) return BadRequest("Неверные данные");
 
         _service.Create(computer);
         return Ok("Все ок");
@@ -81,9 +81,46 @@ public class ComputerController : ControllerBase
 
     [HttpDelete]
     [Route("Delete")]
-    public ActionResult Delete(uint id)
+    public ActionResult<string> Delete(uint id)
     {
+        var comp = _service.GetByID(id);
+        if (comp == null) return NotFound($"Компьютер с id:{id} не найден");
         _service.Delete(id);
-        return Ok();
+        return Ok("Компьютер удален");
     }
+
+    [HttpGet]
+    [Route("Next")]
+    public ActionResult<IList<ComputerDTO>> GetNext()
+    {
+        IList<Computer> computers;
+        var count = _service.Count();
+        if (_pageNumber * 10 > count - 10)
+        {
+            computers = _service.GetComputers(10, _pageNumber * 10);
+        }
+        else
+        {
+            computers = _service.GetComputers(10, ++_pageNumber * 10);
+        }
+        var result = computers.ToDto();
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("Previous")]
+    public ActionResult<IList<ComputerDTO>> GetPrevious()
+    {
+        IList<Computer> computers;
+        if (_pageNumber == 0)
+        {
+            computers = _service.GetComputers(10, 0);
+        }
+        else
+        {
+            computers = _service.GetComputers(10, --_pageNumber * 10);
+        }
+        var result = computers.ToDto();
+        return Ok(result);
+    }    
 }

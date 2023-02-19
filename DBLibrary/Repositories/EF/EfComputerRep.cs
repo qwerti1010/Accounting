@@ -66,4 +66,9 @@ public class EfComputerRep : DbContext, IComputerRepository
             SaveChanges();
         }
     }
+
+    public IList<Computer> GetByEmpID(uint id)
+    {
+        return Computers.Where(comp => comp.EmployeeID == id).ToList();
+    }
 }
